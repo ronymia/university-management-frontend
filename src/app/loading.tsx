@@ -1,11 +1,19 @@
-import Link from "next/link";
+import { Row, Space, Spin } from "antd";
 
-export default function NotFound() {
+const Loading = () => {
   return (
-    <div>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
-    </div>
+    <Row
+      justify="center"
+      align="middle"
+      style={{
+        height: "100vh",
+      }}
+    >
+      <Space>
+        <Spin tip="Loading" size="large"></Spin>
+      </Space>
+    </Row>
   );
-}
+};
+
+export default Loading;
