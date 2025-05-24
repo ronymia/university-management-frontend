@@ -1,3 +1,4 @@
+import ActionBar from "@/components/ui/ActionBar";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import { getUserInfo } from "@/services/auth.service";
 import { Button } from "antd";
@@ -10,17 +11,35 @@ const ManageStudentPage = () => {
       <UMBreadCrumb
         items={[
           {
-            label: `${role}`,
-            link: `/${role}`,
+            label: "super_admin",
+            link: "/super_admin",
           },
         ]}
       />
-      <h1>Manage Student Page</h1>
-      <Link href={`/super_admin/manage-student/create`}>
-        <Button type="default" variant="outlined">
-          Create Student
-        </Button>
-      </Link>
+      <ActionBar title="Student List">
+        {/* <Input
+          size="large"
+          placeholder="Search"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: "20%",
+          }}
+        /> */}
+        <div>
+          <Link href="/super_admin/manage-student/create">
+            <Button type="primary">Create</Button>
+          </Link>
+          {/* {(!!sortBy || !!sortOrder || !!searchTerm) && (
+            <Button
+              style={{ margin: "0px 5px" }}
+              type="primary"
+              onClick={resetFilters}
+            >
+              <ReloadOutlined />
+            </Button>
+          )} */}
+        </div>
+      </ActionBar>
     </div>
   );
 };

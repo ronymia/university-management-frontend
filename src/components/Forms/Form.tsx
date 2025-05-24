@@ -1,9 +1,11 @@
 "use client";
+
+import { ReactElement, ReactNode, useEffect } from "react";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
-import { ReactElement, ReactNode } from "react";
 
 type FormConfig = {
   defaultValues?: Record<string, any>;
+  resolver?: any;
 };
 
 type FormProps = {
@@ -11,11 +13,16 @@ type FormProps = {
   submitHandler: SubmitHandler<any>;
 } & FormConfig;
 
-const Form = ({ children, submitHandler, defaultValues }: FormProps) => {
+const Form = ({
+  children,
+  submitHandler,
+  defaultValues,
+  resolver,
+}: FormProps) => {
   const formConfig: FormConfig = {};
 
   if (!!defaultValues) formConfig["defaultValues"] = defaultValues;
-
+  if (!!resolver) formConfig["resolver"] = resolver;
   const methods = useForm<FormProps>(formConfig);
 
   const { handleSubmit, reset } = methods;
@@ -25,11 +32,7 @@ const Form = ({ children, submitHandler, defaultValues }: FormProps) => {
     reset();
   };
 
-  //   useEffect(() => {
-  //     reset({
-  //       name: "data",
-  //     });
-  //   }, [reset]); // ❌ never put `methods` as the deps
+  useEffect(() => reset(defaultValues), [defaultValues, reset, methods]);
 
   return (
     <FormProvider {...methods}>

@@ -2,10 +2,12 @@ import ActionBar from "@/components/ui/ActionBar";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import { Button } from "antd";
 import Link from "next/link";
+import React from "react";
 
-const ManageFacultyPage = () => {
+const CreateDepartment = () => {
   return (
     <div>
+      {" "}
       <UMBreadCrumb
         items={[
           {
@@ -14,24 +16,27 @@ const ManageFacultyPage = () => {
           },
         ]}
       />
-      <ActionBar title="Faculty List">
+      <ActionBar title="Department List">
         {/* <Input
+          type="text"
           size="large"
-          placeholder="Search"
-          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search..."
           style={{
             width: "20%",
           }}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
         /> */}
         <div>
-          <Link href="/super_admin/manage-faculty/create">
+          <Link href="/super_admin/department/create">
             <Button type="primary">Create</Button>
           </Link>
           {/* {(!!sortBy || !!sortOrder || !!searchTerm) && (
             <Button
-              style={{ margin: "0px 5px" }}
-              type="primary"
               onClick={resetFilters}
+              type="primary"
+              style={{ margin: "0px 5px" }}
             >
               <ReloadOutlined />
             </Button>
@@ -42,4 +47,4 @@ const ManageFacultyPage = () => {
   );
 };
 
-export default ManageFacultyPage;
+export default CreateDepartment;

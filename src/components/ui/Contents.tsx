@@ -5,7 +5,6 @@ import Header from "./Header";
 
 const { Content } = Layout;
 const Contents = ({ children }: { children: React.ReactNode }) => {
-
   return (
     <Content
       style={{
@@ -14,7 +13,14 @@ const Contents = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       <Header />
-      {children}
+
+      <div
+        style={{
+          padding: "10px",
+        }}
+      >
+        {children}
+      </div>
     </Content>
   );
 };
