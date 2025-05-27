@@ -5,11 +5,11 @@ import LocalGuardianInfo from "@/components/StudentForms/LocalGuardianInfo";
 import StudentBasicInfo from "@/components/StudentForms/StudentBasicInfo";
 import StudentInfo from "@/components/StudentForms/StudentInfo";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
-// import { useAddStudentWithFormDataMutation } from "@/redux/api/studentApi";
+import { useAddStudentWithFormDataMutation } from "@/redux/api/studentApi";
 import { message } from "antd";
 
 const CreateStudentPage = () => {
-  // const [addStudentWithFormData] = useAddStudentWithFormDataMutation();
+  const [addStudentWithFormData] = useAddStudentWithFormDataMutation();
   const steps = [
     {
       title: "Student Information",
@@ -39,10 +39,10 @@ const CreateStudentPage = () => {
     formData.append("data", data);
     message.loading("Creating...");
     try {
-      // const res = await addStudentWithFormData(formData);
-      // if (!!res) {
-      //   message.success("Student created successfully!");
-      // }
+      const res = await addStudentWithFormData(formData);
+      if (!!res) {
+        message.success("Student created successfully!");
+      }
       console.log({ formData });
     } catch (err: any) {
       console.error(err.message);
