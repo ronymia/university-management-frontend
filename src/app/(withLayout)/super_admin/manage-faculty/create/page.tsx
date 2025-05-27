@@ -10,11 +10,11 @@ import FormTextArea from "@/components/Forms/FormTextArea";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UploadImage from "@/components/ui/UploadImage";
 import { bloodGroupOptions, genderOptions } from "@/constants/global";
-// import { useAddFacultyWithFormDataMutation } from "@/redux/api/facultyApi";
+import { useAddFacultyWithFormDataMutation } from "@/redux/api/facultyApi";
 import { Button, Col, Row, message } from "antd";
 
 const CreateFacultyPage = () => {
-  // const [addFacultyWithFormData] = useAddFacultyWithFormDataMutation();
+  const [addFacultyWithFormData] = useAddFacultyWithFormDataMutation();
 
   const adminOnSubmit = async (values: any) => {
     const obj = { ...values };
@@ -26,10 +26,10 @@ const CreateFacultyPage = () => {
     formData.append("data", data);
     message.loading("Creating...");
     try {
-      // const res = await addFacultyWithFormData(formData);
-      // if (!!res) {
-      //   message.success("Faculty created successfully!");
-      // }
+      const res = await addFacultyWithFormData(formData);
+      if (!!res) {
+        message.success("Faculty created successfully!");
+      }
       console.log({ formData });
     } catch (err: any) {
       console.error(err.message);
