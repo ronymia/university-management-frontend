@@ -16,16 +16,16 @@ interface IInputProps {
   validation?: object;
 }
 
-const FormInput = ({
+export default function FormInput({
   name,
   type,
   size,
   value,
   id,
   placeholder,
-  required,
+  required = true,
   label,
-}: IInputProps) => {
+}: IInputProps) {
   const {
     control,
     formState: { errors },
@@ -35,22 +35,29 @@ const FormInput = ({
 
   return (
     <>
-      {required ? (
-        <span
-          style={{
-            color: "red",
-          }}
-        >
-          *
-        </span>
-      ) : null}
-      {label ? label : null}
+      {/* LABEL */}
+      <label
+        htmlFor={id}
+        style={{
+          fontWeight: 500,
+          fontSize: 14,
+          color: "#2f2a2a",
+          display: "inline-block",
+          marginBottom: 4,
+        }}
+      >
+        {label}
+        {required && <span style={{ color: "red", paddingLeft: 2 }}>*</span>}
+      </label>
+
+      {/* INPUT FIELD */}
       <Controller
         control={control}
         name={`${name}`}
         render={({ field }) =>
           type === "password" ? (
             <Input.Password
+              style={{ marginTop: "6px", marginBottom: "5px", height: "48px" }}
               type={type}
               size={size}
               placeholder={placeholder}
@@ -59,6 +66,7 @@ const FormInput = ({
             />
           ) : (
             <Input
+              style={{ marginTop: "6px", marginBottom: "5px", height: "48px" }}
               type={type}
               size={size}
               placeholder={placeholder}
@@ -68,9 +76,8 @@ const FormInput = ({
           )
         }
       />
+      {/* ERROR MESSAGE */}
       <small style={{ color: "red" }}>{errorMessage}</small>
     </>
   );
-};
-
-export default FormInput;
+}

@@ -10,12 +10,10 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-import { useDebounced } from "@/redux/hooks";
 import UMTable from "@/components/ui/UMTable";
-import { IDepartment } from "@/types";
 import dayjs from "dayjs";
-import { useFacultiesQuery } from "@/redux/api/facultyApi";
 import { useStudentsQuery } from "@/redux/api/studentApi";
+import { useDebounced } from "@/hooks/useDebounced";
 
 const StudentPage = () => {
   const query: Record<string, any> = {};

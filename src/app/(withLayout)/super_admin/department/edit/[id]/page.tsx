@@ -8,25 +8,32 @@ import {
   useDepartmentQuery,
   useUpdateDepartmentMutation,
 } from "@/redux/api/departmentApi";
+import { managementDepartmentSchema } from "@/schemas/managementDepartment";
 import { Button, Col, Row, message } from "antd";
+import { useRouter } from "next/navigation";
 import { use } from "react";
 
 type IDProps = {
-  params: any;
+  params: Promise<{
+    id: string;
+  }>;
 };
 
-const EditDepartmentPage = ({ params }: IDProps) => {
-  const { id } = use(params) as any;
+export default function EditDepartmentPage({ params }: IDProps) {
+  const resolvedParams = use(params);
+  const { id } = resolvedParams;
 
+  const router = useRouter();
   const { data } = useDepartmentQuery(id);
-  const [updateDepartment] = useUpdateDepartmentMutation();
+  const [updateDepartment, updateResult] = useUpdateDepartmentMutation();
 
   const onSubmit = async (values: { title: string }) => {
-    message.loading("Updating.....");
+    // message.loading("Updating.....");
     try {
       //   console.log(data);
-      await updateDepartment({ id, body: values });
+      await updateDepartment({ id, body: values }).unwrap();
       message.success("Department updated successfully");
+      router.push("/super_admin/department");
     } catch (err: any) {
       //   console.error(err.message);
       message.error(err.message);
@@ -53,18 +60,24 @@ const EditDepartmentPage = ({ params }: IDProps) => {
       />
 
       <ActionBar title="Update Department"> </ActionBar>
-      <Form submitHandler={onSubmit} defaultValues={defaultValues}>
+      <Form
+        submitHandler={onSubmit}
+        resolver={yupResolver(managementDepartmentSchema)}
+        defaultValues={defaultValues}
+      >
         <Row gutter={{ xs: 24, xl: 8, lg: 8, md: 24 }}>
           <Col span={8} style={{ margin: "10px 0" }}>
-            <FormInput name="title" label="Title" />
+            <FormInput id="title" name="title" label="Title" />
           </Col>
         </Row>
-        <Button type="primary" htmlType="submit">
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={updateResult.isLoading}
+        >
           Update
         </Button>
       </Form>
     </div>
   );
-};
-
-export default EditDepartmentPage;
+}

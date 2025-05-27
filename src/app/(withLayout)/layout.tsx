@@ -30,7 +30,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         }}
       >
         <Space>
-          <Spin tip="Loading" size="large"></Spin>
+          <Spin tip="Loading" size="large">
+            <div style={{ padding: 50 }} /> {/* dummy content */}
+          </Spin>
         </Space>
       </Row>
     );
