@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { Layout } from "antd";
+import { Layout, Row, Space, Spin } from "antd";
 import Sidebar from "@/components/ui/Sidebar";
 import Contents from "@/components/ui/Contents";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,19 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
 
   if (!isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Row
+        justify="center"
+        align="middle"
+        style={{
+          height: "100vh",
+        }}
+      >
+        <Space>
+          <Spin tip="Loading" size="large"></Spin>
+        </Space>
+      </Row>
+    );
   }
 
   return (
