@@ -16,8 +16,11 @@ import { useState } from "react";
 import ActionBar from "@/components/ui/ActionBar";
 import dayjs from "dayjs";
 import { useDebounced } from "@/hooks/useDebounced";
+import { usePopup } from "@/components/Popup/CustomPopup";
+import FormModal from "@/components/Popup/FormModal";
 
 const ManageDepartmentPage = () => {
+  const { popupOptions, setPopupOptions, handleAddNewDepartment } = usePopup();
   const query: Record<string, any> = {};
 
   const [page, setPage] = useState<number>(1);
@@ -76,17 +79,26 @@ const ManageDepartmentPage = () => {
       render: function (data: any) {
         return (
           <>
-            <Link href={`/super_admin/department/edit/${data?.id}`}>
-              <Button
-                style={{
-                  margin: "0px 5px",
-                }}
-                onClick={() => console.log(data)}
-                type="primary"
-              >
-                <EditOutlined />
-              </Button>
-            </Link>
+            {/* <Link href={`/super_admin/department/edit/${data?.id}`}> */}
+            <Button
+              style={{
+                margin: "0px 5px",
+              }}
+              onClick={() => {
+                setPopupOptions((prev) => ({
+                  ...prev,
+                  open: true,
+                  actionType: "update",
+                  form: "department",
+                  data: data,
+                  title: "Update Department",
+                }));
+              }}
+              type="primary"
+            >
+              <EditOutlined />
+            </Button>
+            {/* </Link> */}
             <Button
               onClick={() => deleteHandler(data?.id)}
               type="primary"
@@ -120,6 +132,10 @@ const ManageDepartmentPage = () => {
 
   return (
     <div>
+      <FormModal
+        popupOptions={popupOptions}
+        setPopupOptions={setPopupOptions}
+      />
       <UMBreadCrumb
         items={[
           {
@@ -142,6 +158,9 @@ const ManageDepartmentPage = () => {
           }}
         />
         <div>
+          <Button type="dashed" onClick={handleAddNewDepartment}>
+            Create Department
+          </Button>
           <Link href="/super_admin/department/create">
             <Button type="primary">Create</Button>
           </Link>
@@ -160,7 +179,7 @@ const ManageDepartmentPage = () => {
       <UMTable
         loading={isLoading}
         columns={columns}
-        dataSource={departments}
+        dataSource={departments || []}
         pageSize={size}
         totalPages={meta?.total}
         showSizeChanger={true}

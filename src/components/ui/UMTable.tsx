@@ -37,9 +37,13 @@ const UMTable = ({
 
   return (
     <Table
+      key={Math.random()}
       loading={loading}
       columns={columns}
-      dataSource={dataSource}
+      dataSource={dataSource?.map((row: any) => ({
+        ...row,
+        key: row?.id,
+      }))}
       pagination={paginationConfig}
       onChange={onTableChange}
     />

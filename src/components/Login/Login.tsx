@@ -34,7 +34,6 @@ const LoginPage = () => {
 
         // Handle successful login
       }
-      console.log({ response });
     } catch (error: any) {
       console.log("Error during login:", error?.message);
     }

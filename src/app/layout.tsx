@@ -4,7 +4,7 @@ import "./globals.css";
 import Providers from "@/libs/Providers";
 
 // POPUP JS DEFAULT STYLE
-import "reactjs-popup/dist/index.css";
+// import "reactjs-popup/dist/index.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +31,22 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           {children}
+          {/* <div id="portal">
+            <div
+              className=""
+              style={{
+                position: "fixed",
+                inset: "0px",
+                display: "flex",
+
+                zIndex: "999",
+                background: "rgba(0, 0, 0, 0.5)",
+                pointerEvents: "auto",
+              }}
+            >
+              <h1 style={{ textAlign: "center", zIndex: "9999" }}>Portal</h1>
+            </div>
+          </div> */}
         </body>
       </html>
     </Providers>

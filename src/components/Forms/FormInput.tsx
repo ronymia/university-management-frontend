@@ -66,7 +66,12 @@ export default function FormInput({
             />
           ) : (
             <Input
-              style={{ marginTop: "6px", marginBottom: "5px", height: "48px" }}
+              style={{
+                marginTop: "6px",
+                marginBottom: "5px",
+                height: "48px",
+                width: "100%",
+              }}
               type={type}
               size={size}
               placeholder={placeholder}
