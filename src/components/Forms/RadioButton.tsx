@@ -1,5 +1,6 @@
 "use client";
 
+import { IconType } from "react-icons";
 import { BiSolidCheckCircle } from "react-icons/bi";
 
 interface ICustomRadioButton {
@@ -7,7 +8,7 @@ interface ICustomRadioButton {
     name: string;
     title: string;
     value: string;
-    Icon?: React.ReactNode;
+    Icon?: React.ReactNode | IconType;
   }[];
   onChange?: (e) => void;
   wrapperClassName?: string;
@@ -23,7 +24,6 @@ interface ICustomRadioButton {
 export default function RadioButton({
   options = [],
   onChange = (e) => e,
-  wrapperClassName = "",
   label = "",
   disabled = false,
   required = false,
@@ -67,11 +67,15 @@ export default function RadioButton({
               <label
                 htmlFor={`${name}${value}`}
                 id={`${name}${value}-label`}
-                className={`${
-                  isChecked
-                    ? "relative bg-primary/20 border-primary font-bold text-base-300"
-                    : " border-primary/20 text-primary"
-                } justify-center sm:flex-col lg:flex-row gap-x-1 rounded-lg border-2 px-5 h-11 flex items-center cursor-pointer checked:text-primary drop-shadow`}
+                className={`
+                   ${
+                     !!error ? "border border-error" : "border border-[#d9d9d9]"
+                   }
+                  ${
+                    isChecked
+                      ? "relative bg-primary/20 border-primary font-bold text-base-300"
+                      : "border border-[#d9d9d9] text-primary"
+                  } justify-center sm:flex-col lg:flex-row gap-x-1 rounded-lg border-2 px-5 h-11 flex items-center cursor-pointer checked:text-primary drop-shadow`}
               >
                 {isChecked && (
                   <BiSolidCheckCircle className="absolute bg-white rounded-full -right-2 -top-2 text-xl text-primary" />
@@ -89,19 +93,19 @@ export default function RadioButton({
       </div>
 
       {/* Error Message */}
-      {/* {error && (
-        <p
+      {!!error && (
+        <small
           data-testid={`${testId}_error_message`}
           id={`${testId}-error`} // ID to link with input field's aria-describedby
           role="alert"
           aria-label="error message"
           aria-live="assertive" // Ensures screen readers announce the message immediately
           aria-atomic="true" // Ensures the whole message is read out
-          className="text-xs text-red-500"
+          className=" text-error font-medium"
         >
           {error}
-        </p>
-      )} */}
+        </small>
+      )}
     </>
   );
 }

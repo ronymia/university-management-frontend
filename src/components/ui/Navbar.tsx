@@ -5,8 +5,10 @@ import CustomProfileAvatar from "../Avatar/CustomProfileAvatar";
 import { MdOutlineMenuOpen } from "react-icons/md";
 import { useAppDispatch } from "@/redux/hooks";
 import { toggleSidebar } from "@/redux/slice/globalState";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   const appDispatch = useAppDispatch();
   const userDetails = getUserInfo();
   console.log({ userDetails });
@@ -40,7 +42,14 @@ export default function Navbar() {
             label: "Settings",
             onClick: () => console.log("Settings clicked"),
           },
-          { label: "Logout", onClick: () => console.log("Logging out") },
+          {
+            label: "Logout",
+            onClick: () => {
+              window.localStorage.clear();
+              router.push("/auth/login");
+              console.log("Logging out");
+            },
+          },
         ]}
       />
     </nav>

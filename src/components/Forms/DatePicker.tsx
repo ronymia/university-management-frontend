@@ -435,7 +435,7 @@ export default function DatePicker({
           onClick={() => !disabled && setCalendarVisible(!calendarVisible)}
           readOnly={readOnly}
           // className="w-96 h-11 border border-solid border-gray-300 rounded px-2 py-1"
-          className={`w-full bg-base-300  rounded-md  border border-solid border-[#C5C5C5] px-3 py-2 placeholder:text-sm placeholder:capitalize focus:outline-none
+          className={`w-full bg-base-300  rounded-md focus:ring-2  border border-solid border-[#C5C5C5] px-3 py-2 placeholder:text-sm placeholder:capitalize
           ${fieldClassName}
           ${
             disabled
@@ -445,7 +445,7 @@ export default function DatePicker({
               : ""
           }
             ${
-              error
+              !!error
                 ? "border-red-500 focus:border-red-500"
                 : "border-gray-300 focus:border-primary"
             }
@@ -635,7 +635,7 @@ export default function DatePicker({
           aria-label="error message"
           aria-live="assertive" // Ensures screen readers announce the message immediately
           aria-atomic="true" // Ensures the whole message is read out
-          className="text-xs text-red-500 pt-1"
+          className="text-xs text-red-500 pt-1 font-medium"
         >
           {invalidDateError}
         </p>

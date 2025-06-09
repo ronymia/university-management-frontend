@@ -72,7 +72,7 @@ export default function CustomTextareaField({
               fieldClassName ? fieldClassName : ""
             } 
             ${
-              errors[name]?.message
+              !!errorMessage
                 ? " border border-error"
                 : "border border-[#d9d9d9]"
             }`}
@@ -80,7 +80,7 @@ export default function CustomTextareaField({
         )}
       />
       {/* ERROR MESSAGE */}
-      <small className={`text-error`}>{errorMessage}</small>
+      <small className={`text-error font-medium`}>{errorMessage}</small>
     </div>
   );
 }

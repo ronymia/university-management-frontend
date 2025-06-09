@@ -1,18 +1,17 @@
 import { Controller, useFormContext } from "react-hook-form";
-import DatePicker from "./DatePicker";
 import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 
-interface ICustomDatePicker {
+interface ICustomFileUpload {
   name: string;
   required: boolean;
   label: string;
 }
 
-export default function CustomDatePicker({
+export default function CustomFileUpload({
   name,
   required,
   label,
-}: ICustomDatePicker) {
+}: ICustomFileUpload) {
   const {
     control,
     formState: { errors },
@@ -24,15 +23,7 @@ export default function CustomDatePicker({
       <Controller
         control={control}
         name={`${name}`}
-        render={({ field }) => (
-          <DatePicker
-            // value={field.value}
-            {...field}
-            label={label}
-            required={required}
-            // error={errorMessage}
-          />
-        )}
+        render={({ field }) => <input type="file" id="file" {...field} />}
       />
       {/* ERROR MESSAGE */}
       <small className={`text-error`}>{errorMessage}</small>

@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import CustomLoading from "@/components/Loader/CustomLoading";
 import CustomDatePicker from "@/components/Forms/CustomDatePicker";
 import CustomRadioButton from "@/components/Forms/CustomRadioButton";
+import CustomSelect from "@/components/Forms/CustomSelect";
+import CustomFileUpload from "@/components/Forms/CustomFileUpload";
 
 export default function AdminForm() {
   const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
@@ -47,7 +49,7 @@ export default function AdminForm() {
       <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
         <p className={`font-bold mb-2.5 drop-shadow-sm`}>Admin Information</p>
         <div className={`grid grid-cols-3 gap-3`}>
-          <CustomInputField
+          {/* <CustomInputField
             id="fileUrl"
             name="fileUrl"
             type="text"
@@ -55,7 +57,9 @@ export default function AdminForm() {
             placeholder="Image Url"
             required
             wrapperClassName="row-span-2"
-          />
+          /> */}
+          <CustomFileUpload name="file" required label="Image" />
+
           {/* firstName */}
           <CustomInputField
             id="admin.name.firstName"
@@ -112,21 +116,14 @@ export default function AdminForm() {
             ]}
           />
           {/* managementDepartment */}
-          <CustomInputField
-            id="admin.managementDepartment"
-            name="admin.managementDepartment"
-            type="text"
+          <CustomSelect
+            name={"admin.managementDepartment"}
+            id={"admin.managementDepartment"}
+            options={departmentOptions}
             label="Department"
-            placeholder="Department"
+            placeholder={`Select Department`}
             required
           />
-          {/* <FormSelectField
-              size="large"
-              name="admin.managementDepartment"
-              options={departmentOptions}
-              label="Department"
-              placeholder="Select"
-            /> */}
           {/* file */}
 
           {/* <UploadImage name="file" /> */}

@@ -1,5 +1,6 @@
 "use client";
 
+import CustomLoading from "@/components/Loader/CustomLoading";
 import Contents from "@/components/ui/Contents";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
@@ -14,16 +15,19 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const userLoggedIn = isLoggedIn();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!userLoggedIn) {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       setIsLoading(false);
     }
   }, [router]);
 
+  if (isLoading) {
+    return <CustomLoading height={"h-screen"} />;
+  }
   return (
     <div className={`h-screen flex gap-3 bg-[#f9fbfc] p-3`}>
       <Sidebar />

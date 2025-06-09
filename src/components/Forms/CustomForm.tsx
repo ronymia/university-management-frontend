@@ -26,11 +26,6 @@ export default function CustomForm({
   defaultValues,
   resolver,
   className,
-  cancelHandler,
-  confirmButtonLabel,
-  dataAuto,
-  formActionClassName,
-  isPending,
 }: FormProps) {
   const formConfig: FormConfig = {};
 
@@ -58,15 +53,6 @@ export default function CustomForm({
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
         {children}
-        {/* SUBMIT */}
-        {/* <FormAction
-          htmlType={`submit`}
-          dataAuto={dataAuto}
-          isLoading={isSubmitting || isValidating || isPending}
-          confirmButtonLabel={confirmButtonLabel}
-          cancelHandler={cancelHandler}
-          className={formActionClassName}
-        /> */}
       </form>
     </FormProvider>
   );

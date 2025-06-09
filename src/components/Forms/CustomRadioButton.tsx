@@ -50,11 +50,12 @@ export default function CustomRadioButton({
             wrapperClassName={wrapperClassName}
             disabled={disabled}
             inputFieldClassName={inputFieldClassName}
+            error={errorMessage}
           />
         )}
       />
       {/* ERROR MESSAGE */}
-      <small className={`text-error`}>{errorMessage}</small>
+      {/* <small className={`text-error`}>{errorMessage}</small> */}
     </div>
   );
 }

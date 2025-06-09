@@ -20,11 +20,11 @@ export default function DepartmentForm({ id, popupCloseHandler }: IDProps) {
   const { data, isLoading } = useDepartmentQuery(id, { skip: !id });
   const [addDepartment, createResult] = useAddDepartmentMutation();
   const [updateDepartment, updateResult] = useUpdateDepartmentMutation();
-  console.log("id", { id });
+  // console.log("id", { id });
 
   const onSubmit = async (values: { title: string }, reset: any) => {
-    console.log({ reset });
-    console.log({ values });
+    // console.log({ reset });
+    // console.log({ values });
     try {
       if (id) {
         const res = await updateDepartment({ id, body: values }).unwrap();
@@ -36,10 +36,12 @@ export default function DepartmentForm({ id, popupCloseHandler }: IDProps) {
       } else {
         const res = await addDepartment(values).unwrap();
         if (res?.id) {
+          reset?.();
           popupCloseHandler?.();
         }
       }
     } catch (err: any) {
+      reset?.(values);
       console.error(err.message);
       // message.error(err.message);
     }

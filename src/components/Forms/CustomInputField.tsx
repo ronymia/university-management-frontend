@@ -110,15 +110,15 @@ export default function CustomInputField({
                 type={isVisible ? "text" : "password"}
                 value={field.value ?? ""}
                 placeholder={`${placeholder ?? ""}`}
-                aria-invalid={!!errors[name]?.message}
+                aria-invalid={!!errorMessage}
                 aria-required={required}
                 autoComplete="new-password"
                 className={`h-11 bg-base-300 w-full p-2 focus:ring-2 focus:ring-primary rounded-md disabled:px-1 disabled:py-0 disabled:border-2 disabled:border-solid disabled:text-gray-700 ${
                   fieldClassName ? fieldClassName : ""
                 } 
                 ${
-                  errors[name]?.message
-                    ? " border border-error"
+                  !!errorMessage
+                    ? "border border-error"
                     : "border border-[#d9d9d9]"
                 }`}
               />
@@ -132,13 +132,13 @@ export default function CustomInputField({
               type={type}
               name={name}
               placeholder={`${placeholder ?? ""}`}
-              aria-invalid={!!errors[name]?.message}
+              aria-invalid={!!errorMessage}
               aria-required={required}
               className={`h-11 bg-base-300 w-full p-2 focus:ring-2 focus:ring-primary rounded-md disabled:px-1 disabled:py-0 disabled:border-2 disabled:border-solid disabled:text-gray-700 ${
                 fieldClassName ? fieldClassName : ""
               } 
               ${
-                errors[name]?.message
+                !!errorMessage
                   ? " border border-error"
                   : "border border-[#d9d9d9]"
               }`}
