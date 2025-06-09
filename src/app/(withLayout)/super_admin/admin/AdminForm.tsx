@@ -7,6 +7,7 @@ import { adminSchema } from "@/schemas/admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomLoading from "@/components/Loader/CustomLoading";
 import CustomDatePicker from "@/components/Forms/CustomDatePicker";
+import CustomRadioButton from "@/components/Forms/CustomRadioButton";
 
 export default function AdminForm() {
   const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
@@ -92,21 +93,24 @@ export default function AdminForm() {
             required
           />
           {/* gender */}
-          <CustomInputField
+          <CustomRadioButton
             id="admin.gender"
             name="admin.gender"
-            type="text"
             label="Gender"
-            placeholder="Gender"
             required
+            options={[
+              {
+                name: "admin.gender",
+                title: "Male",
+                value: "male",
+              },
+              {
+                name: "admin.gender",
+                title: "Female",
+                value: "female",
+              },
+            ]}
           />
-          {/* <FormSelectField
-              size="large"
-              name="admin.gender"
-              options={genderOptions}
-              label="Gender"
-              placeholder="Select"
-            /> */}
           {/* managementDepartment */}
           <CustomInputField
             id="admin.managementDepartment"
