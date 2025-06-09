@@ -1,32 +1,39 @@
-import Cleave from "cleave.js/react";
+import { generateWeekDays, generateYears } from "@/constants/calendar";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { BiReset } from "react-icons/bi";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-const generateYears = ({ startOfYear, endOfYear, length }) => {
-  return Array.from({ length }, (_, index) => startOfYear + index);
-};
 
-const generateWeekDays = ({ startOfWeekDay = 0 }) => {
-  const weekdays = moment.weekdays();
-  const weekdaysShort = moment.weekdaysShort();
-
-  const reorderedDays = [
-    ...weekdays.slice(startOfWeekDay),
-    ...weekdays.slice(0, startOfWeekDay)
-  ];
-
-  return reorderedDays.map((day, index) => {
-    const originalIndex = weekdays.indexOf(day);
-    return {
-      id: index,
-      label: day,
-      value: originalIndex,
-      shortName: weekdaysShort[originalIndex]
-    };
-  });
-};
+interface IDatePickerProps {
+  id?: string;
+  name?: string;
+  label?: string;
+  value?: any;
+  placeholder?: string;
+  required?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+  error?: string;
+  offDays?: any[];
+  offDayClassName?: string;
+  specialDates?: any[];
+  disabledDates?: any[];
+  disableBeforeDate?: any;
+  disableAfterDate?: any;
+  fieldClassName?: string;
+  visibleBorder?: boolean;
+  onChange?: any;
+  wrapperClassName?: string;
+  dataAuto?: string;
+  right?: boolean;
+  top?: boolean;
+  small?: boolean;
+  startOfYear?: any;
+  startOfWeekDay?: number;
+  formatDate?: string;
+  pick?: "day" | "month" | "year";
+}
 
 export default function DatePicker({
   id,
@@ -55,8 +62,8 @@ export default function DatePicker({
   startOfYear,
   startOfWeekDay = 0,
   formatDate = "DD-MM-YYYY",
-  pick = "day" // month, year, day
-}) {
+  pick = "day", // month, year, day
+}: IDatePickerProps) {
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(moment());
@@ -390,7 +397,7 @@ export default function DatePicker({
 
       {/* INPUT FIELD */}
       <div className="relative">
-        <DateInputCleave
+        {/* <DateInputCleave
           pickedValue={selectedDate}
           onChange={(dateValue) => {
             if (moment(dateValue, formatDate).isValid()) {
@@ -413,8 +420,8 @@ export default function DatePicker({
                 : "border-gray-600 focus:border-primary"
             }
           `}
-        />
-        {/* <input
+        /> */}
+        <input
           data-auto={dataAuto}
           type="text"
           id={id}
@@ -444,7 +451,7 @@ export default function DatePicker({
             }
           `}
           // disabled={disabled}
-        /> */}
+        />
         <button
           type="button"
           disabled={calendarVisible}
@@ -478,7 +485,7 @@ export default function DatePicker({
       {calendarVisible && (
         <div
           data-auto={`date_picker`}
-          className={`w-[350px] absolute bg-base-100 shadow-xl border p-5 rounded-md z-[1000]
+          className={`w-[350px] absolute bg-base-300 shadow-xl border p-5 rounded-md z-[1000]
                     ${right ? "right-0" : "left-0"}
                     ${top ? "top-auto bottom-full mb-2" : "top-full mt-2"}
                     ${
@@ -576,7 +583,9 @@ export default function DatePicker({
                   <FaAngleLeft size={24} />
                 </button>
                 {/*  */}
-                <span>{`${allYears[0]} - ${allYears[allYears.length - 1]}`}</span>
+                <span>{`${allYears[0]} - ${
+                  allYears[allYears.length - 1]
+                }`}</span>
                 {/* NEXT YEARS BUTTON */}
                 <button
                   type="button"
@@ -635,32 +644,32 @@ export default function DatePicker({
   );
 }
 
-function DateInputCleave({ onChange, pickedValue, className }) {
-  const handleChange = (e) => {
-    const val = e.target.value;
+// function DateInputCleave({ onChange, pickedValue, className }) {
+//   const handleChange = (e) => {
+//     const val = e.target.value;
 
-    // Validate date format with moment
-    const isValid = moment(val, "DD-MM-YYYY", true).isValid();
+//     // Validate date format with moment
+//     const isValid = moment(val, "DD-MM-YYYY", true).isValid();
 
-    if (isValid) {
-      onChange?.(val);
-    } else {
-      onChange?.(null);
-    }
-  };
+//     if (isValid) {
+//       onChange?.(val);
+//     } else {
+//       onChange?.(null);
+//     }
+//   };
 
-  return (
-    <Cleave
-      options={{
-        date: true,
-        delimiter: "-",
-        datePattern: ["d", "m", "Y"]
-      }}
-      placeholder="DD-MM-YYYY"
-      value={pickedValue || ""}
-      onChange={handleChange}
-      className={className}
-      inputMode="numeric"
-    />
-  );
-}
+//   return (
+//     <Cleave
+//       options={{
+//         date: true,
+//         delimiter: "-",
+//         datePattern: ["d", "m", "Y"]
+//       }}
+//       placeholder="DD-MM-YYYY"
+//       value={pickedValue || ""}
+//       onChange={handleChange}
+//       className={className}
+//       inputMode="numeric"
+//     />
+//   );
+// }

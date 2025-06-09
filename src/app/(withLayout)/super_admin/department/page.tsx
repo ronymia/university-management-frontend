@@ -2,6 +2,7 @@
 
 import FormModal from "@/components/Forms/FormModal";
 import { usePopup } from "@/components/Popup/CustomPopup";
+import ActionBar from "@/components/ui/ActionBar";
 import CustomTable, {
   IAction,
   IColumn,
@@ -12,8 +13,7 @@ import {
   useDepartmentsQuery,
 } from "@/redux/api/departmentApi";
 import { useState } from "react";
-import { HiAdjustmentsHorizontal } from "react-icons/hi2";
-import { MdAddCircle, MdDelete } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function DepartmentPage() {
@@ -28,13 +28,13 @@ export default function DepartmentPage() {
   const { popupOptions, setPopupOptions, handleAddNewDepartment } = usePopup();
   const [deleteDepartment] = useDeleteDepartmentMutation();
 
-  const debouncedTerm = useDebounced({
+  const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
   });
 
-  if (!!debouncedTerm) {
-    setQueries((prev) => ({ ...prev, searchTerm: debouncedTerm }));
+  if (!!debouncedSearchTerm) {
+    setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
   const { data, isLoading } = useDepartmentsQuery({ ...queries });
 
@@ -92,32 +92,20 @@ export default function DepartmentPage() {
   ];
 
   return (
-    <div className={``}>
+    <>
+      {/* FORM MODAL */}
       <FormModal
         popupOptions={popupOptions}
         setPopupOptions={setPopupOptions}
       />
-      <div className={`flex items-center justify-between my-3`}>
-        <h1 className={`font-medium text-2xl`}>Departments</h1>
 
-        <div className={`flex gap-3`}>
-          <button
-            type="button"
-            className={`flex gap-2 items-center justify-center rounded-full bg-primary px-3 py-2 text-base-300`}
-          >
-            <HiAdjustmentsHorizontal size={22} />
-            Filter
-          </button>
-          <button
-            type="button"
-            onClick={() => handleAddNewDepartment()}
-            className={`flex gap-2 items-center justify-center rounded-full bg-primary px-3 py-2 text-base-300 cursor-pointer`}
-          >
-            <MdAddCircle size={24} />
-            Add Department
-          </button>
-        </div>
-      </div>
+      {/* ACTION BAR */}
+      <ActionBar
+        title={`Manage Departments`}
+        addButtonLabel={`Add Department`}
+        createHandler={handleAddNewDepartment}
+      />
+
       {/* TABLE */}
       <CustomTable
         dataAuto="awarding_body"
@@ -126,6 +114,6 @@ export default function DepartmentPage() {
         isLoading={isLoading}
         actions={actions}
       />
-    </div>
+    </>
   );
 }

@@ -1,10 +1,24 @@
+import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { Controller, useFormContext } from "react-hook-form";
+
+interface ICustomTextareaField {
+  dataAuto?: string;
+  id: string;
+  name: string;
+  placeholder?: string;
+  required?: boolean;
+  label?: string;
+  disabled?: boolean;
+  wrapperClassName?: string;
+  fieldClassName?: string;
+  labelClass?: string;
+  height?: string;
+}
 
 export default function CustomTextareaField({
   dataAuto,
-  name,
-  type,
   id,
+  name,
   placeholder,
   required = true,
   label,
@@ -12,15 +26,19 @@ export default function CustomTextareaField({
   wrapperClassName,
   fieldClassName,
   labelClass,
-  height = "h-32"
-}) {
+  height = "h-32",
+}: ICustomTextareaField) {
   const {
     control,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext();
+  const errorMessage = getErrorMessageByPropertyName(errors, name);
+
   return (
     <div
-      className={`${wrapperClassName && wrapperClassName} w-full flex flex-col gap-y-1.5`}
+      className={`${
+        wrapperClassName && wrapperClassName
+      } w-full flex flex-col gap-y-1.5`}
     >
       {/* LABEL */}
       {label && (
@@ -37,7 +55,7 @@ export default function CustomTextareaField({
       {/* INPUT FIELD */}
       <Controller
         rules={{
-          required: { value: required, message: `${label} is required` }
+          required: { value: required, message: `${label} is required` },
         }}
         control={control}
         name={`${name}`}
@@ -48,19 +66,21 @@ export default function CustomTextareaField({
             disabled={disabled}
             id={id}
             value={field.value ?? ""}
-            type={type}
             name={name}
             placeholder={`${placeholder}${required ? "*" : ""}`}
-            className={`input bg-base-300 w-full ${
-              disabled &&
-              `px-1 py-0 border-2 border-solid disabled:text-gray-700 `
-            }  focus:outline-primary rounded-md ${fieldClassName ? fieldClassName : ""} ${height}`}
-            // ${error ? " border-red-500" : ""}
+            className={`${height} bg-base-300 w-full p-2 focus:ring-2 focus:ring-primary rounded-md disabled:px-1 disabled:py-0 disabled:border-2 disabled:border-solid disabled:text-gray-700 ${
+              fieldClassName ? fieldClassName : ""
+            } 
+            ${
+              errors[name]?.message
+                ? " border border-error"
+                : "border border-[#d9d9d9]"
+            }`}
           />
         )}
       />
       {/* ERROR MESSAGE */}
-      <small className={`text-error`}>{errors[name]?.message}</small>
+      <small className={`text-error`}>{errorMessage}</small>
     </div>
   );
 }

@@ -117,11 +117,21 @@ export function usePopup() {
       title: "Create Department",
     }));
   };
+  const handleAddNewAdmin = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "admin",
+      title: "Create Admin",
+    }));
+  };
 
   return {
     popupOptions,
     togglePopup,
     setPopupOptions,
     handleAddNewDepartment,
+    handleAddNewAdmin,
   };
 }

@@ -1,4 +1,5 @@
 // import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
+import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -60,8 +61,7 @@ export default function CustomInputField({
       });
     }
   }, [error, setError]);
-  // const errorMessage = getErrorMessageByPropertyName(errors, name);
-  console.log({ errors });
+  const errorMessage = getErrorMessageByPropertyName(errors, name);
 
   return (
     <div
@@ -119,7 +119,7 @@ export default function CustomInputField({
                 ${
                   errors[name]?.message
                     ? " border border-error"
-                    : "border border-gray-700"
+                    : "border border-[#d9d9d9]"
                 }`}
               />
             </div>
@@ -140,17 +140,15 @@ export default function CustomInputField({
               ${
                 errors[name]?.message
                   ? " border border-error"
-                  : "border border-gray-700"
+                  : "border border-[#d9d9d9]"
               }`}
             />
           )
         }
       />
       {/* ERROR MESSAGE */}
-      {!!errors[name]?.message && (
-        <small className={`text-error font-medium`}>
-          {errors[name]?.message}
-        </small>
+      {!!errorMessage && (
+        <small className={`text-error font-medium`}>{errorMessage}</small>
       )}
     </div>
   );

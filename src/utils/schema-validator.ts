@@ -11,7 +11,7 @@ export const getErrorMessageByPropertyName = (
   // ["admin","name","lastName"]
   let value = obj;
 
-  for (let prop of properties) {
+  for (const prop of properties) {
     if (value[prop]) {
       value = value[prop];
     } else {

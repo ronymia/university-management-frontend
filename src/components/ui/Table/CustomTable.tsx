@@ -30,7 +30,7 @@ interface ICustomTableProps {
   columns: IColumn[];
   isLoading: boolean;
   actions: IAction[];
-  dataAuto: string;
+  dataAuto?: string;
 }
 
 export default function CustomTable({

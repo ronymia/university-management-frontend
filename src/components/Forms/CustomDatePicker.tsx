@@ -1,19 +1,32 @@
 import { Controller, useFormContext } from "react-hook-form";
 import DatePicker from "./DatePicker";
+import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 
-export default function CustomDatePicker({ name, required, label }) {
+interface ICustomDatePicker {
+  name: string;
+  required: boolean;
+  label: string;
+}
+
+export default function CustomDatePicker({
+  name,
+  required,
+  label,
+}: ICustomDatePicker) {
   const {
     control,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext();
+  const errorMessage = getErrorMessageByPropertyName(errors, name);
+
   return (
     <div>
       <Controller
         rules={{
           required: {
             value: required,
-            message: `${label} is required`
-          }
+            message: `${label} is required`,
+          },
         }}
         control={control}
         name={`${name}`}
@@ -27,7 +40,7 @@ export default function CustomDatePicker({ name, required, label }) {
         )}
       />
       {/* ERROR MESSAGE */}
-      <small className={`text-error`}>{errors[name]?.message}</small>
+      <small className={`text-error`}>{errorMessage}</small>
     </div>
   );
 }

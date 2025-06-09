@@ -1,8 +1,12 @@
 import React from "react";
 
-export default function CustomLoading() {
+export default function CustomLoading({
+  height = "h-40",
+}: {
+  height?: string;
+}) {
   return (
-    <div className={`flex items-center justify-center h-40`}>
+    <div className={`flex items-center justify-center ${height}`}>
       <span className="loader"></span>
     </div>
   );
