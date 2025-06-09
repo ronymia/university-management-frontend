@@ -126,6 +126,15 @@ export function usePopup() {
       title: "Create Admin",
     }));
   };
+  const handleAddNewFaculty = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "faculty",
+      title: "Create Faculty",
+    }));
+  };
 
   return {
     popupOptions,
@@ -133,5 +142,6 @@ export function usePopup() {
     setPopupOptions,
     handleAddNewDepartment,
     handleAddNewAdmin,
+    handleAddNewFaculty,
   };
 }

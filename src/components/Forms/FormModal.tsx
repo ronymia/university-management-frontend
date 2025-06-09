@@ -3,6 +3,7 @@ import { IPopupOptions } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 import CustomPopup from "../Popup/CustomPopup";
 import AdminForm from "@/app/(withLayout)/super_admin/admin/AdminForm";
+import FacultyForm from "@/app/(withLayout)/super_admin/manage-faculty/FacultyForm";
 
 export default function FormModal({
   popupOptions,
@@ -35,6 +36,19 @@ export default function FormModal({
           case "admin":
             return (
               <AdminForm
+                id={
+                  popupOptions?.actionType === "update" && popupOptions?.data
+                    ? popupOptions?.data?.id
+                    : ""
+                }
+                popupCloseHandler={() => {
+                  setPopupOptions((prev) => ({ ...prev, open: false }));
+                }}
+              />
+            );
+          case "faculty":
+            return (
+              <FacultyForm
                 id={
                   popupOptions?.actionType === "update" && popupOptions?.data
                     ? popupOptions?.data?.id

@@ -8,8 +8,10 @@ import CustomTable, {
   IColumn,
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
-import { useDeleteDepartmentMutation } from "@/redux/api/departmentApi";
-import { useFacultiesQuery } from "@/redux/api/facultyApi";
+import {
+  useDeleteFacultyMutation,
+  useFacultiesQuery,
+} from "@/redux/api/facultyApi";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
@@ -24,8 +26,8 @@ export default function FacultyPage() {
     searchTerm: "",
   });
 
-  const { popupOptions, setPopupOptions, handleAddNewDepartment } = usePopup();
-  const [deleteDepartment] = useDeleteDepartmentMutation();
+  const { popupOptions, setPopupOptions, handleAddNewFaculty } = usePopup();
+  const [deleteFaculty] = useDeleteFacultyMutation();
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
@@ -43,7 +45,7 @@ export default function FacultyPage() {
   const deleteHandler = async (id: string) => {
     try {
       //   console.log(data);
-      await deleteDepartment(id);
+      await deleteFaculty(id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -56,8 +58,8 @@ export default function FacultyPage() {
       open: true,
       data: updateData,
       actionType: "update",
-      form: "department",
-      title: "Update Department",
+      form: "faculty",
+      title: "Update Faculty",
     }));
   };
 
@@ -151,7 +153,7 @@ export default function FacultyPage() {
       <ActionBar
         title={`Manage Faculties`}
         addButtonLabel={`Add Faculty`}
-        createHandler={handleAddNewDepartment}
+        createHandler={handleAddNewFaculty}
       />
 
       {/* TABLE */}

@@ -11,7 +11,7 @@ import CustomRadioButton from "@/components/Forms/CustomRadioButton";
 import CustomSelect from "@/components/Forms/CustomSelect";
 import CustomFileUpload from "@/components/Forms/CustomFileUpload";
 
-export default function AdminForm() {
+export default function AdminForm({ id, popupCloseHandler }: any) {
   const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
   const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
   //@ts-ignore
@@ -49,15 +49,6 @@ export default function AdminForm() {
       <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
         <p className={`font-bold mb-2.5 drop-shadow-sm`}>Admin Information</p>
         <div className={`grid grid-cols-3 gap-3`}>
-          {/* <CustomInputField
-            id="fileUrl"
-            name="fileUrl"
-            type="text"
-            label="Image Url"
-            placeholder="Image Url"
-            required
-            wrapperClassName="row-span-2"
-          /> */}
           <CustomFileUpload name="file" required label="Image" />
 
           {/* firstName */}
