@@ -1,23 +1,25 @@
 "use client";
 
 import { getUserInfo } from "@/services/auth.service";
-import React, { JSX, useEffect, useState } from "react";
+import React, {
+  JSX,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import { motion } from "framer-motion";
 import { FaRegUser, FaTableCells } from "react-icons/fa6";
 import { AiOutlineAppstore } from "react-icons/ai";
 import { USER_ROLE } from "@/constants/role";
 import SidebarGenerator from "../SidebarGenerator";
 import UserAvatar from "../Avatar/CustomUserAvatar";
-import { MdOutlineMenuOpen } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  collapseSidebar,
-  expandSidebar,
-  toggleSidebar,
-} from "@/redux/slice/globalState";
+import { collapseSidebar, expandSidebar } from "@/redux/slice/globalState";
+import { IconType } from "react-icons";
 
 export interface IMenuItems {
-  icon: JSX.Element | React.ReactNode | React.ReactElement;
+  icon: JSX.Element | ReactNode | ReactElement | IconType;
   label: string | JSX.Element;
   path: string;
   show: boolean;
@@ -30,10 +32,6 @@ export default function Sidebar() {
   );
 
   const appDispatch = useAppDispatch();
-
-  // const [isSidebarCollapsed, setisSidebarCollapsed] = useState(false);
-  // const { role } = (getUserInfo() as any) || {};
-  // const role = "student";
 
   const [role, setRole] = useState<string | null>(null);
 
@@ -198,27 +196,6 @@ export default function Sidebar() {
           icon: FaTableCells,
           label: "Departments",
           path: `/${role}/department`,
-          show: true,
-          subItems: [],
-        },
-        {
-          icon: FaTableCells,
-          label: "Departments 1",
-          path: `/${role}/department1`,
-          show: true,
-          subItems: [],
-        },
-        {
-          icon: FaTableCells,
-          label: "Departments 2",
-          path: `/${role}/department2`,
-          show: true,
-          subItems: [],
-        },
-        {
-          icon: FaTableCells,
-          label: "Departments 3",
-          path: `/${role}/department3`,
           show: true,
           subItems: [],
         },
