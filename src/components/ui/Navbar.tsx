@@ -11,7 +11,7 @@ export default function Navbar() {
   const router = useRouter();
   const appDispatch = useAppDispatch();
   const userDetails = getUserInfo();
-  // console.log({ userDetails });
+  console.log({ userDetails });
   return (
     <nav
       className={`h-18 px-3 flex items-center justify-between rounded-2xl bg-base-300 shadow relative`}

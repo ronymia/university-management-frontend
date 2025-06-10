@@ -3,12 +3,13 @@ import CustomFilterButton from "../Button/CustomFilterButton";
 import CustomAddButton from "../Button/CustomAddButton";
 
 type IActionBarProps = {
-  createHandler: () => void;
+  createHandler?: () => void;
   title: string;
   addButtonLabel: string;
 };
 
 export default function ActionBar({
+  children,
   createHandler,
   title,
   addButtonLabel,
@@ -20,9 +21,15 @@ export default function ActionBar({
       <div className={`flex gap-3`}>
         {/* FILTER BUTTON */}
         <CustomFilterButton />
+        {children}
 
         {/* ADD BUTTON */}
-        <CustomAddButton clickHandler={createHandler} label={addButtonLabel} />
+        {createHandler ? (
+          <CustomAddButton
+            clickHandler={createHandler}
+            label={addButtonLabel}
+          />
+        ) : null}
       </div>
     </div>
   );

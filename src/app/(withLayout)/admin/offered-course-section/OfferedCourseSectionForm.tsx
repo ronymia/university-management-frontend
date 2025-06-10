@@ -15,6 +15,7 @@ import {
 import { useRoomQuery } from "@/redux/api/roomApi";
 import { useSemesterRegistrationsQuery } from "@/redux/api/semesterRegistrationApi";
 import { offeredCourseSchema } from "@/schemas/admin/offeredCourse";
+import { offeredCourseSectionSchema } from "@/schemas/admin/offeredCourseSection";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -64,6 +65,7 @@ export default function OfferedCourseSectionForm({
 
   const onSubmit = async (values: any, reset: any) => {
     values.maxCapacity = parseInt(values?.maxCapacity);
+    console.log({ values });
     try {
       if (id) {
         const res = await updateOfferedCourseSection({
@@ -101,7 +103,7 @@ export default function OfferedCourseSectionForm({
     <>
       <CustomForm
         submitHandler={onSubmit}
-        resolver={zodResolver(offeredCourseSchema)}
+        resolver={zodResolver(offeredCourseSectionSchema)}
         defaultValues={!!defaultValues ? defaultValues : undefined}
         className={`grid grid-cols-2 gap-3`}
       >

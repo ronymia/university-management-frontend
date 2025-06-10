@@ -207,8 +207,8 @@ export default function Sidebar() {
     ...defaultSidebarItems, // FACULTY SIDEBAR
     {
       icon: FaTableCells,
-      label: "Department",
-      path: `/${role}/department`,
+      label: "Courses",
+      path: `/${role}/courses`,
       show: role === USER_ROLE.FACULTY,
       subItems: [],
     },

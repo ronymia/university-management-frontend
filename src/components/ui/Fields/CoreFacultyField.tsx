@@ -16,7 +16,7 @@ const CoreFacultyField = ({ name, label }: FacultyProps) => {
     // console.log(faculty);
     //ts-ignore
     return {
-      label: `${faculty?.name?.firstName} ${faculty?.name?.lastName} ${faculty?.name?.middleName}`,
+      label: `${faculty?.firstName} ${faculty?.lastName} ${faculty?.middleName}`,
       value: faculty?.id,
     };
   });
