@@ -140,3 +140,22 @@ export enum ExamType {
   FINAL = "FINAL",
   MIDTERM = "MIDTERM",
 }
+
+export const years = [
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "2026",
+  "2027",
+  "2028",
+];
+
+export const yearOptions = years.map((year: string) => {
+  return {
+    label: year,
+    value: year,
+  };
+});

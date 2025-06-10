@@ -6,6 +6,7 @@ import AdminForm from "@/app/(withLayout)/super_admin/admin/AdminForm";
 import FacultyForm from "@/app/(withLayout)/super_admin/manage-faculty/FacultyForm";
 import AcademicDepartmentForm from "@/app/(withLayout)/admin/academic/department/DepartmentForm";
 import AcademicFacultyForm from "@/app/(withLayout)/admin/academic/faculty/FacultyForm";
+import AcademicSemesterForm from "@/app/(withLayout)/admin/academic/semester/SemesterForm";
 
 export default function FormModal({
   popupOptions,
@@ -77,6 +78,19 @@ export default function FormModal({
           case "academic_faculty":
             return (
               <AcademicFacultyForm
+                id={
+                  popupOptions?.actionType === "update" && popupOptions?.data
+                    ? popupOptions?.data?.id
+                    : ""
+                }
+                popupCloseHandler={() => {
+                  setPopupOptions((prev) => ({ ...prev, open: false }));
+                }}
+              />
+            );
+          case "academic_semester":
+            return (
+              <AcademicSemesterForm
                 id={
                   popupOptions?.actionType === "update" && popupOptions?.data
                     ? popupOptions?.data?.id
