@@ -1,3 +1,4 @@
+"use client";
 import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";

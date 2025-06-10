@@ -1,3 +1,4 @@
+"use client";
 import DepartmentForm from "@/app/(withLayout)/super_admin/department/DepartmentForm";
 import { IPopupOptions } from "@/types";
 import { Dispatch, SetStateAction } from "react";

@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import CustomSelect from "../Forms/CustomSelect";
 import { useAcademicDepartmentsQuery } from "@/redux/api/academic/departmentApi";
 

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IMenuItems } from "./ui/Sidebar";
 import { usePathname } from "next/navigation";
-import { IoIosArrowUp } from "react-icons/io";
 
 interface SidebarItemProps extends IMenuItems {
   isSidebarCollapsed: boolean;

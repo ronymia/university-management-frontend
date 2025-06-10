@@ -1,3 +1,4 @@
+"use client";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useState, useEffect } from "react";
 import { RxCrossCircled } from "react-icons/rx";

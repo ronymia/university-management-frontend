@@ -1,3 +1,4 @@
+"use client";
 import CustomSelect from "../Forms/CustomSelect";
 import { useAcademicSemestersQuery } from "@/redux/api/academic/semesterApi";
 

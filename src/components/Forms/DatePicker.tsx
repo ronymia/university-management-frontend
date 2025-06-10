@@ -1,3 +1,4 @@
+"use client";
 import { generateWeekDays, generateYears } from "@/constants/calendar";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";

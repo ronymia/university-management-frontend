@@ -1,3 +1,4 @@
+"use client";
 // import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { useEffect, useState } from "react";

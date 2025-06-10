@@ -1,3 +1,4 @@
+"use client";
 import { Controller, useFormContext } from "react-hook-form";
 import DatePicker from "./DatePicker";
 import { getErrorMessageByPropertyName } from "@/utils/schema-validator";

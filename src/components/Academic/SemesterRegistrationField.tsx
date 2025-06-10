@@ -1,5 +1,5 @@
+"use client";
 import CustomSelect from "../Forms/CustomSelect";
-import FormSelectField, { SelectOptions } from "./FormSelectField";
 import { useSemesterRegistrationsQuery } from "@/redux/api/semesterRegistrationApi";
 
 type SemesterRegistrationFieldProps = {

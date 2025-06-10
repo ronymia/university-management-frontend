@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import { MdAddCircle } from "react-icons/md";
 
 type ICustomButtonProps = {
