@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 export default function FacultyForm({ id, popupCloseHandler }: any) {
   const [addFacultyWithFormData] = useAddFacultyWithFormDataMutation();
   const onSubmit = async (values: any) => {
+    console.log({ values });
     const obj = { ...values };
     const file = obj["file"];
     delete obj["file"];
@@ -20,11 +21,12 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
     const formData = new FormData();
     formData.append("file", file as Blob);
     formData.append("data", data);
+    console.log("after", { values });
     try {
       const res = await addFacultyWithFormData(formData);
       if (!!res) {
       }
-      console.log({ formData });
+      console.log("after", { values });
     } catch (err: any) {
       console.error(err.message);
     }
@@ -35,7 +37,7 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
     <CustomForm submitHandler={onSubmit} resolver={zodResolver(facultySchema)}>
       {/* ADMIN INFORMATION */}
       <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
-        <p className={`font-bold mb-2.5 drop-shadow-sm`}>Admin Information</p>
+        <p className={`font-bold mb-2.5 drop-shadow-sm`}>Faculty Information</p>
         <div className={`grid grid-cols-3 gap-3`}>
           <CustomFileUpload name="file" required label="Image" />
 

@@ -46,11 +46,11 @@ export default function Select({
   // SET DEFAULT value
   useEffect(() => {
     if (value && !isLoading) {
-      console.log("first", value);
+      // console.log("first", value);
       setSelectedOptions(Array.isArray(value) ? value : [value]);
     }
   }, [value, isLoading]);
-  console.log({ selectedOptions });
+  // console.log({ selectedOptions });
 
   // HANDLE OPTION SELECTION
   const handleSelect = (option) => {

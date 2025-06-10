@@ -48,7 +48,7 @@ export default function CustomSelect({
         control={control}
         name={name}
         render={({ field }) => {
-          console.log({ fieldValue: field.value });
+          // console.log({ fieldValue: field.value });
 
           const selectedValue = multipleSelect
             ? options?.filter((item) => field.value?.includes(item.value)) ?? []
@@ -63,7 +63,7 @@ export default function CustomSelect({
               name={name}
               value={selectedValue}
               onChange={(value) => {
-                console.log({ value });
+                // console.log({ value });
                 if (multipleSelect) {
                   const selected = value?.map((item) => item.value) ?? [];
                   field.onChange(selected);

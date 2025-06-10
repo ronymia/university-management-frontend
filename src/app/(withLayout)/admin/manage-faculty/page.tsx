@@ -41,7 +41,7 @@ export default function FacultyPage() {
 
   const faculties = data?.faculties;
   const meta = data?.meta;
-  console.log(faculties);
+  // console.log(faculties);
   const deleteHandler = async (id: string) => {
     try {
       //   console.log(data);

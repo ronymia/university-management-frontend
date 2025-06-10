@@ -9,9 +9,9 @@ import CustomTable, {
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import {
-  useDeleteDepartmentMutation,
-  useDepartmentsQuery,
-} from "@/redux/api/departmentApi";
+  useAcademicDepartmentsQuery,
+  useDeleteAcademicDepartmentMutation,
+} from "@/redux/api/academic/departmentApi";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -26,7 +26,7 @@ export default function DepartmentPage() {
   });
 
   const { popupOptions, setPopupOptions, handleAddNewDepartment } = usePopup();
-  const [deleteDepartment] = useDeleteDepartmentMutation();
+  const [deleteDepartment] = useDeleteAcademicDepartmentMutation();
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
@@ -36,9 +36,9 @@ export default function DepartmentPage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
-  const { data, isLoading } = useDepartmentsQuery({ ...queries });
+  const { data, isLoading } = useAcademicDepartmentsQuery({ ...queries });
 
-  const departments: any[] = data?.departments || [];
+  const academicDepartments: any[] = data?.academicDepartments || [];
   const meta = data?.meta;
 
   const deleteHandler = async (id: string) => {
@@ -101,15 +101,15 @@ export default function DepartmentPage() {
 
       {/* ACTION BAR */}
       <ActionBar
-        title={`Manage Departments`}
-        addButtonLabel={`Add Department`}
+        title={`Manage Academic Departments`}
+        addButtonLabel={`Add Academic Department`}
         createHandler={handleAddNewDepartment}
       />
 
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={departments || []}
+        rows={academicDepartments || []}
         isLoading={isLoading}
         actions={actions}
       />

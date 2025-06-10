@@ -4,10 +4,10 @@ import CustomForm from "@/components/Forms/CustomForm";
 import CustomInputField from "@/components/Forms/CustomInputField";
 import CustomLoading from "@/components/Loader/CustomLoading";
 import {
-  useAddDepartmentMutation,
-  useDepartmentQuery,
-  useUpdateDepartmentMutation,
-} from "@/redux/api/departmentApi";
+  useAddAcademicDepartmentMutation,
+  useUpdateAcademicDepartmentMutation,
+} from "@/redux/api/academic/departmentApi";
+import { useDepartmentQuery } from "@/redux/api/departmentApi";
 import { managementDepartmentSchema } from "@/schemas/managementDepartment";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -18,8 +18,10 @@ type IDProps = {
 
 export default function DepartmentForm({ id, popupCloseHandler }: IDProps) {
   const { data, isLoading } = useDepartmentQuery(id, { skip: !id });
-  const [addDepartment, createResult] = useAddDepartmentMutation();
-  const [updateDepartment, updateResult] = useUpdateDepartmentMutation();
+  const [addAcademicDepartment, createResult] =
+    useAddAcademicDepartmentMutation();
+  const [updateAcademicDepartment, updateResult] =
+    useUpdateAcademicDepartmentMutation();
   // console.log("id", { id });
 
   const onSubmit = async (values: { title: string }, reset: any) => {
@@ -27,14 +29,17 @@ export default function DepartmentForm({ id, popupCloseHandler }: IDProps) {
     // console.log({ values });
     try {
       if (id) {
-        const res = await updateDepartment({ id, body: values }).unwrap();
+        const res = await updateAcademicDepartment({
+          id,
+          body: values,
+        }).unwrap();
         console.log({ res });
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
         }
       } else {
-        const res = await addDepartment(values).unwrap();
+        const res = await addAcademicDepartment(values).unwrap();
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
