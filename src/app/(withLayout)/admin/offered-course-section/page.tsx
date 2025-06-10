@@ -55,14 +55,15 @@ export default function OfferedCourseSectionPage() {
 
   const handleEdit = (updateData: any) => {
     console.log({ updateData });
-    setPopupOptions((prev) => ({
-      ...prev,
-      open: true,
-      data: updateData,
-      actionType: "update",
-      form: "offered_course_section",
-      title: "Update Offered Course Section",
-    }));
+    router.push(`/admin/offered-course-section/edit/${updateData.id}`);
+    // setPopupOptions((prev) => ({
+    //   ...prev,
+    //   open: true,
+    //   data: updateData,
+    //   actionType: "update",
+    //   form: "offered_course_section",
+    //   title: "Update Offered Course Section",
+    // }));
   };
 
   // ALL ACTION BUTTONS

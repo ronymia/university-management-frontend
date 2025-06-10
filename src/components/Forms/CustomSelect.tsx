@@ -33,6 +33,7 @@ export default function CustomSelect({
   options,
   multipleSelect = false,
   isLoading = false,
+  changeHandler,
   ...props
 }: ICustomSelectProps) {
   const {
@@ -66,8 +67,10 @@ export default function CustomSelect({
                 if (multipleSelect) {
                   const selected = value?.map((item) => item.value) ?? [];
                   field.onChange(selected);
+                  changeHandler?.(selected);
                 } else {
                   field.onChange(value?.value ?? "");
+                  changeHandler?.(value?.value ?? "");
                 }
               }}
               label={label}

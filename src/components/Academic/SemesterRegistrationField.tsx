@@ -32,12 +32,14 @@ const SemesterRegistrationField = ({
 
   return (
     <CustomSelect
+      isLoading={isLoading}
       name={name}
       id={name}
       options={semesterRegistrationsOptions}
       label={label}
       placeholder={label}
       required
+      changeHandler={(e) => (onChange ? onChange(e) : undefined)}
     />
   );
 };

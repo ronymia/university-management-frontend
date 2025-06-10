@@ -5,9 +5,11 @@ import { useAcademicDepartmentsQuery } from "@/redux/api/academic/departmentApi"
 export default function AcademicDepartmentField({
   name,
   label,
+  onChange,
 }: {
   name: string;
   label: string;
+  onChange: () => void;
 }) {
   const { data, isLoading } = useAcademicDepartmentsQuery({
     limit: 100,
@@ -30,6 +32,7 @@ export default function AcademicDepartmentField({
       label={label}
       placeholder={label}
       required
+      changeHandler={(e) => (onChange ? onChange(e) : undefined)}
     />
   );
 }

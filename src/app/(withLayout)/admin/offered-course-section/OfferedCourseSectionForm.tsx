@@ -32,21 +32,6 @@ export default function OfferedCourseSectionForm({
     useAddOfferedCourseSectionMutation();
   const [updateOfferedCourseSection, updateResult] =
     useUpdateOfferedCourseSectionMutation();
-  const allSemesterRegistrations = useSemesterRegistrationsQuery({
-    limit: 10,
-    page: 1,
-  });
-
-  const semesterRegistrations =
-    allSemesterRegistrations?.data?.semesterRegistrations;
-  const semesterRegistrationsOptions = semesterRegistrations?.map(
-    (semester) => {
-      return {
-        label: semester?.academicSemester?.title,
-        value: semester?.id,
-      };
-    }
-  );
 
   const [acDepartmentId, setAcDepartmentId] = useState<string>();
   const [semesterRegistrationId, setSemesterRegistrationId] =
@@ -132,6 +117,7 @@ export default function OfferedCourseSectionForm({
           <AcademicDepartmentField
             name={`academicDepartment`}
             label={`Academic department`}
+            onChange={(el) => setAcDepartmentId(el)}
           />
           {/* offeredCourseId */}
           <CustomSelect

@@ -1,6 +1,11 @@
-import React from "react";
+"use client";
+
 import OfferedCourseSectionForm from "../OfferedCourseSectionForm";
+import { useRouter } from "next/navigation";
 
 export default function CreateOfferedCourseSectionPage() {
-  return <OfferedCourseSectionForm />;
+  const router = useRouter();
+  return (
+    <OfferedCourseSectionForm id={""} popupCloseHandler={() => router.back()} />
+  );
 }
