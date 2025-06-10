@@ -86,7 +86,7 @@ export default function StudentPage() {
     // NAME
     {
       header: "Id",
-      accessorKey: "id",
+      accessorKey: "studentId",
       show: true,
       minWidth: 10,
     },
@@ -157,7 +157,7 @@ export default function StudentPage() {
         rows={
           students?.map((row) => ({
             ...row,
-            fullName: `${row?.name?.firstName} ${row?.name?.middleName} ${row?.name?.lastName}`,
+            fullName: `${row?.firstName} ${row?.middleName} ${row?.lastName}`,
             // customManagementDepartment: row?.managementDepartment?.title,
             customCreatedAt: row?.createdAt
               ? dayjs(row?.createdAt).format("MMM D, YYYY hh:mm A")

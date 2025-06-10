@@ -86,7 +86,7 @@ export default function FacultyPage() {
     // NAME
     {
       header: "Id",
-      accessorKey: "id",
+      accessorKey: "facultyId",
       show: true,
       minWidth: 10,
     },
@@ -163,7 +163,7 @@ export default function FacultyPage() {
         rows={
           faculties?.map((row: any) => ({
             ...row,
-            fullName: `${row?.name?.firstName} ${row?.name?.middleName} ${row?.name?.lastName}`,
+            fullName: `${row?.firstName} ${row?.middleName} ${row?.lastName}`,
             customAcademicDepartment: row?.academicDepartment?.title,
             customAcademicFaculty: row?.academicFaculty?.title,
             customCreatedAt: row?.createdAt

@@ -7,13 +7,13 @@ import {
   useStartRegistrationMutation,
 } from "@/redux/api/semesterRegistrationApi";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function StudentRegistrationPage() {
+  const router = useRouter();
   const { data, isLoading } = useMyRegistrationQuery({});
   const [startRegistration] = useStartRegistrationMutation();
-  const router = useRouter();
 
   if (isLoading) return <CustomLoading />;
 

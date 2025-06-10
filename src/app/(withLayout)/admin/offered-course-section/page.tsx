@@ -145,7 +145,7 @@ export default function OfferedCourseSectionPage() {
         rows={
           offeredCourseSections?.map((row: any) => ({
             ...row,
-            customOfferedCourse: row?.offeredCourse?.title,
+            customOfferedCourse: row?.offeredCourse?.course?.title,
             customAcademicDepartment: row?.customAcademicDepartment?.title,
           })) || []
         }
