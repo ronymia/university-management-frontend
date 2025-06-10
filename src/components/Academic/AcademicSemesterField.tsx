@@ -1,6 +1,5 @@
-import React from "react";
 import CustomSelect from "../Forms/CustomSelect";
-import { useAcademicFacultiesQuery } from "@/redux/api/academic/facultyApi";
+import { useAcademicSemestersQuery } from "@/redux/api/academic/semesterApi";
 
 export default function AcademicSemesterField({
   name,
@@ -9,12 +8,12 @@ export default function AcademicSemesterField({
   name: string;
   label: string;
 }) {
-  const { data, isLoading } = useAcademicFacultiesQuery({
+  const { data, isLoading } = useAcademicSemestersQuery({
     limit: 100,
     page: 1,
   });
-  const academicFaculties = data?.academicFaculties;
-  const acFacultyOptions = academicFaculties?.map((acFaculty) => {
+  const academicSemesters = data?.academicSemesters;
+  const acSemesterOptions = academicSemesters?.map((acFaculty) => {
     return {
       label: acFaculty?.title,
       value: acFaculty?.id,
@@ -24,7 +23,7 @@ export default function AcademicSemesterField({
     <CustomSelect
       name={name}
       id={name}
-      options={acFacultyOptions}
+      options={acSemesterOptions}
       label={label}
       placeholder={label}
       required

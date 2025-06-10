@@ -198,6 +198,15 @@ export function usePopup() {
       title: "Create Offered Course",
     }));
   };
+  const handleAddNewSemesterRegistration = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "semester_registration",
+      title: "Create Semester Registration",
+    }));
+  };
 
   return {
     popupOptions,
@@ -213,5 +222,6 @@ export function usePopup() {
     handleAddNewRoom,
     handleAddNewCourse,
     handleAddNewOfferedCourse,
+    handleAddNewSemesterRegistration,
   };
 }
