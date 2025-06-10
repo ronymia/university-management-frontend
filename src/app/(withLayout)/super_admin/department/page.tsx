@@ -108,7 +108,6 @@ export default function DepartmentPage() {
 
       {/* TABLE */}
       <CustomTable
-        dataAuto="awarding_body"
         columns={columns}
         rows={departments || []}
         isLoading={isLoading}
