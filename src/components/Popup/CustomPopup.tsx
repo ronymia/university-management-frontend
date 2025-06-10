@@ -162,6 +162,15 @@ export function usePopup() {
       title: "Create Academic Semester",
     }));
   };
+  const handleAddNewBuilding = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "building",
+      title: "Create Building",
+    }));
+  };
 
   return {
     popupOptions,
@@ -173,5 +182,6 @@ export function usePopup() {
     handleAddNewAcademicDepartment,
     handleAddNewAcademicFaculty,
     handleAddNewAcademicSemester,
+    handleAddNewBuilding,
   };
 }
