@@ -171,6 +171,15 @@ export function usePopup() {
       title: "Create Building",
     }));
   };
+  const handleAddNewRoom = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "room",
+      title: "Create Room",
+    }));
+  };
 
   return {
     popupOptions,
@@ -183,5 +192,6 @@ export function usePopup() {
     handleAddNewAcademicFaculty,
     handleAddNewAcademicSemester,
     handleAddNewBuilding,
+    handleAddNewRoom,
   };
 }

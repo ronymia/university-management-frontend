@@ -133,7 +133,7 @@ export default function Sidebar() {
         {
           icon: FaTableCells,
           label: "Rooms",
-          path: `/${role}/rooms`,
+          path: `/${role}/room`,
           show: true,
           subItems: [],
         },

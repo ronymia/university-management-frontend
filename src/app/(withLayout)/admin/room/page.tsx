@@ -8,15 +8,12 @@ import CustomTable, {
   IColumn,
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
-import {
-  useBuildingsQuery,
-  useDeleteBuildingMutation,
-} from "@/redux/api/buildingApi";
-import React, { useState } from "react";
+import { useDeleteRoomMutation, useRoomsQuery } from "@/redux/api/roomApi";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-export default function BuildingPage() {
+export default function RoomPage() {
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -25,8 +22,8 @@ export default function BuildingPage() {
     searchTerm: "",
   });
 
-  const { popupOptions, setPopupOptions, handleAddNewBuilding } = usePopup();
-  const [deleteBuilding] = useDeleteBuildingMutation();
+  const { popupOptions, setPopupOptions, handleAddNewRoom } = usePopup();
+  const [deleteRoom] = useDeleteRoomMutation();
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
@@ -36,15 +33,15 @@ export default function BuildingPage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
-  const { data, isLoading } = useBuildingsQuery({ ...queries });
+  const { data, isLoading } = useRoomsQuery({ ...queries });
 
-  const buildings: any[] = data?.buildings || [];
+  const rooms: any[] = data?.rooms || [];
   const meta = data?.meta;
 
   const deleteHandler = async (id: string) => {
     try {
       //   console.log(data);
-      await deleteBuilding(id);
+      await deleteRoom(id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -85,16 +82,30 @@ export default function BuildingPage() {
     // NAME
     {
       header: "Title",
-      accessorKey: "title",
+      accessorKey: "roomNumber",
       show: true,
-      minWidth: 30,
+      minWidth: 20,
+    },
+    // NAME
+    {
+      header: "Floor",
+      accessorKey: "floor",
+      show: true,
+      minWidth: 20,
+    },
+    // NAME
+    {
+      header: "Building",
+      accessorKey: "customBuilding",
+      show: true,
+      minWidth: 20,
     },
     // NAME
     {
       header: "Created At",
       accessorKey: "createdAt",
       show: true,
-      minWidth: 30,
+      minWidth: 20,
     },
   ];
   return (
@@ -107,15 +118,20 @@ export default function BuildingPage() {
 
       {/* ACTION BAR */}
       <ActionBar
-        title={`Manage Buildings`}
-        addButtonLabel={`Add Building`}
-        createHandler={handleAddNewBuilding}
+        title={`Manage Rooms`}
+        addButtonLabel={`Add Room`}
+        createHandler={handleAddNewRoom}
       />
 
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={buildings || []}
+        rows={
+          rooms?.map((room: any) => ({
+            ...room,
+            customBuilding: room?.building?.title,
+          })) || []
+        }
         isLoading={isLoading}
         actions={actions}
       />

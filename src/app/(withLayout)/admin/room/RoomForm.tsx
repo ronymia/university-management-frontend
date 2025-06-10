@@ -2,13 +2,15 @@
 
 import CustomForm from "@/components/Forms/CustomForm";
 import CustomInputField from "@/components/Forms/CustomInputField";
+import CustomSelect from "@/components/Forms/CustomSelect";
 import CustomLoading from "@/components/Loader/CustomLoading";
+import { useBuildingsQuery } from "@/redux/api/buildingApi";
 import {
-  useAddBuildingMutation,
-  useBuildingQuery,
-  useUpdateBuildingMutation,
-} from "@/redux/api/buildingApi";
-import { buildingSchema } from "@/schemas/admin/building";
+  useAddRoomMutation,
+  useRoomQuery,
+  useUpdateRoomMutation,
+} from "@/redux/api/roomApi";
+import { roomSchema } from "@/schemas/admin/room";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 type IDProps = {
@@ -16,25 +18,35 @@ type IDProps = {
   id: string;
 };
 
-export default function BuildingForm({ id, popupCloseHandler }: IDProps) {
-  const { data, isLoading } = useBuildingQuery(id, { skip: !id });
-  const [addBuilding, createResult] = useAddBuildingMutation();
-  const [updateBuilding, updateResult] = useUpdateBuildingMutation();
-  // console.log("id", { id });
+export default function RoomForm({ id, popupCloseHandler }: IDProps) {
+  const { data, isLoading } = useRoomQuery(id, { skip: !id });
+  const [addRoom, createResult] = useAddRoomMutation();
+  const [updateRoom, updateResult] = useUpdateRoomMutation();
+  const allBuildings = useBuildingsQuery({
+    limit: 100,
+    page: 1,
+  });
+  const buildings = allBuildings?.data?.buildings;
+  const buildingOptions = buildings?.map((building) => {
+    return {
+      label: building?.title,
+      value: building?.id,
+    };
+  });
 
   const onSubmit = async (values: { title: string }, reset: any) => {
     // console.log({ reset });
     // console.log({ values });
     try {
       if (id) {
-        const res = await updateBuilding({ id, body: values }).unwrap();
+        const res = await updateRoom({ id, body: values }).unwrap();
         console.log({ res });
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
         }
       } else {
-        const res = await addBuilding(values).unwrap();
+        const res = await addRoom(values).unwrap();
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
@@ -48,7 +60,9 @@ export default function BuildingForm({ id, popupCloseHandler }: IDProps) {
   };
 
   const defaultValues = {
-    title: data?.title || "",
+    roomNumber: data?.roomNumber || "",
+    floor: data?.floor || "",
+    buildingId: data?.buildingId || "",
   };
 
   if (isLoading) {
@@ -58,16 +72,35 @@ export default function BuildingForm({ id, popupCloseHandler }: IDProps) {
     <>
       <CustomForm
         submitHandler={onSubmit}
-        resolver={zodResolver(buildingSchema)}
+        resolver={zodResolver(roomSchema)}
         defaultValues={!!defaultValues ? defaultValues : undefined}
         className={`flex flex-col gap-2`}
       >
+        {/* roomNumber */}
         <CustomInputField
-          id="title"
-          name="title"
+          id="roomNumber"
+          name="roomNumber"
           type="text"
-          label="Title"
-          placeholder="Title"
+          label="Room Number"
+          placeholder="Room Number"
+          required
+        />
+        {/* floor */}
+        <CustomInputField
+          id="floor"
+          name="floor"
+          type="text"
+          label="Floor"
+          placeholder="Floor"
+          required
+        />
+
+        {/* buildingId */}
+        <CustomSelect
+          id={`buildingId`}
+          name={`buildingId`}
+          options={buildingOptions}
+          label={`Building`}
           required
         />
 

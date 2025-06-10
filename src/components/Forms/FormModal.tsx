@@ -8,6 +8,7 @@ import AcademicDepartmentForm from "@/app/(withLayout)/admin/academic/department
 import AcademicFacultyForm from "@/app/(withLayout)/admin/academic/faculty/FacultyForm";
 import AcademicSemesterForm from "@/app/(withLayout)/admin/academic/semester/SemesterForm";
 import BuildingForm from "@/app/(withLayout)/admin/building/BuildingForm";
+import RoomForm from "@/app/(withLayout)/admin/room/RoomForm";
 
 export default function FormModal({
   popupOptions,
@@ -105,6 +106,19 @@ export default function FormModal({
           case "building":
             return (
               <BuildingForm
+                id={
+                  popupOptions?.actionType === "update" && popupOptions?.data
+                    ? popupOptions?.data?.id
+                    : ""
+                }
+                popupCloseHandler={() => {
+                  setPopupOptions((prev) => ({ ...prev, open: false }));
+                }}
+              />
+            );
+          case "room":
+            return (
+              <RoomForm
                 id={
                   popupOptions?.actionType === "update" && popupOptions?.data
                     ? popupOptions?.data?.id
