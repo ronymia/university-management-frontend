@@ -189,6 +189,15 @@ export function usePopup() {
       title: "Create Course",
     }));
   };
+  const handleAddNewOfferedCourse = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "offered_course",
+      title: "Create Offered Course",
+    }));
+  };
 
   return {
     popupOptions,
@@ -203,5 +212,6 @@ export function usePopup() {
     handleAddNewBuilding,
     handleAddNewRoom,
     handleAddNewCourse,
+    handleAddNewOfferedCourse,
   };
 }
