@@ -23,6 +23,7 @@ export default function AcademicDepartmentField({
   });
   return (
     <CustomSelect
+      isLoading={isLoading}
       name={name}
       id={name}
       options={acDepartmentOptions}

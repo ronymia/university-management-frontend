@@ -9,14 +9,14 @@ import CustomTable, {
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import {
-  useDeleteOfferedCourseMutation,
-  useOfferedCoursesQuery,
-} from "@/redux/api/offeredCourseApi";
+  useDeleteOfferedCourseSectionMutation,
+  useOfferedCourseSectionsQuery,
+} from "@/redux/api/offeredCourseSectionApi";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-export default function OfferedCoursePage() {
+export default function OfferedCourseSectionPage() {
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -27,7 +27,7 @@ export default function OfferedCoursePage() {
 
   const { popupOptions, setPopupOptions, handleAddNewOfferedCourse } =
     usePopup();
-  const [deleteOfferedCourse] = useDeleteOfferedCourseMutation();
+  const [deleteOfferedCourseSection] = useDeleteOfferedCourseSectionMutation();
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
@@ -37,15 +37,15 @@ export default function OfferedCoursePage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
-  const { data, isLoading } = useOfferedCoursesQuery({ ...queries });
+  const { data, isLoading } = useOfferedCourseSectionsQuery({ ...queries });
 
-  const offeredCourses: any[] = data?.offeredCourses || [];
+  const offeredCourseSections: any[] = data?.offeredCourseSections || [];
   const meta = data?.meta;
 
   const deleteHandler = async (id: string) => {
     try {
       //   console.log(data);
-      await deleteOfferedCourse(id);
+      await deleteOfferedCourseSection(id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -58,8 +58,8 @@ export default function OfferedCoursePage() {
       open: true,
       data: updateData,
       actionType: "update",
-      form: "offered_course",
-      title: "Update Offered Course",
+      form: "offered_course_section",
+      title: "Update Offered Course Section",
     }));
   };
 
@@ -85,17 +85,31 @@ export default function OfferedCoursePage() {
   const columns: IColumn[] = [
     // NAME
     {
-      header: "Course",
-      accessorKey: "customCourse",
+      header: "Offered courses",
+      accessorKey: "customOfferedCourse",
       show: true,
       minWidth: 30,
     },
     // NAME
     {
-      header: "Academic department",
-      accessorKey: "customAcademicDepartment",
+      header: "Section",
+      accessorKey: "title",
       show: true,
-      minWidth: 30,
+      minWidth: 15,
+    },
+    // NAME
+    {
+      header: "Max Capacity",
+      accessorKey: "maxCapacity",
+      show: true,
+      minWidth: 15,
+    },
+    // NAME
+    {
+      header: "Currently Enrolled Student",
+      accessorKey: "currentlyEnrolledStudent",
+      show: true,
+      minWidth: 25,
     },
     // NAME
     {
@@ -124,10 +138,10 @@ export default function OfferedCoursePage() {
       <CustomTable
         columns={columns}
         rows={
-          offeredCourses?.map((row: any) => ({
+          offeredCourseSections?.map((row: any) => ({
             ...row,
-            customCourse: row?.course?.title,
-            customAcademicDepartment: row?.academicDepartment?.title,
+            customOfferedCourse: row?.offeredCourse?.title,
+            customAcademicDepartment: row?.customAcademicDepartment?.title,
           })) || []
         }
         isLoading={isLoading}

@@ -31,6 +31,9 @@ export default function CustomSelect({
   required,
   label,
   options,
+  multipleSelect = false,
+  isLoading = false,
+  ...props
 }: ICustomSelectProps) {
   const {
     control,
@@ -42,30 +45,39 @@ export default function CustomSelect({
     <div>
       <Controller
         control={control}
-        name={`${name}`}
+        name={name}
         render={({ field }) => {
+          console.log({ fieldValue: field.value });
+
+          const selectedValue = multipleSelect
+            ? options?.filter((item) => field.value?.includes(item.value)) ?? []
+            : options?.find((item) => item.value === field.value) ?? null;
+
           return (
             <Select
               {...field}
-              value={
-                field.value
-                  ? options?.find((item) => item.value === field.value)
-                  : []
-              }
+              multipleSelect={multipleSelect}
+              isLoading={isLoading}
               id={id}
               name={name}
+              value={selectedValue}
               onChange={(value) => {
                 console.log({ value });
-                field.onChange(value?.value ?? "");
+                if (multipleSelect) {
+                  const selected = value?.map((item) => item.value) ?? [];
+                  field.onChange(selected);
+                } else {
+                  field.onChange(value?.value ?? "");
+                }
               }}
               label={label}
               required={required}
-              // error={errorMessage}
               options={options}
             />
           );
         }}
       />
+
       {/* ERROR MESSAGE */}
       <small className={`text-error`}>{errorMessage}</small>
     </div>

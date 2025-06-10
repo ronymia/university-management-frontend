@@ -62,6 +62,7 @@ export default function DepartmentForm({ id, popupCloseHandler }: IDProps) {
         defaultValues={!!defaultValues ? defaultValues : undefined}
         className={`flex flex-col gap-2`}
       >
+        {/* title */}
         <CustomInputField
           id="title"
           name="title"

@@ -3,27 +3,33 @@
 import AcademicDepartmentField from "@/components/Academic/AcademicDepartmentField";
 import SemesterRegistrationField from "@/components/Academic/SemesterRegistrationField";
 import CustomForm from "@/components/Forms/CustomForm";
+import CustomInputField from "@/components/Forms/CustomInputField";
 import CustomSelect from "@/components/Forms/CustomSelect";
 import CustomLoading from "@/components/Loader/CustomLoading";
-import { useCoursesQuery } from "@/redux/api/courseApi";
+import { useOfferedCoursesQuery } from "@/redux/api/offeredCourseApi";
 import {
-  useAddOfferedCourseMutation,
-  useUpdateOfferedCourseMutation,
-} from "@/redux/api/offeredCourseApi";
+  useAddOfferedCourseSectionMutation,
+  useUpdateOfferedCourseSectionMutation,
+} from "@/redux/api/offeredCourseSectionApi";
 import { useRoomQuery } from "@/redux/api/roomApi";
 import { useSemesterRegistrationsQuery } from "@/redux/api/semesterRegistrationApi";
 import { offeredCourseSchema } from "@/schemas/admin/offeredCourse";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 type IDProps = {
   popupCloseHandler: () => void;
   id: string;
 };
 
-export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
+export default function OfferedCourseSectionForm({
+  id,
+  popupCloseHandler,
+}: IDProps) {
   const { data, isLoading } = useRoomQuery(id, { skip: !id });
-  const [addOfferedCourse, createResult] = useAddOfferedCourseMutation();
-  const [updateOfferedCourse, updateResult] = useUpdateOfferedCourseMutation();
+  const [addOfferedCourse, createResult] = useAddOfferedCourseSectionMutation();
+  const [updateOfferedCourse, updateResult] =
+    useUpdateOfferedCourseSectionMutation();
   const allSemesterRegistrations = useSemesterRegistrationsQuery({
     limit: 10,
     page: 1,
@@ -39,24 +45,38 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
       };
     }
   );
-  const allCourses = useCoursesQuery({
+
+  const [acDepartmentId, setAcDepartmentId] = useState<string>();
+  const [semesterRegistrationId, setSemesterRegistrationId] =
+    useState<string>();
+
+  const query: Record<string, any> = {};
+
+  if (!!acDepartmentId) {
+    query["academicDepartmentId"] = acDepartmentId;
+  }
+  if (!!semesterRegistrationId) {
+    query["semesterRegistrationId"] = semesterRegistrationId;
+  }
+  const offeredCoursesQuery = useOfferedCoursesQuery({
     limit: 10,
     page: 1,
+    ...query,
   });
-  console.log({ allCourses });
-  const courses = allCourses?.data?.courses?.data ?? [];
-  const courseOptions = courses?.map((item) => {
+
+  const offeredCourses = offeredCoursesQuery?.data?.offeredCourses;
+  const offeredCoursesOptions = offeredCourses?.map((offCourse) => {
+    // console.log(offCourse?.course?.id);
     return {
-      label: item?.title,
-      value: item?.id,
+      label: offCourse?.course?.title,
+      value: offCourse?.id,
     };
   });
 
   /* !!!need to pass academic_semester data */
 
   const onSubmit = async (values: any, reset: any) => {
-    // console.log({ reset });
-    console.log({ values });
+    values.maxCapacity = parseInt(values?.maxCapacity);
     try {
       if (id) {
         const res = await updateOfferedCourse({ id, body: values }).unwrap();
@@ -82,7 +102,6 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
   const defaultValues = {
     semesterRegistrationId: data?.semesterRegistrationId || "",
     academicDepartmentId: data?.academicDepartmentId || "",
-    courseIds: data?.courseIds || "",
   };
 
   if (isLoading) {
@@ -97,31 +116,43 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
         className={`flex flex-col gap-2`}
       >
         {/* semesterRegistrationId */}
-        {/* <SemesterRegistrationField
-          name={`semesterRegistrationId`}
-          label={`Semester registration`}
-        /> */}
-        <CustomSelect
-          id={`semesterRegistrationId`}
-          name={`semesterRegistrationId`}
-          options={semesterRegistrationsOptions as any}
-          label={`Semester registration`}
-          required
+        <SemesterRegistrationField
+          name="semesterRegistration"
+          label="Semester Registration"
+          onChange={(el) => setSemesterRegistrationId(el)}
         />
 
-        {/* academicDepartmentId */}
+        {/* academicDepartment */}
         <AcademicDepartmentField
-          name={`academicDepartmentId`}
+          name={`academicDepartment`}
           label={`Academic department`}
         />
-
+        {/* offeredCourseId */}
         <CustomSelect
-          id={`courseIds`}
-          name={`courseIds`}
-          options={courseOptions}
-          label={`Courses`}
+          id={`offeredCourseId`}
+          name={`offeredCourseId`}
+          label={`Offered course`}
+          options={offeredCoursesOptions}
           required
-          multipleSelect={true}
+        />
+
+        {/* title */}
+        <CustomInputField
+          id="title"
+          name="title"
+          type="text"
+          label="Section"
+          placeholder="Title"
+          required
+        />
+        {/* maxCapacity */}
+        <CustomInputField
+          id="maxCapacity"
+          name="maxCapacity"
+          type="text"
+          label="Max Capacity"
+          placeholder="Max Capacity"
+          required
         />
 
         <div className="flex justify-end gap-3 mt-5">

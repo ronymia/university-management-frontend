@@ -5,4 +5,5 @@ export const offeredCourseSchema = z.object({
     .string()
     .min(1, "Semester Registration is required"),
   academicDepartmentId: z.string().min(1, "Academic Department is required"),
+  courseIds: z.array(z.string()),
 });

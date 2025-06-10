@@ -36,6 +36,8 @@ export default function Select({
   disabled,
   CustomCloseIcon = RxCrossCircled,
   options = [],
+  multipleSelect,
+  isLoading,
 }: ISelectProps) {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -43,37 +45,69 @@ export default function Select({
 
   // SET DEFAULT value
   useEffect(() => {
-    if (value) {
+    if (value && !isLoading) {
+      console.log("first", value);
       setSelectedOptions(Array.isArray(value) ? value : [value]);
     }
-  }, [value]);
+  }, [value, isLoading]);
+  console.log({ selectedOptions });
 
   // HANDLE OPTION SELECTION
   const handleSelect = (option) => {
     // IF ALREADY SELECTED
-    if (selectedOptions.some((item) => item?.value === option?.value)) {
+    if (
+      selectedOptions.some(
+        (item) => item?.value === option?.value && !multipleSelect
+      )
+    ) {
       setSelectedOptions([]);
       onChange?.(null);
       setIsOpen(false); // Close the options list after selection
       return;
+    } else if (
+      selectedOptions.some(
+        (item) => item?.value === option?.value && multipleSelect
+      )
+    ) {
+      const newSelectedOptions = selectedOptions.filter(
+        (item) => item?.value !== option?.value
+      );
+      setSelectedOptions(newSelectedOptions);
+      onChange?.(newSelectedOptions);
+      setIsOpen(false); // Close the options list after selection
+      return;
     }
 
-    //   UPDATE STATE
-    setSelectedOptions([option]);
-    if (onChange) {
-      onChange(option);
+    if (multipleSelect) {
+      setSelectedOptions([...selectedOptions, option]);
+      if (onChange) {
+        onChange([...selectedOptions, option]);
+      }
+      setIsOpen(false); // Close the options list after selection
+    } else {
+      setSelectedOptions([option]);
+      if (onChange) {
+        onChange(option);
+      }
+      setIsOpen(false); // Close the options list after selection
     }
-    setIsOpen(false); // Close the options list after selection
   };
 
   // HANDLE REMOVE
   const handleRemove = (removedOption) => {
+    if (!multipleSelect) {
+      setSelectedOptions([]);
+      if (onChange) {
+        onChange(null);
+      }
+      return;
+    }
     const newSelectedOptions = selectedOptions.filter(
       (item) => item?.value !== removedOption?.value
     );
     setSelectedOptions(newSelectedOptions);
     if (onChange) {
-      onChange(null);
+      onChange(newSelectedOptions);
     }
   };
 
@@ -110,7 +144,7 @@ export default function Select({
         aria-haspopup="listbox"
         role="combobox"
       >
-        {selectedOptions.map((option) => (
+        {selectedOptions?.map((option) => (
           <span
             key={option.value}
             className={` bg-primary/10 text-primary px-2 rounded cursor-pointer inline-flex items-center justify-center gap-3 py-1 text-sm drop-shadow-2xl font-medium`}
