@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CustomDropdown } from "../Dropdown/CustomDropdown";
+import { getUserInfo } from "@/services/auth.service";
 
 export default function CustomProfileAvatar({
   name = "User",
@@ -12,6 +13,8 @@ export default function CustomProfileAvatar({
   dropdownItems?: { label: string; onClick: () => void }[];
   size?: string;
 }) {
+  const userDetails = getUserInfo();
+
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -39,7 +42,7 @@ export default function CustomProfileAvatar({
       <div className="flex flex-col">
         <span className="text-sm font-bold">MD Rony Mia</span>
         <small className="text-xs font-semibold text-gray-500">
-          Super Admin
+          {userDetails?.role || ""}
         </small>
       </div>
     </div>
