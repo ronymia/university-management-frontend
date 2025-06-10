@@ -12,6 +12,7 @@ import RoomForm from "@/app/(withLayout)/admin/room/RoomForm";
 import CourseForm from "@/app/(withLayout)/admin/course/CourseForm";
 import OfferedCourseForm from "@/app/(withLayout)/admin/offered-course/OfferedCourseForm";
 import SemesterRegistrationForm from "@/app/(withLayout)/admin/semester-registration/SemesterRegistrationForm";
+import OfferedCourseSectionForm from "@/app/(withLayout)/admin/offered-course-section/OfferedCourseSectionForm";
 
 export default function FormModal({
   popupOptions,
@@ -148,6 +149,19 @@ export default function FormModal({
           case "offered_course":
             return (
               <OfferedCourseForm
+                id={
+                  popupOptions?.actionType === "update" && popupOptions?.data
+                    ? popupOptions?.data?.id
+                    : ""
+                }
+                popupCloseHandler={() => {
+                  setPopupOptions((prev) => ({ ...prev, open: false }));
+                }}
+              />
+            );
+          case "offered_course_section":
+            return (
+              <OfferedCourseSectionForm
                 id={
                   popupOptions?.actionType === "update" && popupOptions?.data
                     ? popupOptions?.data?.id

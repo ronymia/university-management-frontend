@@ -12,11 +12,13 @@ import {
   useDeleteOfferedCourseSectionMutation,
   useOfferedCourseSectionsQuery,
 } from "@/redux/api/offeredCourseSectionApi";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function OfferedCourseSectionPage() {
+  const router = useRouter();
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -25,7 +27,7 @@ export default function OfferedCourseSectionPage() {
     searchTerm: "",
   });
 
-  const { popupOptions, setPopupOptions, handleAddNewOfferedCourse } =
+  const { popupOptions, setPopupOptions, handleAddNewOfferedCourseSection } =
     usePopup();
   const [deleteOfferedCourseSection] = useDeleteOfferedCourseSectionMutation();
 
@@ -129,9 +131,11 @@ export default function OfferedCourseSectionPage() {
 
       {/* ACTION BAR */}
       <ActionBar
-        title={`Manage Offered Courses`}
-        addButtonLabel={`Add Offered Course`}
-        createHandler={handleAddNewOfferedCourse}
+        title={`Manage Offered Course Sections`}
+        addButtonLabel={`Add Offered Course Section`}
+        createHandler={() =>
+          router.push("/admin/offered-course-section/create")
+        }
       />
 
       {/* TABLE */}

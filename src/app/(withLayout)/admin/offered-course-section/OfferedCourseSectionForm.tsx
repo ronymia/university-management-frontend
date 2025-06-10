@@ -6,6 +6,7 @@ import CustomForm from "@/components/Forms/CustomForm";
 import CustomInputField from "@/components/Forms/CustomInputField";
 import CustomSelect from "@/components/Forms/CustomSelect";
 import CustomLoading from "@/components/Loader/CustomLoading";
+import FormDynamicFields from "@/components/ui/FormDynamicFields";
 import { useOfferedCoursesQuery } from "@/redux/api/offeredCourseApi";
 import {
   useAddOfferedCourseSectionMutation,
@@ -27,8 +28,9 @@ export default function OfferedCourseSectionForm({
   popupCloseHandler,
 }: IDProps) {
   const { data, isLoading } = useRoomQuery(id, { skip: !id });
-  const [addOfferedCourse, createResult] = useAddOfferedCourseSectionMutation();
-  const [updateOfferedCourse, updateResult] =
+  const [addOfferedCourseSection, createResult] =
+    useAddOfferedCourseSectionMutation();
+  const [updateOfferedCourseSection, updateResult] =
     useUpdateOfferedCourseSectionMutation();
   const allSemesterRegistrations = useSemesterRegistrationsQuery({
     limit: 10,
@@ -79,14 +81,17 @@ export default function OfferedCourseSectionForm({
     values.maxCapacity = parseInt(values?.maxCapacity);
     try {
       if (id) {
-        const res = await updateOfferedCourse({ id, body: values }).unwrap();
+        const res = await updateOfferedCourseSection({
+          id,
+          body: values,
+        }).unwrap();
         console.log({ res });
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
         }
       } else {
-        const res = await addOfferedCourse(values).unwrap();
+        const res = await addOfferedCourseSection(values).unwrap();
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
@@ -113,47 +118,53 @@ export default function OfferedCourseSectionForm({
         submitHandler={onSubmit}
         resolver={zodResolver(offeredCourseSchema)}
         defaultValues={!!defaultValues ? defaultValues : undefined}
-        className={`flex flex-col gap-2`}
+        className={`grid grid-cols-2 gap-3`}
       >
-        {/* semesterRegistrationId */}
-        <SemesterRegistrationField
-          name="semesterRegistration"
-          label="Semester Registration"
-          onChange={(el) => setSemesterRegistrationId(el)}
-        />
+        <div className="flex flex-col gap-2">
+          {/* semesterRegistrationId */}
+          <SemesterRegistrationField
+            name="semesterRegistration"
+            label="Semester Registration"
+            onChange={(el) => setSemesterRegistrationId(el)}
+          />
 
-        {/* academicDepartment */}
-        <AcademicDepartmentField
-          name={`academicDepartment`}
-          label={`Academic department`}
-        />
-        {/* offeredCourseId */}
-        <CustomSelect
-          id={`offeredCourseId`}
-          name={`offeredCourseId`}
-          label={`Offered course`}
-          options={offeredCoursesOptions}
-          required
-        />
+          {/* academicDepartment */}
+          <AcademicDepartmentField
+            name={`academicDepartment`}
+            label={`Academic department`}
+          />
+          {/* offeredCourseId */}
+          <CustomSelect
+            id={`offeredCourseId`}
+            name={`offeredCourseId`}
+            label={`Offered course`}
+            options={offeredCoursesOptions}
+            required
+          />
 
-        {/* title */}
-        <CustomInputField
-          id="title"
-          name="title"
-          type="text"
-          label="Section"
-          placeholder="Title"
-          required
-        />
-        {/* maxCapacity */}
-        <CustomInputField
-          id="maxCapacity"
-          name="maxCapacity"
-          type="text"
-          label="Max Capacity"
-          placeholder="Max Capacity"
-          required
-        />
+          {/* title */}
+          <CustomInputField
+            id="title"
+            name="title"
+            type="text"
+            label="Section"
+            placeholder="Title"
+            required
+          />
+          {/* maxCapacity */}
+          <CustomInputField
+            id="maxCapacity"
+            name="maxCapacity"
+            type="text"
+            label="Max Capacity"
+            placeholder="Max Capacity"
+            required
+          />
+        </div>
+
+        <div className="">
+          <FormDynamicFields />
+        </div>
 
         <div className="flex justify-end gap-3 mt-5">
           <button
