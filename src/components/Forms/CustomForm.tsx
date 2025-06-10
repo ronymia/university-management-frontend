@@ -40,7 +40,6 @@ export default function CustomForm({
   } = methods;
 
   const onSubmit = (data: any) => {
-    console.log({ data });
     submitHandler(data, reset);
     // reset();
   };

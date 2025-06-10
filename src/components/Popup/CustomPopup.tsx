@@ -135,6 +135,15 @@ export function usePopup() {
       title: "Create Faculty",
     }));
   };
+  const handleAddNewAcademicDepartment = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "academic_department",
+      title: "Create Academic Department",
+    }));
+  };
 
   return {
     popupOptions,
@@ -143,5 +152,6 @@ export function usePopup() {
     handleAddNewDepartment,
     handleAddNewAdmin,
     handleAddNewFaculty,
+    handleAddNewAcademicDepartment,
   };
 }

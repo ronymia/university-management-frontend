@@ -24,7 +24,7 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
       providesTags: [tagTypes.academicDepartment],
     }),
     // get single academic department
-    academicDepartment: build.query({
+    academicDepartmentById: build.query({
       query: (id: string | string[] | undefined) => ({
         url: `${ACADEMIC_DEPARTMENT_URL}/${id}`,
         method: "GET",
@@ -64,7 +64,7 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
 export const {
   useAddAcademicDepartmentMutation,
   useAcademicDepartmentsQuery,
-  useAcademicDepartmentQuery,
+  useAcademicDepartmentByIdQuery,
   useUpdateAcademicDepartmentMutation,
   useDeleteAcademicDepartmentMutation,
 } = academicDepartmentApi;
