@@ -52,14 +52,14 @@ const StudentBasicInfo = () => {
         required
       />
       {/* designation */}
-      <CustomInputField
+      {/* <CustomInputField
         id="student.designation"
         name="student.designation"
         type="text"
         label="Designation"
         placeholder="Designation"
         required
-      />
+      /> */}
       {/* presentAddress */}
       <CustomTextareaField
         id="student.presentAddress"

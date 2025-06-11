@@ -20,7 +20,7 @@ import { RiEdit2Fill } from "react-icons/ri";
 export default function AcademicDepartmentPage() {
   const [queries, setQueries] = useState({
     page: 1,
-    limit: 10,
+    limit: 20,
     sortBy: "",
     sortOrder: "",
     searchTerm: "",

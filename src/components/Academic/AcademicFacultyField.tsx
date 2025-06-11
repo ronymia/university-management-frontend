@@ -22,9 +22,10 @@ export default function AcademicFacultyField({
   });
   return (
     <CustomSelect
+      isLoading={isLoading}
       name={name}
       id={name}
-      options={acFacultyOptions}
+      options={acFacultyOptions ?? []}
       label={label}
       placeholder={label}
       required

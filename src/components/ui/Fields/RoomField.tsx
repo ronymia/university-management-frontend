@@ -25,7 +25,7 @@ const RoomField = ({ name, label }: RoomProps) => {
       isLoading={isLoading}
       name={name}
       id={name}
-      options={roomsOptions}
+      options={roomsOptions ?? []}
       label={label}
       placeholder={label}
       required

@@ -8,7 +8,7 @@ interface ICustomRadioButton {
     name: string;
     title: string;
     value: string;
-    Icon?: React.ReactNode | IconType;
+    Icon?: React.ReactNode | IconType | React.ReactElement;
   }[];
   onChange?: (e) => void;
   wrapperClassName?: string;
@@ -80,7 +80,14 @@ export default function RadioButton({
                 {isChecked && (
                   <BiSolidCheckCircle className="absolute bg-white rounded-full -right-2 -top-2 text-xl text-primary" />
                 )}
-                {Icon && <Icon className="text-md" />}
+                {Icon &&
+                  (typeof Icon === "function" ? (
+                    // Icon is a component (IconType)
+                    <Icon className="text-md" />
+                  ) : (
+                    // Icon is a React element or node
+                    Icon
+                  ))}
                 <span
                   className={`text-sm ${!isChecked ? "" : "text-primary "}`}
                 >

@@ -97,9 +97,10 @@ export default function RoomForm({ id, popupCloseHandler }: IDProps) {
 
         {/* buildingId */}
         <CustomSelect
+          isLoading={allBuildings.isLoading}
           id={`buildingId`}
           name={`buildingId`}
-          options={buildingOptions}
+          options={buildingOptions as { label: string; value: string }[]}
           label={`Building`}
           required
         />

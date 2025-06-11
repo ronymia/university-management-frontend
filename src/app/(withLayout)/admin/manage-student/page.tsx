@@ -43,10 +43,10 @@ export default function StudentPage() {
   const students = data?.students;
   const meta = data?.meta;
   // console.log(students);
-  const deleteHandler = async (id: string) => {
+  const deleteHandler = async (deleteData: any) => {
     try {
       //   console.log(data);
-      await deleteStudent(id);
+      await deleteStudent(deleteData?.id);
     } catch (err: any) {
       console.error(err.message);
     }

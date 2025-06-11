@@ -44,7 +44,7 @@ export default function CustomTable({
   const windowInnerWidth = useDeviceWith();
 
   // GET PERMISSIONS
-  const permissions = getFromLocalStorage("permissions") || [];
+  const permissions = (getFromLocalStorage("permissions") as string[]) || [];
 
   /* ===================================== RETURN JSX ===================================== */
   return (

@@ -5,14 +5,15 @@ import CustomAddButton from "../Button/CustomAddButton";
 type IActionBarProps = {
   createHandler?: () => void;
   title: string;
-  addButtonLabel: string;
+  addButtonLabel?: string;
+  children?: React.ReactNode;
 };
 
 export default function ActionBar({
   children,
   createHandler,
   title,
-  addButtonLabel,
+  addButtonLabel = "Add",
 }: IActionBarProps) {
   return (
     <div className={`flex items-center justify-between my-3`}>

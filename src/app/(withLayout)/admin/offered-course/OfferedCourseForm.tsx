@@ -102,9 +102,12 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
           label={`Semester registration`}
         /> */}
         <CustomSelect
+          isLoading={allSemesterRegistrations.isLoading}
           id={`semesterRegistrationId`}
           name={`semesterRegistrationId`}
-          options={semesterRegistrationsOptions as any}
+          options={
+            semesterRegistrationsOptions as { label: string; value: string }[]
+          }
           label={`Semester registration`}
           required
         />
@@ -116,6 +119,7 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
         />
 
         <CustomSelect
+          isLoading={allCourses.isLoading}
           id={`courseIds`}
           name={`courseIds`}
           options={courseOptions}

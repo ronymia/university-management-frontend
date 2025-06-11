@@ -5,7 +5,6 @@ import { SubmitHandler } from "react-hook-form";
 import { useUserLoginMutation } from "@/redux/api/authApi";
 import { storeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
-import { authKey } from "@/constants/storageKey";
 import CustomForm from "../Forms/CustomForm";
 import CustomInputField from "../Forms/CustomInputField";
 import CustomButton from "../Button/CustomButton";
@@ -25,7 +24,7 @@ const LoginPage = () => {
   const [userLogin, loginResult] = useUserLoginMutation();
   // Define the form submission handler
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log({ data });
+    // console.log({ data });
     try {
       const response = await userLogin({ ...data }).unwrap();
 

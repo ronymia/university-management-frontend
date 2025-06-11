@@ -84,6 +84,7 @@ export default function AcademicSemesterForm({
       >
         {/* title */}
         <CustomSelect
+          isLoading={false}
           name={"title"}
           id={"title"}
           options={semesterOptions}
@@ -93,6 +94,7 @@ export default function AcademicSemesterForm({
         />
         {/* startMonth */}
         <CustomSelect
+          isLoading={false}
           name={"startMonth"}
           id={"startMonth"}
           options={monthOptions}
@@ -102,6 +104,7 @@ export default function AcademicSemesterForm({
         />
         {/* endMonth */}
         <CustomSelect
+          isLoading={false}
           name={"endMonth"}
           id={"endMonth"}
           options={monthOptions}
@@ -111,6 +114,7 @@ export default function AcademicSemesterForm({
         />
         {/* year */}
         <CustomSelect
+          isLoading={false}
           name={"year"}
           id={"year"}
           options={yearOptions}

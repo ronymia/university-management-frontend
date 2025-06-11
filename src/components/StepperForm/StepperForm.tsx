@@ -66,7 +66,9 @@ const StepperForm = ({
     reset();
     setToLocalStorage("step", JSON.stringify({ step: 0 }));
     setToLocalStorage(persistKey, JSON.stringify({}));
-    navigateLink && router.push(navigateLink);
+    if (navigateLink) {
+      router.push(navigateLink);
+    }
   };
 
   return (

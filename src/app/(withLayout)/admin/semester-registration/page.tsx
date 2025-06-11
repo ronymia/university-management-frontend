@@ -13,6 +13,7 @@ import {
   useSemesterRegistrationsQuery,
   useStartNewSemesterMutation,
 } from "@/redux/api/semesterRegistrationApi";
+import dayjs from "dayjs";
 import { useState } from "react";
 import { MdDelete, MdPlayCircleOutline } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -42,22 +43,26 @@ export default function SemesterRegistrationPage() {
   }
   const { data, isLoading } = useSemesterRegistrationsQuery({ ...queries });
 
-  const semesterRegistrations: any[] = data?.semesterRegistrations || [];
+  const semesterRegistrations = data?.semesterRegistrations || [];
   const meta = data?.meta;
 
-  const handleStartSemester = async (id: string) => {
+  const handleStartSemester = async (startSemesterData: {
+    [key: string]: any;
+  }) => {
     try {
-      const res = await startNewSemester(id).unwrap();
+      const res = await startNewSemester(
+        startSemesterData?.academicSemesterId
+      ).unwrap();
       console.log(res);
     } catch (err: any) {
       console.error(err?.message);
     }
   };
 
-  const deleteHandler = async (id: string) => {
+  const deleteHandler = async (deleteData: any) => {
     try {
       //   console.log(data);
-      await deleteSemesterRegistrations(id);
+      await deleteSemesterRegistrations(deleteData?.id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -85,7 +90,11 @@ export default function SemesterRegistrationPage() {
       disableOn: [
         {
           accessorKey: "status",
-          value: "ENDED",
+          value: "UPCOMING",
+        },
+        {
+          accessorKey: "status",
+          value: "ONGOING",
         },
       ],
     },
@@ -110,14 +119,14 @@ export default function SemesterRegistrationPage() {
     // NAME
     {
       header: "Start Date",
-      accessorKey: "startDate",
+      accessorKey: "customStartDate",
       show: true,
       minWidth: 20,
     },
     // NAME
     {
       header: "End Date",
-      accessorKey: "endDate",
+      accessorKey: "customEndDate",
       show: true,
       minWidth: 20,
     },
@@ -162,9 +171,10 @@ export default function SemesterRegistrationPage() {
       <CustomTable
         columns={columns}
         rows={
-          semesterRegistrations?.map((row: any) => ({
+          semesterRegistrations?.map((row) => ({
             ...row,
-            // customCourse: row?.course?.title,
+            customStartDate: dayjs(row?.startDate).format("MMM D, YYYY"),
+            customEndDate: dayjs(row?.endDate).format("MMM D, YYYY"),
             customAcademicSemester: row?.academicSemester?.title,
           })) || []
         }

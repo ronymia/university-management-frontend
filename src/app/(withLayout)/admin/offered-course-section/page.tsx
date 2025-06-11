@@ -27,8 +27,7 @@ export default function OfferedCourseSectionPage() {
     searchTerm: "",
   });
 
-  const { popupOptions, setPopupOptions, handleAddNewOfferedCourseSection } =
-    usePopup();
+  const { popupOptions, setPopupOptions } = usePopup();
   const [deleteOfferedCourseSection] = useDeleteOfferedCourseSectionMutation();
 
   const debouncedSearchTerm = useDebounced({
@@ -44,10 +43,10 @@ export default function OfferedCourseSectionPage() {
   const offeredCourseSections: any[] = data?.offeredCourseSections || [];
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
+  const deleteHandler = async (deleteData: any) => {
     try {
       //   console.log(data);
-      await deleteOfferedCourseSection(id);
+      await deleteOfferedCourseSection(deleteData?.id);
     } catch (err: any) {
       console.error(err.message);
     }
@@ -110,7 +109,7 @@ export default function OfferedCourseSectionPage() {
     // NAME
     {
       header: "Currently Enrolled Student",
-      accessorKey: "currentlyEnrolledStudent",
+      accessorKey: "currentEnrolledStudent",
       show: true,
       minWidth: 25,
     },

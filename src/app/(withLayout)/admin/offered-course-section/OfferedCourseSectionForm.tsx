@@ -13,8 +13,6 @@ import {
   useUpdateOfferedCourseSectionMutation,
 } from "@/redux/api/offeredCourseSectionApi";
 import { useRoomQuery } from "@/redux/api/roomApi";
-import { useSemesterRegistrationsQuery } from "@/redux/api/semesterRegistrationApi";
-import { offeredCourseSchema } from "@/schemas/admin/offeredCourse";
 import { offeredCourseSectionSchema } from "@/schemas/admin/offeredCourseSection";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -123,10 +121,11 @@ export default function OfferedCourseSectionForm({
           />
           {/* offeredCourseId */}
           <CustomSelect
+            isLoading={offeredCoursesQuery.isLoading}
             id={`offeredCourseId`}
             name={`offeredCourseId`}
             label={`Offered course`}
-            options={offeredCoursesOptions}
+            options={offeredCoursesOptions ?? []}
             required
           />
 

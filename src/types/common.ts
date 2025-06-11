@@ -73,6 +73,9 @@ export interface IFaculty {
 export interface IStudent {
   id: string;
   name: Name & { id: string };
+  firstName: string;
+  middleName: string;
+  lastName: string;
   dateOfBirth: string;
   gender: string;
   bloodGroup: string;

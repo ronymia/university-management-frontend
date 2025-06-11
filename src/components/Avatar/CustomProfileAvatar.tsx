@@ -13,7 +13,7 @@ export default function CustomProfileAvatar({
   dropdownItems?: { label: string; onClick: () => void }[];
   size?: string;
 }) {
-  const userDetails = getUserInfo();
+  const userDetails = getUserInfo() as any;
 
   const initials = name
     .split(" ")

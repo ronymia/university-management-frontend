@@ -42,10 +42,10 @@ export default function OfferedCoursePage() {
   const offeredCourses: any[] = data?.offeredCourses || [];
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
+  const deleteHandler = async (deleteData: any) => {
     try {
       //   console.log(data);
-      await deleteOfferedCourse(id);
+      await deleteOfferedCourse(deleteData?.id);
     } catch (err: any) {
       console.error(err.message);
     }

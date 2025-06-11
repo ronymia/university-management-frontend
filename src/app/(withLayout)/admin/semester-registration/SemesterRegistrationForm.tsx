@@ -95,11 +95,11 @@ export default function SemesterRegistrationForm({
     });
 
   const defaultValues = {
-    startDate: data?.startDate || "",
-    endDate: data?.endDate || "",
-    academicSemesterId: data?.academicSemester?.id || "",
-    minCredit: data?.minCredit || "",
-    maxCredit: data?.maxCredit || "",
+    startDate: dayjs(data?.startDate).format("DD-MM-YYYY") || "",
+    endDate: dayjs(data?.endDate).format("DD-MM-YYYY") || "",
+    academicSemesterId: data?.academicSemesterId || "",
+    minCredit: String(data?.minCredit) || "",
+    maxCredit: String(data?.maxCredit) || "",
     status: data?.status || "",
   };
 
@@ -145,6 +145,7 @@ export default function SemesterRegistrationForm({
 
         {/* status */}
         <CustomSelect
+          isLoading={false}
           id={`status`}
           name={`status`}
           label={`Status`}

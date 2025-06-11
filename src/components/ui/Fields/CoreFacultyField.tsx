@@ -26,7 +26,7 @@ const CoreFacultyField = ({ name, label }: FacultyProps) => {
       isLoading={isLoading}
       name={name}
       id={name}
-      options={facultiesOptions}
+      options={facultiesOptions ?? []}
       label={label}
       placeholder={label}
       required

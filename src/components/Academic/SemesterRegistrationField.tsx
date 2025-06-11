@@ -35,7 +35,7 @@ const SemesterRegistrationField = ({
       isLoading={isLoading}
       name={name}
       id={name}
-      options={semesterRegistrationsOptions}
+      options={semesterRegistrationsOptions ?? []}
       label={label}
       placeholder={label}
       required

@@ -19,7 +19,7 @@ const BuildingField = ({ name, label }: { name: string; label: string }) => {
       isLoading={isLoading}
       name={name}
       id={name}
-      options={buildingsOptions}
+      options={buildingsOptions ?? []}
       label={label}
       placeholder={label}
       required

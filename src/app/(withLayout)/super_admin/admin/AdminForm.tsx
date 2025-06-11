@@ -108,6 +108,7 @@ export default function AdminForm({ id, popupCloseHandler }: any) {
           />
           {/* managementDepartment */}
           <CustomSelect
+            isLoading={isLoading}
             name={"admin.managementDepartment"}
             id={"admin.managementDepartment"}
             options={departmentOptions}
@@ -158,7 +159,7 @@ export default function AdminForm({ id, popupCloseHandler }: any) {
           />
           {/* dateOfBirth */}
           <CustomDatePicker
-            id="admin.dateOfBirth"
+            // id="admin.dateOfBirth"
             name="admin.dateOfBirth"
             label="Date of birth"
             placeholder="Date of birth"

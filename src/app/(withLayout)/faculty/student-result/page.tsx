@@ -14,7 +14,7 @@ import {
 } from "@/redux/api/studentEnrollCourseMarkApi";
 import { IStudentEnrolledCourseMark } from "@/types";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function StudentResultPage({
@@ -169,7 +169,7 @@ export default function StudentResultPage({
             customGradeInfo: (
               <>
                 <table>
-                  <p title="name">{!marks?.grade ? "-" : marks?.grade}</p>
+                  <p title="name">{!row?.grade ? "-" : row?.grade}</p>
                   <p title="student ID">{row?.marks}</p>
                 </table>
               </>

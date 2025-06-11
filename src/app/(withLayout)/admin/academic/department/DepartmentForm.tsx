@@ -30,7 +30,7 @@ export default function AcademicDepartmentForm({
     console.log({ data });
     try {
       if (!!id) {
-        const res = await updateAcademicDepartment({ ...data, id });
+        const res = await updateAcademicDepartment({ body: data, id });
         if (!!res) {
           popupCloseHandler?.();
         }

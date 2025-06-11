@@ -4,26 +4,27 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import Select from "./Select";
 
+type IOption = { label: string; value: string | number };
+
 interface ICustomSelectProps {
   id?: any;
   name: string;
   placeholder?: string;
   defaultValues?: any;
-  handleOnSelect?: (value) => void;
+  changeHandler?: (value: any) => void;
   error?: string;
   label?: string;
   wrapperClassName?: string;
   fieldClassName?: string;
   testId?: string;
-  required?: boolean;
+  required: boolean;
   labelClass?: string;
   dataTestId?: string;
   disabled?: boolean;
+  multipleSelect?: boolean;
+  isLoading: boolean;
   CustomCloseIcon?: any;
-  options?: {
-    label: string;
-    value: string | number;
-  }[];
+  options: IOption[];
 }
 
 export default function CustomSelect({
@@ -63,15 +64,17 @@ export default function CustomSelect({
               id={id}
               name={name}
               value={selectedValue}
-              onChange={(value) => {
+              onChange={(onSelectedValue) => {
                 // console.log({ value });
                 if (multipleSelect) {
-                  const selected = value?.map((item) => item.value) ?? [];
+                  const selected = Array.isArray(onSelectedValue)
+                    ? onSelectedValue?.map((item) => item.value)
+                    : [];
                   field.onChange(selected);
                   changeHandler?.(selected);
                 } else {
-                  field.onChange(value?.value ?? "");
-                  changeHandler?.(value?.value ?? "");
+                  field.onChange((onSelectedValue as IOption)?.value ?? "");
+                  changeHandler?.((onSelectedValue as IOption)?.value ?? "");
                 }
               }}
               label={label}

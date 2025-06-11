@@ -2,12 +2,15 @@
 import useClickOutside from "@/hooks/useClickOutside";
 import { useState, useEffect } from "react";
 import { RxCrossCircled } from "react-icons/rx";
+
+type IOption = { label: string; value: string | number };
+
 interface ISelectProps {
   id?: any;
   name?: string;
   placeholder?: string;
   value?: any;
-  onChange?: (value) => void;
+  onChange?: (value: IOption | IOption[]) => void;
   error?: string;
   label?: string;
   wrapperClassName?: string;
@@ -17,8 +20,10 @@ interface ISelectProps {
   labelClass?: string;
   dataTestId?: string;
   disabled?: boolean;
+  multipleSelect?: boolean;
+  isLoading: boolean;
   CustomCloseIcon?: any;
-  options?: any[];
+  options: IOption[];
 }
 export default function Select({
   id,
@@ -37,10 +42,10 @@ export default function Select({
   disabled,
   CustomCloseIcon = RxCrossCircled,
   options = [],
-  multipleSelect,
+  multipleSelect = false,
   isLoading,
 }: ISelectProps) {
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState<IOption[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useClickOutside(() => setIsOpen(false));
 
@@ -54,7 +59,7 @@ export default function Select({
   // console.log({ selectedOptions });
 
   // HANDLE OPTION SELECTION
-  const handleSelect = (option) => {
+  const handleSelect = (option: IOption) => {
     // IF ALREADY SELECTED
     if (
       selectedOptions.some(
@@ -95,11 +100,11 @@ export default function Select({
   };
 
   // HANDLE REMOVE
-  const handleRemove = (removedOption) => {
+  const handleRemove = (removedOption: IOption) => {
     if (!multipleSelect) {
       setSelectedOptions([]);
       if (onChange) {
-        onChange(null);
+        onChange?.(null);
       }
       return;
     }

@@ -65,7 +65,7 @@ export default function DatePicker({
   formatDate = "DD-MM-YYYY",
   pick = "day", // month, year, day
 }: IDatePickerProps) {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(moment());
   const [currentYear, setCurrentYear] = useState(
@@ -79,7 +79,7 @@ export default function DatePicker({
     generateYears({ startOfYear: currentYear - (currentYear % 12), length: 12 })
   );
   const [renderComponent, setRenderComponent] = useState(pick);
-  const [invalidDateError, setInvalidDateError] = useState(null);
+  const [invalidDateError, setInvalidDateError] = useState<string>("");
   const calendarRef = useRef(null);
 
   // SET DEFAULT DATE
@@ -94,7 +94,10 @@ export default function DatePicker({
       } else if (
         parsedDefaultDate.isValid() &&
         !!disableBeforeDate &&
-        parsedDefaultDate.isSameOrBefore(disableBeforeDate, formatDate)
+        parsedDefaultDate.isSameOrBefore(
+          moment(disableBeforeDate, formatDate),
+          "day"
+        )
       ) {
         setInvalidDateError(
           `Please enter a date after ${moment(
@@ -106,7 +109,10 @@ export default function DatePicker({
       } else if (
         parsedDefaultDate.isValid() &&
         !!disableAfterDate &&
-        parsedDefaultDate.isSameOrAfter(disableAfterDate, formatDate)
+        parsedDefaultDate.isSameOrAfter(
+          moment(disableAfterDate, formatDate),
+          "day"
+        )
       ) {
         setInvalidDateError(
           `Please enter a date before ${moment(
@@ -151,11 +157,11 @@ export default function DatePicker({
 
   // OUT SIDE CLICK HANDLER
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         calendarRef.current &&
-        event.target &&
-        !calendarRef.current.contains(event.target)
+        event.target instanceof HTMLElement &&
+        !(calendarRef.current as unknown as HTMLElement).contains(event.target)
       ) {
         setCalendarVisible(false);
       }
@@ -361,12 +367,12 @@ export default function DatePicker({
     );
   };
 
-  const handleMonthClick = (index) => {
+  const handleMonthClick = (index: number) => {
     setCurrentMonth(currentMonth.clone().month(index));
     setRenderComponent("day");
   };
 
-  const handleYearClick = (year) => {
+  const handleYearClick = (year: number) => {
     setCurrentYear(year);
     if (pick === "year") {
       onChange?.(year);

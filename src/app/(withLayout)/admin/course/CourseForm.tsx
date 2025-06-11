@@ -24,17 +24,18 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
   const [updateCourse, updateResult] = useUpdateCourseMutation();
 
   const allCourses = useCoursesQuery({ limit: 10, page: 1 });
-  console.log({ course: allCourses.data });
+  // console.log({ course: allCourses.data });
   const courses = allCourses?.data?.courses?.data ?? [];
-  const coursesOptions = courses?.map((course) => {
+  const coursesOptions = courses?.map((course: any) => {
     return {
       label: course?.title,
       value: course?.id,
     };
   });
   const onSubmit = async (values: any, reset: any) => {
-    values.credits = parseInt(values?.credits);
-    const coursePreRequisitesOptions = values?.coursePreRequisites?.map(
+    const tempFormData = { ...values };
+    tempFormData.credits = parseInt(tempFormData?.credits);
+    const coursePreRequisitesOptions = tempFormData?.preRequisiteCourses?.map(
       (id: string) => {
         return {
           courseId: id,
@@ -42,17 +43,17 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
       }
     );
 
-    values.coursePreRequisites = coursePreRequisitesOptions;
+    tempFormData.preRequisiteCourses = coursePreRequisitesOptions;
     try {
       if (id) {
-        const res = await updateCourse({ id, body: values }).unwrap();
+        const res = await updateCourse({ id, body: tempFormData }).unwrap();
         console.log({ res });
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
         }
       } else {
-        const res = await addCourse(values).unwrap();
+        const res = await addCourse(tempFormData).unwrap();
         if (res?.id) {
           reset?.();
           popupCloseHandler?.();
@@ -67,13 +68,18 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
 
   const defaultValues = {
     title: data?.title || "",
-    floor: data?.floor || "",
-    buildingId: data?.buildingId || "",
+    code: data?.code || "",
+    credits: String(data?.credits) || "",
+    preRequisiteCourses: Array.isArray(data?.preRequisite)
+      ? data?.preRequisite?.map((item: any) => item?.preRequisiteId)
+      : [],
   };
 
   if (isLoading) {
     return <CustomLoading />;
   }
+
+  console.log({ defaultValues });
   return (
     <>
       <CustomForm
@@ -110,10 +116,13 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
           required
         />
 
-        {/* buildingId */}
+        {/* preRequisiteCourses */}
         <CustomSelect
-          id={`coursePreRequisites`}
-          name={`coursePreRequisites`}
+          multipleSelect={true}
+          isLoading={allCourses.isLoading}
+          required={false}
+          id={`preRequisiteCourses`}
+          name={`preRequisiteCourses`}
           options={coursesOptions}
           label={`Pre Requisite Courses`}
         />

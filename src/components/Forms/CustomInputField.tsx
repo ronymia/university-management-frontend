@@ -39,7 +39,6 @@ export default function CustomInputField({
   wrapperClassName,
   fieldClassName,
   labelClass,
-  isValidateEmail = false,
   error = {},
 }: ICustomInputFieldProps) {
   // STE TO MANAGE PASSWORD VISIBILITY

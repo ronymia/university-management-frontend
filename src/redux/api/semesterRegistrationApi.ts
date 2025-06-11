@@ -53,7 +53,7 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
     }),
     myRegistration: build.query({
       query: () => ({
-        url: `${BASE_SEMESTER_REGISTRATION}/my-registration`,
+        url: `${BASE_SEMESTER_REGISTRATION}/get-my-registration`,
         method: "GET",
       }),
       providesTags: [tagTypes.courseRegistration],
@@ -66,7 +66,7 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
     }),
     mySemesterRegistrationCourses: build.query({
       query: () => ({
-        url: `${BASE_SEMESTER_REGISTRATION}/my-semester-registration-courses
+        url: `${BASE_SEMESTER_REGISTRATION}/get-my-semester-courses
 				`,
         method: "GET",
       }),
@@ -74,7 +74,7 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
     }),
     enrollIntoCourse: build.mutation({
       query: (data) => ({
-        url: `${BASE_SEMESTER_REGISTRATION}/enroll-into-course`,
+        url: `${BASE_SEMESTER_REGISTRATION}/enrolled-into-course`,
         method: "POST",
         data,
       }),
@@ -90,7 +90,7 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
     }),
     confirmMyRegistration: build.mutation({
       query: () => ({
-        url: `${BASE_SEMESTER_REGISTRATION}/confirm-registration`,
+        url: `${BASE_SEMESTER_REGISTRATION}/confirm-my-registration`,
         method: "POST",
       }),
       invalidatesTags: [tagTypes.courseRegistration],

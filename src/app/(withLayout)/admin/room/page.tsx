@@ -54,8 +54,8 @@ export default function RoomPage() {
       open: true,
       data: updateData,
       actionType: "update",
-      form: "building",
-      title: "Update Building",
+      form: "room",
+      title: "Update Room",
     }));
   };
 

@@ -6,12 +6,41 @@ import CustomForm from "@/components/Forms/CustomForm";
 import CustomInputField from "@/components/Forms/CustomInputField";
 import CustomRadioButton from "@/components/Forms/CustomRadioButton";
 import CustomTextareaField from "@/components/Forms/CustomTextareaField";
-import { useAddFacultyWithFormDataMutation } from "@/redux/api/facultyApi";
+import CustomLoading from "@/components/Loader/CustomLoading";
+import {
+  useAddFacultyWithFormDataMutation,
+  useFacultyByIdQuery,
+  useUpdateFacultyMutation,
+} from "@/redux/api/facultyApi";
 import { facultySchema } from "@/schemas/faculty";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function FacultyForm({ id, popupCloseHandler }: any) {
+  const { data, isLoading } = useFacultyByIdQuery(id, { skip: !id });
+
   const [addFacultyWithFormData] = useAddFacultyWithFormDataMutation();
+  const [updateFaculty] = useUpdateFacultyMutation();
+
+  console.log({ data });
+
+  const defaultValues = {
+    password: "123456",
+    faculty: {
+      name: { firstName: "Rony", middleName: "Mia", lastName: "Mia" },
+      email: "rony.faculty2@yopmail.com",
+      contactNo: "01321185988",
+      designation: "Professor",
+      dateOfBirth: "02-06-2025",
+      emergencyContactNo: "01321185989",
+      bloodGroup: "AB+",
+      gender: "male",
+      academicDepartment: "2dc47e12-0a3e-4c9a-8bb3-c2591fa60a66",
+      academicFaculty: "e0035f4d-764b-46ce-8688-c5d1409f97c7",
+      presentAddress: "west khabaspur faridpur",
+      permanentAddress: "zc ",
+    },
+  };
+
   const onSubmit = async (values: any) => {
     console.log({ values });
     const obj = { ...values };
@@ -23,16 +52,23 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
     formData.append("data", data);
     console.log("after", { values });
     try {
-      const res = await addFacultyWithFormData(formData);
-      if (!!res) {
+      if (!!id) {
+        const res = await updateFaculty(formData);
+        if (!!res) {
+        }
+        console.log("after", { values });
+      } else {
+        const res = await addFacultyWithFormData(formData);
+        if (!!res) {
+        }
+        console.log("after", { values });
       }
-      console.log("after", { values });
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  // if (isLoading) return <CustomLoading height={`h-[80vh]`} />;
+  if (isLoading) return <CustomLoading height={`h-[80vh]`} />;
   return (
     <CustomForm submitHandler={onSubmit} resolver={zodResolver(facultySchema)}>
       {/* ADMIN INFORMATION */}

@@ -9,7 +9,7 @@ export default function AcademicDepartmentField({
 }: {
   name: string;
   label: string;
-  onChange?: () => void;
+  onChange?: (e: any) => void;
 }) {
   const { data, isLoading } = useAcademicDepartmentsQuery({
     limit: 100,
@@ -28,7 +28,7 @@ export default function AcademicDepartmentField({
       isLoading={isLoading}
       name={name}
       id={name}
-      options={acDepartmentOptions}
+      options={acDepartmentOptions ?? []}
       label={label}
       placeholder={label}
       required
