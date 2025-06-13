@@ -1,4 +1,5 @@
 import CustomInputField from "../Forms/CustomInputField";
+import CustomTextareaField from "../Forms/CustomTextareaField";
 
 const LocalGuardianInfo = () => {
   return (
@@ -34,13 +35,13 @@ const LocalGuardianInfo = () => {
           required
         />
         {/* address */}
-        <CustomInputField
+        <CustomTextareaField
           id="student.localGuardian.address"
           name="student.localGuardian.address"
-          type="text"
-          label="Local guardian"
-          placeholder="Local guardian"
+          label="Address"
+          placeholder="Address"
           required
+          wrapperClassName={`col-span-3`}
         />
       </div>
     </>

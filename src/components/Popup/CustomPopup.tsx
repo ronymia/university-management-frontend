@@ -216,6 +216,15 @@ export function usePopup() {
       title: "Offered Course Section",
     }));
   };
+  const handleAddNewStudent = () => {
+    setPopupOptions((prev) => ({
+      ...prev,
+      open: true,
+      actionType: "create",
+      form: "student",
+      title: "Create Student",
+    }));
+  };
 
   return {
     popupOptions,
@@ -233,5 +242,6 @@ export function usePopup() {
     handleAddNewOfferedCourse,
     handleAddNewSemesterRegistration,
     handleAddNewOfferedCourseSection,
+    handleAddNewStudent,
   };
 }

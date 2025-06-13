@@ -1,10 +1,11 @@
+"use client";
+
 import AcademicDepartmentField from "@/components/Academic/AcademicDepartmentField";
 import AcademicFacultyField from "@/components/Academic/AcademicFacultyField";
 import CustomDatePicker from "@/components/Forms/CustomDatePicker";
 import CustomFileUpload from "@/components/Forms/CustomFileUpload";
 import CustomForm from "@/components/Forms/CustomForm";
 import CustomInputField from "@/components/Forms/CustomInputField";
-import CustomRadioButton from "@/components/Forms/CustomRadioButton";
 import CustomTextareaField from "@/components/Forms/CustomTextareaField";
 import CustomLoading from "@/components/Loader/CustomLoading";
 import {
@@ -14,32 +15,49 @@ import {
 } from "@/redux/api/facultyApi";
 import { facultySchema } from "@/schemas/faculty";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import BloodGroupField from "../Fields/BloodGroupField";
+import GenderField from "../Fields/GenderField";
+import FacultyDesignationField from "../Fields/FacultyDesignationField";
 
-export default function FacultyForm({ id, popupCloseHandler }: any) {
-  const { data, isLoading } = useFacultyByIdQuery(id, { skip: !id });
+export default function FacultyForm({ id = "" }: { id: string }) {
+  const router = useRouter();
+  const [academicFacultyId, setAcademicFacultyId] = useState<string>("");
+  const { data, isLoading } = useFacultyByIdQuery(id, {
+    skip: !id,
+  });
 
   const [addFacultyWithFormData] = useAddFacultyWithFormDataMutation();
   const [updateFaculty] = useUpdateFacultyMutation();
 
-  console.log({ data });
-
   const defaultValues = {
-    password: "123456",
+    password: "",
     faculty: {
-      name: { firstName: "Rony", middleName: "Mia", lastName: "Mia" },
-      email: "rony.faculty2@yopmail.com",
-      contactNo: "01321185988",
-      designation: "Professor",
-      dateOfBirth: "02-06-2025",
-      emergencyContactNo: "01321185989",
-      bloodGroup: "AB+",
-      gender: "male",
-      academicDepartment: "2dc47e12-0a3e-4c9a-8bb3-c2591fa60a66",
-      academicFaculty: "e0035f4d-764b-46ce-8688-c5d1409f97c7",
-      presentAddress: "west khabaspur faridpur",
-      permanentAddress: "zc ",
+      name: {
+        firstName: data?.name.firstName,
+        middleName: data?.name?.middleName,
+        lastName: data?.name?.lastName,
+      },
+      email: data?.email,
+      contactNo: data?.contactNo,
+      designation: data?.designation,
+      dateOfBirth: data?.dateOfBirth,
+      emergencyContactNo: data?.emergencyContactNo,
+      bloodGroup: data?.bloodGroup,
+      gender: data?.gender,
+      academicDepartment: data?.academicDepartment?.syncId,
+      academicFaculty: data?.academicFaculty?.syncId,
+      presentAddress: data?.presentAddress,
+      permanentAddress: data?.permanentAddress,
     },
   };
+
+  useEffect(() => {
+    if (data?.academicFaculty?.syncId) {
+      setAcademicFacultyId(data?.academicFaculty?.syncId);
+    }
+  }, [data?.academicFaculty?.syncId]);
 
   const onSubmit = async (values: any) => {
     console.log({ values });
@@ -53,13 +71,19 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
     console.log("after", { values });
     try {
       if (!!id) {
-        const res = await updateFaculty(formData);
+        const body = values.faculty;
+        delete body["profileImage"];
+        const res = await updateFaculty({ id, body });
         if (!!res) {
+          router.back();
+          console.log("res", { res });
         }
         console.log("after", { values });
       } else {
         const res = await addFacultyWithFormData(formData);
         if (!!res) {
+          router.back();
+          console.log("res", { res });
         }
         console.log("after", { values });
       }
@@ -70,12 +94,18 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
 
   if (isLoading) return <CustomLoading height={`h-[80vh]`} />;
   return (
-    <CustomForm submitHandler={onSubmit} resolver={zodResolver(facultySchema)}>
+    <CustomForm
+      submitHandler={onSubmit}
+      resolver={zodResolver(facultySchema)}
+      defaultValues={defaultValues}
+    >
       {/* ADMIN INFORMATION */}
       <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
         <p className={`font-bold mb-2.5 drop-shadow-sm`}>Faculty Information</p>
         <div className={`grid grid-cols-3 gap-3`}>
-          <CustomFileUpload name="file" required label="Image" />
+          {!id && (
+            <CustomFileUpload id="file" name="file" required label="Image" />
+          )}
 
           {/* firstName */}
           <CustomInputField
@@ -105,42 +135,29 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
             required
           />
           {/* password */}
-          <CustomInputField
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            placeholder="Password"
-            required
-          />
+          {!id && (
+            <CustomInputField
+              id="password"
+              name="password"
+              type="password"
+              label="Password"
+              placeholder="Password"
+              required
+            />
+          )}
           {/* gender */}
-          <CustomRadioButton
-            id="faculty.gender"
-            name="faculty.gender"
-            label="Gender"
-            required
-            options={[
-              {
-                name: "faculty.gender",
-                title: "Male",
-                value: "male",
-              },
-              {
-                name: "faculty.gender",
-                title: "Female",
-                value: "female",
-              },
-            ]}
-          />
+          <GenderField name="faculty.gender" label="Gender" required={true} />
           {/* academicDepartment */}
           <AcademicFacultyField
             name={"faculty.academicFaculty"}
             label="Academic Faculty"
+            onChange={(e) => setAcademicFacultyId(e)}
           />
           {/* academicDepartment */}
           <AcademicDepartmentField
             name={"faculty.academicDepartment"}
             label="Academic Department"
+            academicFacultyId={academicFacultyId || ""}
           />
           {/* file */}
 
@@ -185,28 +202,22 @@ export default function FacultyForm({ id, popupCloseHandler }: any) {
           />
           {/* dateOfBirth */}
           <CustomDatePicker
-            id="faculty.dateOfBirth"
+            // id="faculty.dateOfBirth"
             name="faculty.dateOfBirth"
             label="Date of birth"
             placeholder="Date of birth"
             required
           />
           {/* bloodGroup */}
-          <CustomInputField
-            id="faculty.bloodGroup"
+          <BloodGroupField
             name="faculty.bloodGroup"
-            type="text"
             label="Blood group"
-            placeholder="Blood group"
             required
           />
           {/* designation */}
-          <CustomInputField
-            id="faculty.designation"
+          <FacultyDesignationField
             name="faculty.designation"
-            type="text"
             label="Designation"
-            placeholder="Designation"
             required
           />
           {/* presentAddress */}

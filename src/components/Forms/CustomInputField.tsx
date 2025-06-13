@@ -40,6 +40,11 @@ export default function CustomInputField({
   fieldClassName,
   labelClass,
   error = {},
+  maxLength,
+  minLength,
+  max,
+  min,
+  pattern,
 }: ICustomInputFieldProps) {
   // STE TO MANAGE PASSWORD VISIBILITY
   const [isVisible, setIsVisible] = useState(false);
@@ -51,17 +56,18 @@ export default function CustomInputField({
   } = useFormContext();
 
   // ADD SERVER ERRORS
-  useEffect(() => {
-    if (Object.keys(error).length > 0) {
-      Object.entries(error).forEach(([field, messages]) => {
-        setError(field, {
-          type: "server",
-          message: Array.isArray(messages) ? messages[0] : messages,
-        });
-      });
-    }
-  }, [error, setError]);
+  // useEffect(() => {
+  //   if (Object.keys(error).length > 0) {
+  //     Object.entries(error).forEach(([field, messages]) => {
+  //       setError(field, {
+  //         type: "server",
+  //         message: Array.isArray(messages) ? messages[0] : messages,
+  //       });
+  //     });
+  //   }
+  // }, [error, setError]);
   const errorMessage = getErrorMessageByPropertyName(errors, name);
+  // console.log({ fieldErrors: errors, errorMessage });
 
   return (
     <div
@@ -85,6 +91,48 @@ export default function CustomInputField({
       <Controller
         control={control}
         name={`${name}`}
+        rules={{
+          required: {
+            value: required,
+            message: `${label} is required`,
+          },
+          ...(typeof maxLength === "number"
+            ? {
+                maxLength: {
+                  value: maxLength,
+                  message: `${label} must be at most ${maxLength} characters long`,
+                },
+              }
+            : {}),
+          ...(typeof minLength === "number"
+            ? {
+                minLength: {
+                  value: minLength,
+                  message: `${label} must be at least ${minLength} characters long`,
+                },
+              }
+            : {}),
+          ...(typeof max === "number"
+            ? {
+                max: {
+                  value: max,
+                  message: `${label} must be at most ${max}`,
+                },
+              }
+            : {}),
+          min: {
+            value: min ?? 0,
+            message: `${label} must be at least ${min}`,
+          },
+          ...(pattern
+            ? {
+                pattern: {
+                  value: new RegExp(pattern),
+                  message: `${label} is not valid`,
+                },
+              }
+            : {}),
+        }}
         render={({ field }) =>
           type === "password" ? (
             <div className={`w-full relative z-50`}>

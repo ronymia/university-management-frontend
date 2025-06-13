@@ -9,7 +9,10 @@ import CustomTable, {
   IColumn,
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
-import { useAdminsQuery, useDeleteAdminMutation } from "@/redux/api/adminApi";
+import {
+  useDeleteFacultyMutation,
+  useFacultiesQuery,
+} from "@/redux/api/facultyApi";
 import { getUserInfo } from "@/services/auth.service";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -18,19 +21,19 @@ import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
-export default function AdminPage() {
+export default function FacultyPage() {
   const router = useRouter();
-  const { role } = getUserInfo() as any;
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
     sortBy: "",
     sortOrder: "",
     searchTerm: "",
-    adminId: "",
   });
+  const { role } = getUserInfo() as any;
   const { popupOptions, setPopupOptions } = usePopup();
-  const [deleteAdmin] = useDeleteAdminMutation();
+  const [deleteFaculty] = useDeleteFacultyMutation();
+
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -39,22 +42,31 @@ export default function AdminPage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
-  const { data, isLoading } = useAdminsQuery({ ...queries });
-  const admins = data?.admins;
-  const meta = data?.meta;
+  const { data, isLoading } = useFacultiesQuery({ ...queries });
 
+  const faculties = data?.faculties;
+  const meta = data?.meta;
+  // console.log(faculties);
   const deleteHandler = async (id: string) => {
     try {
       //   console.log(data);
-      await deleteAdmin(id);
+      await deleteFaculty(id);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
   const handleEdit = (updateData: any) => {
-    // console.log({ updateData });
-    router.push(`/${role}/admin/edit/${updateData.id}`);
+    console.log({ updateData });
+    router.push(`manage-faculty/edit/${updateData.id}`);
+    // setPopupOptions((prev) => ({
+    //   ...prev,
+    //   open: true,
+    //   data: updateData,
+    //   actionType: "update",
+    //   form: "faculty",
+    //   title: "Update Faculty",
+    // }));
   };
 
   // ALL ACTION BUTTONS
@@ -101,9 +113,16 @@ export default function AdminPage() {
     // NAME
     {
       header: "Department",
-      accessorKey: "customManagementDepartment",
+      accessorKey: "customAcademicDepartment",
       show: true,
-      minWidth: 20,
+      minWidth: 15,
+    },
+    // NAME
+    {
+      header: "Faculty",
+      accessorKey: "customAcademicFaculty",
+      show: true,
+      minWidth: 15,
     },
     // NAME
     {
@@ -127,6 +146,7 @@ export default function AdminPage() {
       minWidth: 15,
     },
   ];
+
   return (
     <>
       {/* FORM MODAL */}
@@ -136,13 +156,9 @@ export default function AdminPage() {
       />
 
       {/* ACTION BAR */}
-      <ActionBar
-        title={`Manage Admins`}
-        // addButtonLabel={`Add Admin`}
-        // createHandler={handleAddNewAdmin}
-      >
-        <Link href={`/${role}/admin/create`}>
-          <CustomAddButton label={`Add Admin`} />
+      <ActionBar title={`Manage Faculties`}>
+        <Link href={`/${role}/manage-faculty/create`}>
+          <CustomAddButton label={`Add Faculty`} />
         </Link>
       </ActionBar>
 
@@ -150,15 +166,17 @@ export default function AdminPage() {
       <CustomTable
         isLoading={isLoading}
         actions={actions}
+        showPagination
         columns={columns}
-        limit={queries?.limit}
-        totalData={meta?.total ?? 0}
+        limit={queries.limit}
+        totalData={meta?.total || 0}
         paginationHandler={(page: number) => setQueries({ ...queries, page })}
         rows={
-          admins?.map((row) => ({
+          faculties?.map((row) => ({
             ...row,
             fullName: `${row?.name?.firstName} ${row?.name?.middleName} ${row?.name?.lastName}`,
-            customManagementDepartment: row?.managementDepartment?.title,
+            customAcademicDepartment: row?.academicDepartment?.title,
+            customAcademicFaculty: row?.academicFaculty?.title,
             customCreatedAt: row?.createdAt
               ? dayjs(row?.createdAt).format("MMM D, YYYY hh:mm A")
               : "",

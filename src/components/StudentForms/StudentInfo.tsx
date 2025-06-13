@@ -5,8 +5,18 @@ import AcademicFacultyField from "../Academic/AcademicFacultyField";
 import AcademicSemesterField from "../Academic/AcademicSemesterField";
 import CustomRadioButton from "../Forms/CustomRadioButton";
 import CustomFileUpload from "../Forms/CustomFileUpload";
+import { useState } from "react";
 
-const StudentInfo = () => {
+const StudentInfo = ({
+  studentId,
+  academicFacultyId: propsAcademicFacultyId,
+}: {
+  studentId?: string;
+  academicFacultyId?: string;
+}) => {
+  const [academicFacultyId, setAcademicFacultyId] = useState<string>(
+    propsAcademicFacultyId || ""
+  );
   return (
     <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
       <div className={`grid grid-cols-3 gap-3`}>
@@ -26,7 +36,7 @@ const StudentInfo = () => {
           type="text"
           label="Middle Name"
           placeholder="Middle Name"
-          required
+          required={false}
         />
         {/* lastName */}
         <CustomInputField
@@ -38,30 +48,40 @@ const StudentInfo = () => {
           required
         />
         {/* password */}
-        <CustomInputField
-          id="password"
-          name="password"
-          type="text"
-          label="Password"
-          placeholder="Password"
-          required
-        />
-        {/* academicDepartment */}
-        <AcademicDepartmentField
-          name="student.academicDepartment"
-          label="Academic Department"
+        {!studentId ? (
+          <CustomInputField
+            id="password"
+            name="password"
+            type="text"
+            label="Password"
+            placeholder="Password"
+            required={false}
+          />
+        ) : null}
+
+        {/* academicSemester */}
+        <AcademicSemesterField
+          name="student.academicSemester"
+          label="Academic Semester"
         />
 
         {/* academicFaculty */}
         <AcademicFacultyField
           name="student.academicFaculty"
           label="Academic Faculty"
+          onChange={(e) => {
+            setAcademicFacultyId(e);
+            console.log({ e });
+          }}
         />
-        {/* academicSemester */}
-        <AcademicSemesterField
-          name="student.academicSemester"
-          label="Academic Semester"
+
+        {/* academicDepartment */}
+        <AcademicDepartmentField
+          academicFacultyId={academicFacultyId}
+          name="student.academicDepartment"
+          label="Academic Department"
         />
+
         {/* gender */}
         <CustomRadioButton
           id="student.gender"
@@ -81,7 +101,9 @@ const StudentInfo = () => {
             },
           ]}
         />
-        <CustomFileUpload name="file" required label="Image" />
+        {!studentId ? (
+          <CustomFileUpload name="file" required label="Image" />
+        ) : null}
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 
+import StudentForm from "@/app/(withLayout)/admin/manage-student/StudentForm";
 import React from "react";
-import StudentForm from "../StudentForm";
 
-export default function CreateStudentPage() {
+export default function SuperAdminCreateStudentPage() {
   return <StudentForm />;
 }

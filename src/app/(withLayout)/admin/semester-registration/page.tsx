@@ -13,6 +13,7 @@ import {
   useSemesterRegistrationsQuery,
   useStartNewSemesterMutation,
 } from "@/redux/api/semesterRegistrationApi";
+import { ISemesterRegistration } from "@/types";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { MdDelete, MdPlayCircleOutline } from "react-icons/md";
@@ -29,7 +30,7 @@ export default function SemesterRegistrationPage() {
 
   const { popupOptions, setPopupOptions, handleAddNewSemesterRegistration } =
     usePopup();
-  const [deleteSemesterRegistrations] =
+  const [deleteSemesterRegistrations, deleteResult] =
     useDeleteSemesterRegistrationsMutation();
   const [startNewSemester] = useStartNewSemesterMutation();
 
@@ -46,30 +47,34 @@ export default function SemesterRegistrationPage() {
   const semesterRegistrations = data?.semesterRegistrations || [];
   const meta = data?.meta;
 
-  const handleStartSemester = async (startSemesterData: {
-    [key: string]: any;
-  }) => {
+  const handleStartSemester = async (
+    startSemesterData: ISemesterRegistration
+  ) => {
     try {
-      const res = await startNewSemester(
-        startSemesterData?.academicSemesterId
-      ).unwrap();
+      const res = await startNewSemester(startSemesterData?.id).unwrap();
       console.log(res);
     } catch (err: any) {
       console.error(err?.message);
     }
   };
 
-  const deleteHandler = async (deleteData: any) => {
+  const deleteHandler = async (deleteData: ISemesterRegistration) => {
     try {
       //   console.log(data);
-      await deleteSemesterRegistrations(deleteData?.id);
+      await deleteSemesterRegistrations(deleteData.id);
     } catch (err: any) {
       console.error(err.message);
     }
+    // setPopupOptions((prev) => ({
+    //   ...prev,
+    //   open: true,
+    //   data: deleteData,
+    //   actionType: "delete",
+    //   form: "semester_registration",
+    // }));
   };
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: ISemesterRegistration) => {
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
@@ -94,7 +99,7 @@ export default function SemesterRegistrationPage() {
         },
         {
           accessorKey: "status",
-          value: "ONGOING",
+          value: "ENDED",
         },
       ],
     },
@@ -107,7 +112,16 @@ export default function SemesterRegistrationPage() {
     },
     {
       name: "delete",
-      handler: deleteHandler,
+      handler: (deleteData) => {
+        setPopupOptions((prev) => ({
+          ...prev,
+          open: true,
+          data: deleteData,
+          actionType: "delete",
+          form: "semester_registration",
+          deleteHandler: () => deleteHandler(deleteData),
+        }));
+      },
       Icon: MdDelete,
       permissions: [],
       disableOn: [],
@@ -162,14 +176,22 @@ export default function SemesterRegistrationPage() {
 
       {/* ACTION BAR */}
       <ActionBar
-        title={`Manage Semester Registrations`}
+        title={`Semester Registration`}
         addButtonLabel={`Add Semester Registration`}
         createHandler={handleAddNewSemesterRegistration}
       />
 
       {/* TABLE */}
       <CustomTable
+        showPagination
+        isLoading={isLoading || deleteResult.isLoading}
+        actions={actions}
+        limit={queries.limit}
+        totalData={meta?.total || 0}
         columns={columns}
+        paginationHandler={(page: number) => {
+          setQueries((prev) => ({ ...prev, page }));
+        }}
         rows={
           semesterRegistrations?.map((row) => ({
             ...row,
@@ -178,8 +200,6 @@ export default function SemesterRegistrationPage() {
             customAcademicSemester: row?.academicSemester?.title,
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );

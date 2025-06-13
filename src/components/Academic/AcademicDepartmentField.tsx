@@ -3,18 +3,27 @@ import CustomSelect from "../Forms/CustomSelect";
 import { useAcademicDepartmentsQuery } from "@/redux/api/academic/departmentApi";
 
 export default function AcademicDepartmentField({
+  academicFacultyId,
   name,
   label,
   onChange,
 }: {
+  academicFacultyId: string;
   name: string;
   label: string;
   onChange?: (e: any) => void;
 }) {
-  const { data, isLoading } = useAcademicDepartmentsQuery({
-    limit: 100,
-    page: 1,
-  });
+  console.log({ academicFacultyId });
+  const { data, isLoading, isFetching } = useAcademicDepartmentsQuery(
+    {
+      limit: 100,
+      page: 1,
+      academicFacultyId,
+    },
+    {
+      skip: !academicFacultyId,
+    }
+  );
   const academicDepartments = data?.academicDepartments;
   const acDepartmentOptions = academicDepartments?.map((acDepartment: any) => {
     // console.log(acDepartment?.id);
@@ -25,7 +34,7 @@ export default function AcademicDepartmentField({
   });
   return (
     <CustomSelect
-      isLoading={isLoading}
+      isLoading={isLoading || isFetching}
       name={name}
       id={name}
       options={acDepartmentOptions ?? []}

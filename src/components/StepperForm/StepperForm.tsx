@@ -5,55 +5,93 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import CustomButton from "../Button/CustomButton";
+import { CustomStepper } from "../ui/CustomStepper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 interface ISteps {
   title?: string;
   content?: React.ReactElement | React.ReactNode;
 }
 
-interface IStepsProps {
+type FormConfig = {
+  defaultValues?: Record<string, any>;
+  masterSchema: any;
+  stepSchema: any;
+};
+
+type IStepsProps = {
   steps: ISteps[];
   persistKey: string;
   submitHandler: (el: any) => void;
   navigateLink?: string;
-}
+} & FormConfig;
 
-const StepperForm = ({
+export default function StepperForm({
   steps,
   submitHandler,
   navigateLink,
   persistKey,
-}: IStepsProps) => {
+  stepSchema,
+  masterSchema,
+  defaultValues,
+}: IStepsProps) {
+  // console.log({ defaultValues });
   const router = useRouter();
 
+  // STEPPER CURRENT STEP
   const [current, setCurrent] = useState<number>(
     !!getFromLocalStorage("step")
       ? Number(JSON.parse(getFromLocalStorage("step") as string).step)
       : 0
   );
 
-  const [savedValues, setSavedValues] = useState(
-    !!getFromLocalStorage(persistKey)
+  // SAVED VALUES ON LOCALSTORAGE
+  const [savedValues] = useState(
+    !defaultValues && !!getFromLocalStorage(persistKey)
       ? JSON.parse(getFromLocalStorage(persistKey) as string)
       : ""
   );
 
+  // UPDATE STEPPER CURRENT STEP ON LOCALSTORAGE
   useEffect(() => {
     setToLocalStorage("step", JSON.stringify({ step: current }));
   }, [current]);
 
+  // NEXT STEP
   const next = () => {
     setCurrent(current + 1);
   };
 
+  // PREVIOUS STEP
   const prev = () => {
     setCurrent(current - 1);
   };
 
+  // GET STEPS
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
-  const methods = useForm({ defaultValues: savedValues });
+  const formConfig: {
+    defaultValues?: Record<string, any>;
+    resolver?: any;
+    mode?: any;
+  } = {};
+
+  // if (!!defaultValues) formConfig["defaultValues"] = defaultValues;
+  if (!defaultValues && !!savedValues)
+    formConfig["defaultValues"] = savedValues;
+  if (!!masterSchema) formConfig["resolver"] = zodResolver(masterSchema as any);
+
+  const methods = useForm<any>(formConfig);
   const watch = methods.watch();
+
+  useEffect(() => {
+    if (savedValues) {
+      methods.reset(savedValues);
+    } else if (defaultValues) {
+      methods.reset(defaultValues);
+    }
+  }, [savedValues, defaultValues, methods]);
 
   useEffect(() => {
     setToLocalStorage(persistKey, JSON.stringify(watch));
@@ -71,29 +109,70 @@ const StepperForm = ({
     }
   };
 
+  useEffect(() => {
+    console.log("Form values", methods.getValues());
+  }, [watch]);
+
   return (
     <>
-      {/* <Steps current={current} items={items} /> */}
+      {/* CUSTOM STEPPER */}
+      <CustomStepper
+        steps={items as { key: string; title: string }[]}
+        activeStep={current}
+      />
+
+      {/* HOOK FORM PROVIDER */}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(handleStudentOnSubmit)}>
           <div>{steps[current].content}</div>
-          <div style={{ marginTop: 24 }}>
-            {current < steps.length - 1 && (
-              <CustomButton onClick={() => next()}>Next</CustomButton>
+          <div className={`flex items-center justify-center mt-5 gap-5`}>
+            {/* PREVIOUS */}
+            {current > 0 && (
+              <CustomButton onClick={() => prev()} className={`w-md`}>
+                Previous
+              </CustomButton>
             )}
+
+            {/* FORM SUBMIT */}
             {current === steps.length - 1 && (
-              <CustomButton htmlType="submit" onClick={() => {}}>
+              <CustomButton htmlType="submit" className={`w-md`}>
                 Done
               </CustomButton>
             )}
-            {current > 0 && (
-              <CustomButton onClick={() => prev()}>Previous</CustomButton>
+
+            {/* NEXT */}
+            {current < steps.length - 1 && (
+              <CustomButton
+                onClick={async () => {
+                  // CLEAR ERRORS
+                  methods.clearErrors();
+                  // CURRENT STEP SCHEMA
+                  const currentStepSchema = stepSchema[current];
+
+                  // Get the current values from the form
+                  const currentFormValues = methods.watch();
+
+                  // VALIDATE CURRENT STEP SCHEMA
+                  try {
+                    await currentStepSchema.parseAsync(currentFormValues);
+                    next(); // If validation passes, move to next step
+                  } catch (error) {
+                    // CHECKING ZOD ERROR
+                    if (error instanceof z.ZodError) {
+                      // Trigger validation
+                      const isValid = await methods.trigger();
+                      if (isValid) next();
+                    }
+                  }
+                }}
+                className={`w-md`}
+              >
+                Next
+              </CustomButton>
             )}
           </div>
         </form>
       </FormProvider>
     </>
   );
-};
-
-export default StepperForm;
+}

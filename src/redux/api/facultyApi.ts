@@ -29,6 +29,9 @@ export const facultyApi = baseApi.injectEndpoints({
         url: `${BASE_FACULTY_API_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IFaculty) => {
+        return response;
+      },
       providesTags: [tagTypes.faculty],
     }),
     // get single faculty user endpoint

@@ -32,11 +32,14 @@ export const adminApi = baseApi.injectEndpoints({
       },
       providesTags: [tagTypes.admin],
     }),
-    admin: build.query({
+    adminById: build.query({
       query: (id: string | string[] | undefined) => ({
         url: `${ADMIN_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IAdmin) => {
+        return response;
+      },
       providesTags: [tagTypes.admin],
     }),
     updateAdmin: build.mutation({
@@ -59,7 +62,7 @@ export const adminApi = baseApi.injectEndpoints({
 
 export const {
   useAdminsQuery,
-  useAdminQuery,
+  useAdminByIdQuery,
   useAddAdminWithFormDataMutation,
   useUpdateAdminMutation,
   useDeleteAdminMutation,

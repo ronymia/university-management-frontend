@@ -1,10 +1,7 @@
 import { z } from "zod";
 
 export const facultySchema = z.object({
-  password: z
-    .string({ message: "Password is required" })
-    .min(6, "Password must be at least 6 characters")
-    .max(32, "Password must not exceed 32 characters"),
+  password: z.string({ message: "Password is required" }).optional(),
 
   faculty: z.object({
     name: z.object({

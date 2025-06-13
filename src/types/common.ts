@@ -34,11 +34,19 @@ export interface Name {
   middleName: string;
 }
 
+export interface IManagementDepartment {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 export interface IAdmin {
   id: string;
   name: Name;
   gender: string;
-  managementDepartment: string;
+  managementDepartment: IManagementDepartment;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -61,8 +69,8 @@ export interface IFaculty {
   emergencyContactNo: string;
   dateOfBirth: string;
   bloodGroup: string;
-  academicFaculty: string;
-  academicDepartment: string;
+  academicFaculty: IAcademicFaculty;
+  academicDepartment: IAcademicDepartment;
   designation: string;
   presentAddress: string;
   permanentAddress: string;
@@ -87,6 +95,9 @@ export interface IStudent {
   guardian: Guardian & { id: string };
   localGuardian: LocalGuardian & { id: string };
   department: string;
+  academicDepartment: IAcademicDepartment;
+  academicSemester: IAcademicSemester;
+  academicFaculty: IAcademicFaculty;
   subject: string;
   createdAt: string;
   updatedAt: string;
@@ -110,6 +121,7 @@ export interface LocalGuardian {
 
 export interface IAcademicFaculty {
   id: string;
+  syncId: string;
   title: string;
   createdAt: string;
   updatedAt: string;
@@ -118,6 +130,7 @@ export interface IAcademicFaculty {
 
 export interface IAcademicDepartment {
   id: string;
+  syncId: string;
   title: string;
   academicFaculty: IAcademicFaculty;
   createdAt: string;
@@ -127,6 +140,7 @@ export interface IAcademicDepartment {
 
 export interface IAcademicSemester {
   id: string;
+  syncId: string;
   title: string;
   year: number;
   code: string;

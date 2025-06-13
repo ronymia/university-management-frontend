@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import useDeviceWith from "@/hooks/useDeviceWith";
 import { hasPermission } from "@/utils/hasPermission";
 import { getFromLocalStorage } from "@/utils/local-storage";
+import Pagination from "./Pagination";
 
 export interface IAction {
   name: string;
@@ -31,6 +32,10 @@ interface ICustomTableProps {
   isLoading: boolean;
   actions: IAction[];
   dataAuto?: string;
+  showPagination?: boolean;
+  paginationHandler: (page: number) => void;
+  limit: number;
+  totalData: number;
 }
 
 export default function CustomTable({
@@ -39,12 +44,16 @@ export default function CustomTable({
   isLoading = false,
   actions = [],
   dataAuto,
+  showPagination = true,
+  paginationHandler = () => {},
+  limit,
+  totalData,
 }: ICustomTableProps) {
   // GET DEVICE WIDTH
   const windowInnerWidth = useDeviceWith();
 
   // GET PERMISSIONS
-  const permissions = (getFromLocalStorage("permissions") as string[]) || [];
+  const permissions = getFromLocalStorage("permissions") || [];
 
   /* ===================================== RETURN JSX ===================================== */
   return (
@@ -298,6 +307,14 @@ export default function CustomTable({
               ))}
         </tbody>
       </table>
+      {showPagination ? (
+        <Pagination
+          limit={limit}
+          totalData={totalData}
+          changeHandler={paginationHandler}
+          dataAuto={dataAuto}
+        />
+      ) : null}
     </>
   );
 }

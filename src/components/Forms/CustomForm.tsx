@@ -39,6 +39,8 @@ export default function CustomForm({
     // reset();
   };
 
+  console.log({ errors: methods.formState.errors });
+
   // useEffect(() => {
   //   if (defaultValues) reset(defaultValues);
   // }, [defaultValues, reset]);

@@ -1,30 +1,14 @@
-export const genderOptions = [
-  {
-    label: "Male",
-    value: "male",
-  },
-  {
-    label: "Female",
-    value: "female",
-  },
-  {
-    label: "Others",
-    value: "others",
-  },
-];
-export const departmentOptions = [
-  {
-    label: "HR",
-    value: "hr manager",
-  },
-  {
-    label: "Finance",
-    value: "finance",
-  },
-  {
-    label: "Management",
-    value: "management",
-  },
+import { IBloodGroup, IDesignation, IGender } from "@/types/global";
+
+export const bloodGroup: IBloodGroup[] = [
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "AB+",
+  "AB-",
+  "O+",
+  "O-",
 ];
 
 export const bloodGroupOptions = [
@@ -59,6 +43,46 @@ export const bloodGroupOptions = [
   {
     label: "O-",
     value: "O-",
+  },
+];
+
+export const gender: IGender[] = ["male", "female"];
+
+export const genderOptions = [
+  {
+    label: "Male",
+    value: "male",
+  },
+  {
+    label: "Female",
+    value: "female",
+  },
+  {
+    label: "Others",
+    value: "others",
+  },
+];
+
+export const designation: IDesignation[] = [
+  "Professor",
+  "Lecturer",
+  "Assistant Lecturer",
+  "Assistant Professor",
+  "Associate Professor",
+  "Senior Professor",
+];
+export const departmentOptions = [
+  {
+    label: "HR",
+    value: "hr manager",
+  },
+  {
+    label: "Finance",
+    value: "finance",
+  },
+  {
+    label: "Management",
+    value: "management",
   },
 ];
 

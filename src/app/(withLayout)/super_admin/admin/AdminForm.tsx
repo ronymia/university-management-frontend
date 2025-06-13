@@ -1,19 +1,27 @@
 import CustomForm from "@/components/Forms/CustomForm";
 import CustomTextareaField from "@/components/Forms/CustomTextareaField";
 import CustomInputField from "@/components/Forms/CustomInputField";
-import { useAddAdminWithFormDataMutation } from "@/redux/api/adminApi";
+import {
+  useAddAdminWithFormDataMutation,
+  useAdminByIdQuery,
+  useUpdateAdminMutation,
+} from "@/redux/api/adminApi";
 import { useDepartmentsQuery } from "@/redux/api/departmentApi";
-import { adminSchema } from "@/schemas/admin";
+import { createAdminSchema, updateAdminSchema } from "@/schemas/admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomLoading from "@/components/Loader/CustomLoading";
 import CustomDatePicker from "@/components/Forms/CustomDatePicker";
-import CustomRadioButton from "@/components/Forms/CustomRadioButton";
 import CustomSelect from "@/components/Forms/CustomSelect";
 import CustomFileUpload from "@/components/Forms/CustomFileUpload";
+import GenderField from "@/components/ui/Fields/GenderField";
+import { useRouter } from "next/navigation";
 
-export default function AdminForm({ id, popupCloseHandler }: any) {
+export default function AdminForm({ id = "" }: { id?: string }) {
+  const router = useRouter();
   const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
+  const { data: adminData, isLoading: adminLoading } = useAdminByIdQuery(id);
   const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
+  const [updateAdmin] = useUpdateAdminMutation();
   //@ts-ignore
   const departments: IDepartment[] = data?.departments;
 
@@ -26,6 +34,27 @@ export default function AdminForm({ id, popupCloseHandler }: any) {
       };
     });
 
+  const defaultValues = {
+    password: "",
+    admin: {
+      name: {
+        firstName: adminData?.name?.firstName,
+        middleName: adminData?.name?.middleName,
+        lastName: adminData?.name?.lastName,
+      },
+      email: adminData?.email,
+      designation: adminData?.designation,
+      dateOfBirth: adminData?.dateOfBirth,
+      contactNo: adminData?.contactNo,
+      emergencyContactNo: adminData?.emergencyContactNo,
+      bloodGroup: adminData?.bloodGroup,
+      gender: adminData?.gender,
+      managementDepartment: adminData?.managementDepartment?.id,
+      presentAddress: adminData?.presentAddress,
+      permanentAddress: adminData?.permanentAddress,
+    },
+  };
+
   const onSubmit = async (values: any) => {
     console.log({ values });
     const obj = { ...values };
@@ -36,20 +65,36 @@ export default function AdminForm({ id, popupCloseHandler }: any) {
     formData.append("file", file as Blob);
     formData.append("data", data);
     try {
-      await addAdminWithFormData(formData);
+      if (!!id) {
+        const body = values.admin;
+        delete body["profileImage"];
+        const res = await updateAdmin({ id, body });
+        if (!!res) {
+          router.back();
+          console.log("res", { res });
+        }
+      } else {
+        await addAdminWithFormData(formData);
+      }
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
-  if (isLoading) return <CustomLoading height={`h-[80vh]`} />;
+  if (adminLoading) return <CustomLoading height={`h-[80vh]`} />;
   return (
-    <CustomForm submitHandler={onSubmit} resolver={zodResolver(adminSchema)}>
+    <CustomForm
+      submitHandler={onSubmit}
+      resolver={zodResolver(id ? updateAdminSchema : createAdminSchema)}
+      defaultValues={defaultValues ? defaultValues : undefined}
+    >
       {/* ADMIN INFORMATION */}
       <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
         <p className={`font-bold mb-2.5 drop-shadow-sm`}>Admin Information</p>
         <div className={`grid grid-cols-3 gap-3`}>
-          <CustomFileUpload name="file" required label="Image" />
+          {!id && (
+            <CustomFileUpload id="file" name="file" required label="Image" />
+          )}
 
           {/* firstName */}
           <CustomInputField
@@ -79,33 +124,19 @@ export default function AdminForm({ id, popupCloseHandler }: any) {
             required
           />
           {/* password */}
-          <CustomInputField
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            placeholder="Password"
-            required
-          />
+          {!id ? (
+            <CustomInputField
+              id="password"
+              name="password"
+              type="password"
+              label="Password"
+              placeholder="Password"
+              required
+            />
+          ) : null}
+
           {/* gender */}
-          <CustomRadioButton
-            id="admin.gender"
-            name="admin.gender"
-            label="Gender"
-            required
-            options={[
-              {
-                name: "admin.gender",
-                title: "Male",
-                value: "male",
-              },
-              {
-                name: "admin.gender",
-                title: "Female",
-                value: "female",
-              },
-            ]}
-          />
+          <GenderField name="admin.gender" label="Gender" required />
           {/* managementDepartment */}
           <CustomSelect
             isLoading={isLoading}

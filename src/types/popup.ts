@@ -5,4 +5,5 @@ export interface IPopupOptions {
   form: string;
   data?: any;
   title: string;
+  deleteHandler?: () => void;
 }

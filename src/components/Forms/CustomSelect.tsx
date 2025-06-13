@@ -7,7 +7,7 @@ import Select from "./Select";
 type IOption = { label: string; value: string | number };
 
 interface ICustomSelectProps {
-  id?: any;
+  id?: string;
   name: string;
   placeholder?: string;
   defaultValues?: any;
@@ -86,7 +86,7 @@ export default function CustomSelect({
       />
 
       {/* ERROR MESSAGE */}
-      <small className={`text-error`}>{errorMessage}</small>
+      <small className={`text-error font-medium`}>{errorMessage}</small>
     </div>
   );
 }

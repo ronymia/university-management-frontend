@@ -7,12 +7,14 @@ interface ICustomDatePicker {
   name: string;
   required: boolean;
   label: string;
+  placeholder?: string;
 }
 
 export default function CustomDatePicker({
   name,
   required,
   label,
+  placeholder,
 }: ICustomDatePicker) {
   const {
     control,
@@ -32,11 +34,12 @@ export default function CustomDatePicker({
             label={label}
             required={required}
             // error={errorMessage}
+            placeholder={placeholder}
           />
         )}
       />
       {/* ERROR MESSAGE */}
-      <small className={`text-error`}>{errorMessage}</small>
+      <small className={`text-error font-medium`}>{errorMessage}</small>
     </div>
   );
 }

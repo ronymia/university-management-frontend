@@ -1,4 +1,5 @@
 import CustomInputField from "../Forms/CustomInputField";
+import CustomTextareaField from "../Forms/CustomTextareaField";
 
 const GuardianInfo = () => {
   return (
@@ -61,13 +62,13 @@ const GuardianInfo = () => {
           required
         />
         {/* address */}
-        <CustomInputField
+        <CustomTextareaField
           id="student.guardian.address"
           name="student.guardian.address"
-          type="text"
           label="Address"
           placeholder="Address"
           required
+          wrapperClassName={`col-span-3`}
         />
       </div>
     </>

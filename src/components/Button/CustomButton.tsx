@@ -46,7 +46,7 @@ export default function CustomButton({
       type={htmlType}
       onClick={handleClick}
       disabled={disabled}
-      className={`relative overflow-hidden rounded  px-4 py-2 text-base-300 ${
+      className={`relative overflow-hidden rounded  px-4 py-2 text-base-300 cursor-pointer ${
         variant === "outlined"
           ? "border border-primary text-primary font-medium"
           : "bg-primary"

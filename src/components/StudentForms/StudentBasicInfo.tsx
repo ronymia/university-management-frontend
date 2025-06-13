@@ -1,6 +1,7 @@
 import CustomTextareaField from "../Forms/CustomTextareaField";
 import CustomInputField from "../Forms/CustomInputField";
 import CustomDatePicker from "../Forms/CustomDatePicker";
+import BloodGroupField from "../ui/Fields/BloodGroupField";
 
 const StudentBasicInfo = () => {
   return (
@@ -24,6 +25,7 @@ const StudentBasicInfo = () => {
         label="Contact No."
         placeholder="Contact No."
         required
+        maxLength={11}
       />
       {/* emergencyContactNo */}
       <CustomInputField
@@ -33,23 +35,19 @@ const StudentBasicInfo = () => {
         label="Emergency Contact No."
         placeholder="Emergency Contact No."
         required
+        maxLength={11}
       />
       {/* dateOfBirth */}
       <CustomDatePicker
-        id="student.dateOfBirth"
         name="student.dateOfBirth"
         label="Date of birth"
-        placeholder="Date of birth"
         required
       />
       {/* bloodGroup */}
-      <CustomInputField
-        id="student.bloodGroup"
+      <BloodGroupField
         name="student.bloodGroup"
-        type="text"
         label="Blood group"
-        placeholder="Blood group"
-        required
+        required={false}
       />
       {/* designation */}
       {/* <CustomInputField

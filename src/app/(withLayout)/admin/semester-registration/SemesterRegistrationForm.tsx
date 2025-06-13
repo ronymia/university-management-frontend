@@ -104,7 +104,7 @@ export default function SemesterRegistrationForm({
   };
 
   if (isLoading) {
-    return <CustomLoading />;
+    return <CustomLoading height="h-[50vh]" />;
   }
   return (
     <>
