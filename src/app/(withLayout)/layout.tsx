@@ -29,8 +29,13 @@ export default function DashboardLayout({
     return <CustomLoading height={"h-screen"} />;
   }
   return (
-    <div className={`h-screen flex gap-3 bg-[#f9fbfc] p-3`}>
-      <Sidebar />
+    <div className={`min-h-screen flex gap-3 bg-[#f9fbfc] p-3`}>
+      {/* Sticky Sidebar */}
+      <div className="sticky top-3 h-[calc(100vh-1.5rem)] overflow-y-auto">
+        <Sidebar />
+      </div>
+
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col gap-3">
         <Navbar />
         <Contents>{children}</Contents>

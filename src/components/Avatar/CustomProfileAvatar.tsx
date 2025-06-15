@@ -1,20 +1,23 @@
 import Image from "next/image";
 import { CustomDropdown } from "../Dropdown/CustomDropdown";
 import { getUserInfo } from "@/services/auth.service";
+import { useAppSelector } from "@/redux/hooks";
+import { USER_ROLE } from "@/constants/role";
+import { getFullName } from "@/utils/getFullName";
 
 export default function CustomProfileAvatar({
   name = "User",
   avatarUrl,
   dropdownItems = [],
-  size = "20",
 }: {
   name?: string;
   avatarUrl?: string;
   dropdownItems?: { label: string; onClick: () => void }[];
   size?: string;
 }) {
+  const { user } = useAppSelector((state) => state.auth);
   const userDetails = getUserInfo() as any;
-
+  console.log({ user });
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -40,7 +43,11 @@ export default function CustomProfileAvatar({
         )}
       </button>
       <div className="flex flex-col">
-        <span className="text-sm font-bold">MD Rony Mia</span>
+        <span className="text-sm font-bold">
+          {userDetails?.role === USER_ROLE.SUPER_ADMIN
+            ? "MD ROny Mia"
+            : getFullName(user?.name)}
+        </span>
         <small className="text-xs font-semibold text-gray-500">
           {userDetails?.role || ""}
         </small>

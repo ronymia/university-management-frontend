@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { IconType } from "react-icons";
 import { motion } from "motion/react";
 import useDeviceWith from "@/hooks/useDeviceWith";
 import { hasPermission } from "@/utils/hasPermission";
 import { getFromLocalStorage } from "@/utils/local-storage";
 import Pagination from "./Pagination";
+import ActionButtons from "./ActionButtons";
+import SortableHeader from "./SortableHeader";
+import { useAppSelector } from "@/redux/hooks";
 
 export interface IAction {
   name: string;
@@ -24,6 +27,10 @@ export interface IColumn {
   show: boolean;
   isMainField?: boolean;
   align?: "left" | "center" | "right";
+  // Add these for sorting
+  sortable?: boolean;
+  sortDirection?: "asc" | "desc" | null;
+  onSort?: (accessorKey: string, direction: "asc" | "desc") => void;
 }
 
 interface ICustomTableProps {
@@ -46,14 +53,54 @@ export default function CustomTable({
   dataAuto,
   showPagination = true,
   paginationHandler = () => {},
+  changeLimitHandler = () => {},
   limit,
   totalData,
 }: ICustomTableProps) {
   // GET DEVICE WIDTH
   const windowInnerWidth = useDeviceWith();
+  const { isStickyNavbar, lastScrollTopNavbar } = useAppSelector(
+    (state) => state.globalState
+  );
 
   // GET PERMISSIONS
   const permissions = getFromLocalStorage("permissions") || [];
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
+
+  const handleSort = (key: string, direction: "asc" | "desc") => {
+    setSortConfig({ key, direction });
+  };
+
+  const sortedRows = useMemo(() => {
+    if (!sortConfig) return rows;
+
+    return [...rows].sort((a, b) => {
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+
+      if (aValue < bValue) {
+        return sortConfig.direction === "asc" ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [rows, sortConfig]);
+
+  // Update your columns with sorting props
+  const columnsWithSort = columns.map((col) => ({
+    ...col,
+    sortable: true, // or conditionally set this
+    sortDirection:
+      sortConfig?.key === col.accessorKey ? sortConfig.direction : null,
+    onSort: handleSort,
+  }));
+
+  // Then pass sortedRows and columnsWithSort to your CustomTable
 
   /* ===================================== RETURN JSX ===================================== */
   return (
@@ -66,7 +113,9 @@ export default function CustomTable({
         className="w-full"
       >
         {/* <===================================== Table Header ===================================> */}
-        <thead className="h-16 hidden md:table-header-group">
+        {/* // In your CustomTable component's return statement */}
+        <thead className="h-16 hidden md:table-header-group sticky top-3 bg-base-300 z-10">
+          {/* Main Header Row */}
           <tr className="text-start text-neutral">
             {columns?.map((col, index) =>
               col.show ? (
@@ -93,27 +142,24 @@ export default function CustomTable({
                 </th>
               ) : null
             )}
-            {actions?.length > 0 && (
+            {actions.length > 0 && (
               <th
                 key="actions"
                 style={{ minWidth: "2%" }}
-                colSpan={actions?.length}
-                className=""
+                colSpan={actions.length}
+                className="rounded-tr-xl rounded-br-xl"
               >
-                <div
-                  className={`bg-primary/10 flex items-center justify-end h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5`}
-                >
+                <div className="bg-primary/10 flex items-center justify-end h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5">
                   Action
                 </div>
               </th>
             )}
           </tr>
         </thead>
-
         {/* <===================================== Table Body ===================================> */}
         <tbody className="block w-full md:table-row-group">
           {!isLoading
-            ? rows?.map((row, rowIndex) => (
+            ? sortedRows?.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
                   className="h-16 block md:table-row border md:border-0 md:border-b border-primary-content  text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg "
@@ -179,7 +225,7 @@ export default function CustomTable({
                     </td>
                   )}
                   {/* <===================================== Table Columns ===================================> */}
-                  {columns?.map((col, index) =>
+                  {columnsWithSort?.map((col, index) =>
                     col.show ? (
                       <td
                         key={col?.accessorKey}
@@ -225,59 +271,13 @@ export default function CustomTable({
                   {windowInnerWidth > 768 && actions?.length > 0 && (
                     <td className="hidden md:table-cell text-right">
                       <div className="flex justify-end space-x-4 h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5">
-                        {actions
-                          ?.filter((action) => {
-                            return !action?.disableOn?.some(
-                              (disable: { [key: string]: any }) => {
-                                return (
-                                  row?.[disable?.accessorKey] === disable?.value
-                                );
-                              }
-                            );
-                          })
-                          .map((action) => (
-                            // CHECK PERMISSIONS
-                            <React.Fragment key={action?.name}>
-                              {hasPermission(
-                                action.permissions,
-                                permissions
-                              ) ? (
-                                <button
-                                  data-auto={`${dataAuto}_${action?.name}-${row?.id}`}
-                                  key={action?.name}
-                                  type="button"
-                                  onClick={() => {
-                                    action?.handler?.(row);
-                                  }}
-                                >
-                                  <action.Icon
-                                    className={`text-xl ${
-                                      action?.name === "delete"
-                                        ? " text-red-500"
-                                        : "text-primary"
-                                    }`}
-                                  />
-                                </button>
-                              ) : (
-                                <button
-                                  data-auto={`${dataAuto}_${action?.name}-${row?.id}`}
-                                  key={action?.name}
-                                  type="button"
-                                  onClick={() => {
-                                    action?.handler?.(row);
-                                  }}
-                                >
-                                  <action.Icon
-                                    className={`text-xl ${
-                                      action?.name === "delete"
-                                        ? " text-red-500"
-                                        : "text-primary"
-                                    }`}
-                                  />
-                                </button>
-                              )}
-                            </React.Fragment>
-                          ))}
+                        <ActionButtons
+                          key={row?.id}
+                          actions={actions}
+                          row={row}
+                          dataAuto={dataAuto}
+                          permissions={permissions}
+                        />
                       </div>
                     </td>
                   )}
@@ -306,15 +306,50 @@ export default function CustomTable({
                 </motion.tr>
               ))}
         </tbody>
+        {/* <===================================== Table Footer ==================================> */}
+        {showPagination && !isLoading && (
+          <tfoot className="h-16 sticky bottom-3 bg-base-300 z-10">
+            <tr className="text-sm font-semibold">
+              <td colSpan={columns.length + 1}>
+                <div className="w-full drop-shadow rounded-xl border border-primary/20 bg-primary/20 h-16 flex items-center justify-between px-4">
+                  {/* Pagination Info */}
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">
+                      Showing {0}-{0} of {totalData}
+                    </span>
+                  </div>
+
+                  {/* Pagination Controls */}
+                  <div className="flex items-center gap-4">
+                    <label className="font-bold">
+                      Rows Per Page:
+                      <select
+                        value={limit}
+                        onChange={(e) =>
+                          changeLimitHandler?.(parseInt(e.target.value))
+                        }
+                        className="ml-2 border border-primary rounded"
+                      >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                    </label>
+
+                    <Pagination
+                      limit={limit}
+                      totalData={totalData}
+                      changeHandler={paginationHandler}
+                      dataAuto={dataAuto}
+                    />
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        )}
       </table>
-      {showPagination ? (
-        <Pagination
-          limit={limit}
-          totalData={totalData}
-          changeHandler={paginationHandler}
-          dataAuto={dataAuto}
-        />
-      ) : null}
     </>
   );
 }

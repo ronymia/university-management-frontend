@@ -268,7 +268,7 @@ export default function Sidebar() {
     <motion.aside
       animate={{ width: isSidebarCollapsed ? 60 : 240 }}
       transition={{ duration: 0.3, type: "tween" }}
-      className="flex flex-col shadow-lg relative bg-base-300 text-primary border-r-2 border-gray-300 rounded-2xl"
+      className="flex flex-col shadow-lg relative bg-base-300 text-primary border-r-2 border-gray-300 rounded-2xl h-full"
       onHoverStart={() => {
         if (isHovering) appDispatch(expandSidebar());
       }}

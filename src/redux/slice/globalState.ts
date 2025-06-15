@@ -5,6 +5,8 @@ export const globalState = createSlice({
   initialState: {
     isSidebarCollapsed: false,
     isHovering: false,
+    isStickyNavbar: true,
+    lastScrollTopNavbar: 0,
   },
   reducers: {
     toggleSidebar: (state) => {
@@ -27,10 +29,22 @@ export const globalState = createSlice({
       state.isSidebarCollapsed = false;
       //   state.isHovering = true;
     },
+    toggleStickyNavbar: (state, action) => {
+      state.isStickyNavbar = action.payload;
+    },
+    setLastScrollTopNavbar: (state, action) => {
+      state.lastScrollTopNavbar = action.payload;
+    },
   },
 });
 
-export const { toggleSidebar, collapseSidebar, expandSidebar, toggleHovering } =
-  globalState.actions;
+export const {
+  toggleSidebar,
+  collapseSidebar,
+  expandSidebar,
+  toggleHovering,
+  toggleStickyNavbar,
+  setLastScrollTopNavbar,
+} = globalState.actions;
 
 export default globalState.reducer;

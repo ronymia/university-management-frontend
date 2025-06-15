@@ -14,6 +14,8 @@ import {
   useStudentsQuery,
 } from "@/redux/api/studentApi";
 import { getUserInfo } from "@/services/auth.service";
+import type { IStudent } from "@/types";
+import { getFullName } from "@/utils/getFullName";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,7 +49,7 @@ export default function StudentPage() {
   const students = data?.students;
   const meta = data?.meta;
   // console.log(students);
-  const deleteHandler = async (deleteData: any) => {
+  const deleteHandler = async (deleteData: IStudent) => {
     try {
       //   console.log(data);
       await deleteStudent(deleteData?.id);
@@ -56,7 +58,7 @@ export default function StudentPage() {
     }
   };
 
-  const handleEdit = (updateData: any) => {
+  const handleEdit = (updateData: IStudent) => {
     console.log({ updateData });
     router.push(`manage-student/edit/${updateData.id}`);
     // setPopupOptions((prev) => ({
@@ -175,9 +177,7 @@ export default function StudentPage() {
         rows={
           students?.map((row) => ({
             ...row,
-            fullName: `${row?.name?.firstName} ${
-              row?.name?.middleName ? row?.name?.middleName : ""
-            } ${row?.name?.lastName}`,
+            fullName: row?.name ? getFullName(row?.name) : `N/A`,
             customAcademicDepartment: row?.academicDepartment?.title,
             customAcademicSemester: row?.academicSemester?.title,
             customCreatedAt: row?.createdAt
