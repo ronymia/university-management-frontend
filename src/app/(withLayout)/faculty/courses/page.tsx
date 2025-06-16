@@ -9,6 +9,7 @@ import { useDebounced } from "@/hooks/useDebounced";
 import { useFacultyCoursesQuery } from "@/redux/api/facultyApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FaUsersViewfinder } from "react-icons/fa6";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function FacultyCoursePage() {
@@ -37,8 +38,12 @@ export default function FacultyCoursePage() {
 
   const handleEdit = (updateData: any) => {
     console.log({ updateData });
+    const courseId = updateData?.course?.id;
+    const offeredCourseSectionId =
+      updateData?.sections[0]?.classSchedules[0]?.offeredCourseSectionId;
+    console.log({ offeredCourseSectionId });
     router.push(
-      `/faculty/courses/student?courseId=${updateData?.course?.id}&offeredCourseSectionId=${updateData?.id}`
+      `/faculty/courses/student?courseId=${courseId}&offeredCourseSectionId=${offeredCourseSectionId}`
     );
   };
 
@@ -47,7 +52,7 @@ export default function FacultyCoursePage() {
     {
       name: "View all students",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
+      Icon: FaUsersViewfinder,
       permissions: [],
       disableOn: [],
     },
@@ -65,14 +70,14 @@ export default function FacultyCoursePage() {
     // NAME
     {
       header: "Code",
-      accessorKey: "code",
+      accessorKey: "courseCode",
       show: true,
       minWidth: 20,
     },
     // NAME
     {
       header: "Credits",
-      accessorKey: "credits",
+      accessorKey: "courseCredits",
       show: true,
       minWidth: 20,
     },
@@ -87,7 +92,7 @@ export default function FacultyCoursePage() {
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -104,9 +109,41 @@ export default function FacultyCoursePage() {
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={myCourses || []}
         isLoading={isLoading}
         actions={actions}
+        paginationConfig={{
+          page: queries.page,
+          limit: queries.limit,
+          total: meta?.total || 0,
+          totalPage: meta?.totalPage || 0,
+          showPagination: true,
+          paginationHandler: (page) => setQueries({ ...queries, page }),
+          changeLimitHandler: (limit) => setQueries({ ...queries, limit }),
+        }}
+        rows={
+          myCourses?.map((row) => ({
+            ...row,
+            customCourse: `${row?.course?.title}`,
+            courseCode: `${row?.course?.code}`,
+            courseCredits: `${row?.course?.credits}`,
+            customSection: (
+              <>
+                {row?.sections
+                  ?.map((section) => section.section)
+                  .map((el, index) => {
+                    return (
+                      <div key={index} style={{ margin: "20px 0px" }}>
+                        <span>
+                          Sec - {el?.title} ({el?.currentEnrolledStudent}/
+                          {el?.maxCapacity})
+                        </span>
+                      </div>
+                    );
+                  })}
+              </>
+            ),
+          })) || []
+        }
       />
     </>
   );

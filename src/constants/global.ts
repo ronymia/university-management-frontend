@@ -1,4 +1,10 @@
-import { IBloodGroup, IDesignation, IGender } from "@/types/global";
+import { SemesterRegistrationStatus } from "@/enums/global";
+import {
+  IBloodGroup,
+  IDesignation,
+  IGender,
+  ISemesterRegistrationStatus,
+} from "@/types/global";
 
 export const bloodGroup: IBloodGroup[] = [
   "A+",
@@ -158,7 +164,11 @@ export const daysOptions = days.map((day: string) => {
   };
 });
 
-export const semesterRegistrationStatus = ["UPCOMING", "ONGOING", "ENDED"];
+export const semesterRegistrationStatus: ISemesterRegistrationStatus[] = [
+  "UPCOMING",
+  "ONGOING",
+  "ENDED",
+];
 
 export enum ExamType {
   FINAL = "FINAL",

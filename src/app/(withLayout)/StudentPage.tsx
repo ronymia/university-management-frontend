@@ -174,6 +174,19 @@ export default function StudentPage() {
         paginationHandler={(page: number) => {
           setQueries((prev) => ({ ...prev, page: page }));
         }}
+        paginationConfig={{
+          page: queries?.page || 1,
+          limit: queries?.limit || 10,
+          total: meta?.total || 0,
+          totalPage: meta?.totalPage || 0,
+          showPagination: true,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
         rows={
           students?.map((row) => ({
             ...row,

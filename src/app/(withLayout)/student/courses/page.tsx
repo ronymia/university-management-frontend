@@ -50,61 +50,61 @@ export default function StudentCoursePage() {
 
   // TABLE COLUMNS DEFINE
   const columns: IColumn[] = [
-    // NAME
+    // customCourseName
     {
       header: "Course name",
       accessorKey: "customCourseName",
       show: true,
       minWidth: 20,
     },
-    // NAME
+    // courseCode
     {
       header: "Code",
-      accessorKey: "code",
+      accessorKey: "courseCode",
       show: true,
-      minWidth: 20,
+      minWidth: 10,
     },
-    // NAME
+    // credits
     {
       header: "Credits",
       accessorKey: "credits",
       show: true,
-      minWidth: 20,
+      minWidth: 10,
     },
-    // NAME
+    // status
     {
       header: "Status",
       accessorKey: "status",
       show: true,
-      minWidth: 20,
+      minWidth: 10,
     },
-    // NAME
+    // customGrade
     {
       header: "Grade",
       accessorKey: "customGrade",
       show: true,
-      minWidth: 20,
+      minWidth: 10,
     },
-    // NAME
+    // point
     {
       header: "Points",
-      accessorKey: "point",
+      accessorKey: "points",
       show: true,
-      minWidth: 20,
+      minWidth: 10,
     },
-    // NAME
+    // totalMarks
     {
       header: "Total Marks",
       accessorKey: "totalMarks",
       show: true,
-      minWidth: 20,
+      minWidth: 15,
     },
     // NAME
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
-      minWidth: 20,
+      show: false,
+      minWidth: 30,
     },
   ];
   return (
@@ -118,18 +118,29 @@ export default function StudentCoursePage() {
 
       {/* TABLE */}
       <CustomTable
+        isLoading={isLoading}
+        actions={actions}
         columns={columns}
+        paginationConfig={{
+          showPagination: true,
+          page: queries.page,
+          limit: queries.limit,
+          total: meta?.total || 0,
+          totalPage: meta?.totalPage || 0,
+          paginationHandler: (page: number) => setQueries({ ...queries, page }),
+          changeLimitHandler: (limit: number) =>
+            setQueries({ ...queries, limit }),
+        }}
         rows={
           myCourses?.map((row) => ({
-            id: row?.id,
+            ...row,
             customCourseName: row?.course?.title,
             customGrade: row?.grade ? row?.grade : "-",
+            courseCode: row?.course?.code,
             credits: row?.course?.credits,
             createdAt: row?.createdAt,
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );

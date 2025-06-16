@@ -1,4 +1,4 @@
-import { IMeta, IMyCourse, IStudent } from "@/types";
+import { IMeta, IMyCourse, IStudent, IStudentClassSchedule } from "@/types";
 import { baseApi } from "./baseApi";
 import { tagTypes } from "../tag-types";
 
@@ -81,7 +81,7 @@ export const studentApi = baseApi.injectEndpoints({
           params: arg,
         };
       },
-      transformResponse: (response: IStudent[], meta: IMeta) => {
+      transformResponse: (response: IStudentClassSchedule[], meta: IMeta) => {
         return {
           myCourseSchedules: response,
           meta,
@@ -91,7 +91,7 @@ export const studentApi = baseApi.injectEndpoints({
     }),
     myAcademicInfos: build.query({
       query: (arg: Record<string, any>) => ({
-        url: `${STUDENT_URL}/my-academic-infos`,
+        url: `${STUDENT_URL}/my-academic-info`,
         method: "GET",
         params: arg,
       }),

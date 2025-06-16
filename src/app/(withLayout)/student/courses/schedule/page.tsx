@@ -39,7 +39,7 @@ export default function MyCourseSchedulePage() {
       header: "Course name",
       accessorKey: "customCourseName",
       show: true,
-      minWidth: 20,
+      minWidth: 30,
     },
     // NAME
     {
@@ -60,7 +60,7 @@ export default function MyCourseSchedulePage() {
       header: "Class Schedules",
       accessorKey: "customClassSchedule",
       show: true,
-      minWidth: 20,
+      minWidth: 50,
     },
   ];
   return (
@@ -74,28 +74,36 @@ export default function MyCourseSchedulePage() {
 
       {/* TABLE */}
       <CustomTable
+        rowHeight={`h-52`}
         columns={columns}
+        isLoading={isLoading}
+        actions={actions}
+        paginationConfig={{
+          page: 1,
+          limit: 10,
+          total: 0,
+          totalPage: 0,
+          showPagination: true,
+          paginationHandler: () => {},
+          changeLimitHandler: () => {},
+        }}
         rows={
           myCourseSchedules?.map((row) => ({
-            id: row?.id,
-            customCourseName: row?.course?.title,
-            customGrade: row?.grade ? row?.grade : "-",
-            customCredits: row?.course?.credits,
-            customSection: row?.title,
-            createdAt: row?.createdAt,
+            customCourseName: row?.offeredCourse?.course?.title,
+            customCredits: row?.offeredCourse?.course?.credits,
+            customSection: row?.offeredCourseSection?.title,
             customClassSchedule: (
               <>
                 <ClassSchedule
                   data={
-                    row?.offeredCourseClassSchedules as IOfferedCourseSchedule[]
+                    row?.offeredCourseSection
+                      ?.offeredCourseClassSchedules as IOfferedCourseSchedule[]
                   }
                 />
               </>
             ),
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );

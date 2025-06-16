@@ -7,6 +7,7 @@ import CustomTable, {
   IAction,
   IColumn,
 } from "@/components/ui/Table/CustomTable";
+import { SemesterRegistrationStatus } from "@/enums/global";
 import { useDebounced } from "@/hooks/useDebounced";
 import {
   useDeleteSemesterRegistrationsMutation,
@@ -95,11 +96,11 @@ export default function SemesterRegistrationPage() {
       disableOn: [
         {
           accessorKey: "status",
-          value: "UPCOMING",
+          value: SemesterRegistrationStatus.UPCOMING,
         },
         {
           accessorKey: "status",
-          value: "ENDED",
+          value: SemesterRegistrationStatus.ONGOING,
         },
       ],
     },

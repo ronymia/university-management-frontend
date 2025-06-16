@@ -1,4 +1,10 @@
-import { ICoreFaculty, IFaculty, IFacultyCourse, IMeta } from "@/types";
+import {
+  ICoreFaculty,
+  ICoreStudent,
+  IFaculty,
+  IFacultyCourse,
+  IMeta,
+} from "@/types";
 import { baseApi } from "./baseApi";
 import { tagTypes } from "../tag-types";
 
@@ -6,6 +12,23 @@ const BASE_FACULTY_API_URL = "/faculties";
 
 export const facultyApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
+    // get all faculty user endpoint
+    facultiesFromCore: build.query({
+      query: (arg: Record<string, any>) => {
+        return {
+          url: `${BASE_FACULTY_API_URL}/core-faculties`,
+          method: "GET",
+          params: arg,
+        };
+      },
+      transformResponse: (response: IFaculty[], meta: IMeta) => {
+        return {
+          faculties: response,
+          meta,
+        };
+      },
+      providesTags: [tagTypes.faculty],
+    }),
     // get all faculty user endpoint
     faculties: build.query({
       query: (arg: Record<string, any>) => {
@@ -95,7 +118,7 @@ export const facultyApi = baseApi.injectEndpoints({
           params: arg,
         };
       },
-      transformResponse: (response: ICoreFaculty[], meta: IMeta) => {
+      transformResponse: (response: ICoreStudent[], meta: IMeta) => {
         return {
           myCourseStudents: response,
           meta,
@@ -107,6 +130,7 @@ export const facultyApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useFacultiesFromCoreQuery,
   useAddFacultyWithFormDataMutation, // create faculty user hook
   useFacultiesQuery, // get all faculty users hook
   useFacultyQuery, // get single faculty user hook

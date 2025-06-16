@@ -8,8 +8,6 @@ import { hasPermission } from "@/utils/hasPermission";
 import { getFromLocalStorage } from "@/utils/local-storage";
 import Pagination from "./Pagination";
 import ActionButtons from "./ActionButtons";
-import SortableHeader from "./SortableHeader";
-import { useAppSelector } from "@/redux/hooks";
 
 export interface IAction {
   name: string;
@@ -34,34 +32,50 @@ export interface IColumn {
 }
 
 interface ICustomTableProps {
+  rowHeight?: string;
   rows: any[];
   columns: IColumn[];
   isLoading: boolean;
   actions: IAction[];
   dataAuto?: string;
   showPagination?: boolean;
-  paginationHandler: (page: number) => void;
-  limit: number;
-  totalData: number;
+  paginationHandler?: (page: number) => void;
+  limit?: number;
+  totalData?: number;
+  paginationConfig?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPage: number;
+    showPagination: boolean;
+    paginationHandler: (page: number) => void;
+    changeLimitHandler: (limit: number) => void;
+  };
 }
 
 export default function CustomTable({
+  rowHeight = "h-16",
   rows = [],
   columns = [],
   isLoading = false,
   actions = [],
   dataAuto,
-  showPagination = true,
-  paginationHandler = () => {},
-  changeLimitHandler = () => {},
   limit,
   totalData,
+  showPagination = true,
+  paginationHandler = () => {},
+  paginationConfig = {
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPage: 0,
+    showPagination: true,
+    paginationHandler: () => {},
+    changeLimitHandler: () => {},
+  },
 }: ICustomTableProps) {
   // GET DEVICE WIDTH
   const windowInnerWidth = useDeviceWith();
-  const { isStickyNavbar, lastScrollTopNavbar } = useAppSelector(
-    (state) => state.globalState
-  );
 
   // GET PERMISSIONS
   const permissions = getFromLocalStorage("permissions") || [];
@@ -135,6 +149,12 @@ export default function CustomTable({
                                 ? "border-l rounded-tl-xl rounded-bl-xl"
                                 : "border-l-0"
                             }
+                            ${
+                              actions.length === 0 &&
+                              index === columns.length - 1
+                                ? "border-r rounded-tr-xl rounded-br-xl"
+                                : "border-r-0"
+                            }
                            `}
                   >
                     {col?.header}
@@ -162,7 +182,7 @@ export default function CustomTable({
             ? sortedRows?.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className="h-16 block md:table-row border md:border-0 md:border-b border-primary-content  text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg "
+                  className=" block md:table-row border md:border-0 md:border-b border-primary-content  text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg "
                 >
                   {/* <===================================== Action for Mobile ====================================> */}
                   {windowInnerWidth < 768 && actions?.length > 0 && (
@@ -242,12 +262,18 @@ export default function CustomTable({
                         className="block md:table-cell  border md:border-none border-gray-200"
                       >
                         <div
-                          className={`drop-shadow border-t border-b border-primary/20 h-16 flex items-center justify-start px-4 
+                          className={`drop-shadow border-t border-b border-primary/20 ${rowHeight} flex items-center justify-start px-4 
                             ${
                               index === 0
                                 ? "border-l rounded-tl-xl rounded-bl-xl"
                                 : "border-l-0"
                             }
+                             ${
+                               actions.length === 0 &&
+                               index === columns.length - 1
+                                 ? "border-r rounded-tr-xl rounded-br-xl"
+                                 : "border-r-0"
+                             }
                            `}
                         >
                           <div className="flex justify-between md:block">
@@ -326,7 +352,9 @@ export default function CustomTable({
                       <select
                         value={limit}
                         onChange={(e) =>
-                          changeLimitHandler?.(parseInt(e.target.value))
+                          paginationConfig?.changeLimitHandler?.(
+                            parseInt(e.target.value)
+                          )
                         }
                         className="ml-2 border border-primary rounded"
                       >
@@ -338,9 +366,9 @@ export default function CustomTable({
                     </label>
 
                     <Pagination
-                      limit={limit}
-                      totalData={totalData}
-                      changeHandler={paginationHandler}
+                      limit={paginationConfig?.limit}
+                      totalData={paginationConfig?.total}
+                      changeHandler={paginationConfig?.paginationHandler}
                       dataAuto={dataAuto}
                     />
                   </div>

@@ -1,3 +1,5 @@
+import { SemesterRegistrationStatus } from "@/enums/global";
+
 export type IBloodGroup =
   | "A+"
   | "A-"
@@ -16,3 +18,8 @@ export type IDesignation =
   | "Associate Professor"
   | "Professor"
   | "Senior Professor";
+
+export type ISemesterRegistrationStatus =
+  | SemesterRegistrationStatus.UPCOMING
+  | SemesterRegistrationStatus.ONGOING
+  | SemesterRegistrationStatus.ENDED;

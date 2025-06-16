@@ -13,16 +13,25 @@ import {
   useUpdateFinalMarksMutation,
 } from "@/redux/api/studentEnrollCourseMarkApi";
 import { IStudentEnrolledCourseMark } from "@/types";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, useState } from "react";
+import { Fragment, use, useState } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
+
+interface IStudentResultPageProps {
+  searchParams: Promise<{
+    studentId: string;
+    courseId: string;
+    offeredCourseSectionId: string;
+  }>;
+}
 
 export default function StudentResultPage({
   searchParams,
-}: Record<string, any>) {
+}: IStudentResultPageProps) {
   const router = useRouter();
   //   console.log(searchParams);
-  const { studentId, courseId, offeredCourseSectionId } = searchParams;
+  const { studentId, courseId, offeredCourseSectionId } = use(searchParams);
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -67,19 +76,17 @@ export default function StudentResultPage({
 
   const handleUpdateMarks = (updateData: any) => {
     console.log({ updateData });
-    router.push(
-      `/faculty/update-mark?&examType=${data?.examType}&marks=${data?.marks}&academicSemesterId=${data?.academicSemesterId}&studentId=${studentId}&courseId=${courseId}&offeredCourseSectionId=${offeredCourseSectionId}`
-    );
+    router.push(``);
   };
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
-    {
-      name: "Update marks",
-      handler: handleUpdateMarks,
-      Icon: RiEdit2Fill,
-      permissions: [],
-      disableOn: [],
-    },
+    // {
+    //   name: "Update marks",
+    //   handler: handleUpdateMarks,
+    //   Icon: RiEdit2Fill,
+    //   permissions: [],
+    //   disableOn: [],
+    // },
   ]);
 
   // TABLE COLUMNS DEFINE
@@ -93,8 +100,8 @@ export default function StudentResultPage({
     },
     // NAME
     {
-      header: "Grade info",
-      accessorKey: "customGradeInfo",
+      header: "Course Name",
+      accessorKey: "courseName",
       show: true,
       minWidth: 20,
     },
@@ -107,9 +114,23 @@ export default function StudentResultPage({
     },
     // NAME
     {
+      header: "Grade info",
+      accessorKey: "customGradeInfo",
+      show: true,
+      minWidth: 20,
+    },
+    // NAME
+    {
+      header: "Update Marks",
+      accessorKey: "updateMarks",
+      show: true,
+      minWidth: 20,
+    },
+    // NAME
+    {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -117,11 +138,7 @@ export default function StudentResultPage({
   return (
     <>
       {/* ACTION BAR */}
-      <ActionBar
-        title={`My Course Students`}
-        addButtonLabel={`Add Course`}
-        // createHandler={handleAddNewCourse}
-      >
+      <ActionBar title={`My Course Students Result`}>
         <div style={{ marginLeft: "auto" }}>
           {data?.studentEnrolledCourseMarks
             .filter(
@@ -136,7 +153,7 @@ export default function StudentResultPage({
                       onClick={() =>
                         handleUpdateFinalMarks({
                           studentId,
-                          courseId,
+                          courseId: el.studentEnrolledCourse.course.id,
                           academicSemesterId,
                         })
                       }
@@ -160,18 +177,34 @@ export default function StudentResultPage({
               <>
                 <table>
                   <p title="name">
-                    {row?.firstName} {row?.middleName} {row?.lastName}
+                    {row?.student.firstName} {row?.student.middleName}
+                    {row?.student.lastName}
                   </p>
-                  <p title="student ID">{row?.studentId}</p>
+                  <p title="student ID">{row?.student.studentId}</p>
                 </table>
               </>
             ),
+            courseName: row.studentEnrolledCourse.course.title,
             customGradeInfo: (
               <>
                 <table>
                   <p title="name">{!row?.grade ? "-" : row?.grade}</p>
                   <p title="student ID">{row?.marks}</p>
                 </table>
+              </>
+            ),
+            updateMarks: (
+              <>
+                <Link
+                  href={`/faculty/update-mark?&examType=${row?.examType}&marks=${row?.marks}&academicSemesterId=${row?.academicSemesterId}&studentId=${studentId}&courseId=${row.studentEnrolledCourse.course.id}&offeredCourseSectionId=${offeredCourseSectionId}`}
+                >
+                  <CustomButton
+                    className="btn btn-primary"
+                    // onClick={() => handleViewMarks(row)}
+                  >
+                    View Marks
+                  </CustomButton>
+                </Link>
               </>
             ),
           })) || []

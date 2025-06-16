@@ -73,7 +73,7 @@ export default function ViewPreregistrationPage() {
                     <strong>Sec - {section?.title}</strong>
                   </td>
                   <td style={{ width: "30%" }}>
-                    Enrolled - ({section?.currentlyEnrolledStudent}/
+                    Enrolled - ({section?.currentEnrolledStudent}/
                     {section?.maxCapacity})
                   </td>
                   <td style={{ width: "30%" }}>
@@ -166,7 +166,7 @@ export default function ViewPreregistrationPage() {
         //               <strong>Sec - {section?.title}</strong>
         //             </td>
         //             <td style={{ width: "30%" }}>
-        //               Enrolled - ({section?.currentlyEnrolledStudent}/
+        //               Enrolled - ({section?.currentEnrolledStudent}/
         //               {section?.maxCapacity})
         //             </td>
         //             <td style={{ width: "30%" }}>

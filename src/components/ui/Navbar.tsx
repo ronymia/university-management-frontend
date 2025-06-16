@@ -2,7 +2,7 @@
 
 import { getUserInfo } from "@/services/auth.service";
 import CustomProfileAvatar from "../Avatar/CustomProfileAvatar";
-import { MdOutlineMenuOpen } from "react-icons/md";
+import { MdOutlineLogout, MdOutlineMenuOpen } from "react-icons/md";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   setLastScrollTopNavbar,
@@ -12,6 +12,9 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { GrUserSettings } from "react-icons/gr";
+import { FaRegUser } from "react-icons/fa";
+import { TbUserEdit } from "react-icons/tb";
 
 export default function Navbar() {
   const router = useRouter();
@@ -45,14 +48,14 @@ export default function Navbar() {
 
   return (
     <AnimatePresence mode="wait">
-      {isStickyNavbar && (
+      {
         <motion.nav
           key="sticky-navbar"
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={`h-18 z-50 sticky top-3 px-3 flex items-center justify-between rounded-2xl bg-base-300 shadow`}
+          className={`h-18 z-50 relative px-3 flex items-center justify-between rounded-2xl bg-base-300 shadow`}
         >
           <button
             type="button"
@@ -76,10 +79,17 @@ export default function Navbar() {
             name="Jane Doe"
             dropdownItems={[
               {
-                label: "Settings",
+                Icon: TbUserEdit,
+                label: "Profile",
                 onClick: () => console.log("Settings clicked"),
               },
               {
+                label: "Settings",
+                Icon: GrUserSettings,
+                onClick: () => console.log("Settings clicked"),
+              },
+              {
+                Icon: MdOutlineLogout,
                 label: "Logout",
                 onClick: () => {
                   window.localStorage.clear();
@@ -90,7 +100,7 @@ export default function Navbar() {
             ]}
           />
         </motion.nav>
-      )}
+      }
     </AnimatePresence>
   );
 }

@@ -1,10 +1,23 @@
+"use client";
 import CustomForm from "@/components/Forms/CustomForm";
 import CustomInputField from "@/components/Forms/CustomInputField";
 import ActionBar from "@/components/ui/ActionBar";
 import { useUpdateMarksMutation } from "@/redux/api/studentEnrollCourseMarkApi";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { use } from "react";
 
-export default function UpdateMarkPage({ searchParams }: Record<string, any>) {
+interface IUpdateMarkPageProps {
+  searchParams: Promise<{
+    examType: string;
+    marks: string;
+    academicSemesterId: string;
+    studentId: string;
+    courseId: string;
+    offeredCourseSectionId: string;
+  }>;
+}
+
+export default function UpdateMarkPage({ searchParams }: IUpdateMarkPageProps) {
   const {
     examType,
     marks,
@@ -12,7 +25,8 @@ export default function UpdateMarkPage({ searchParams }: Record<string, any>) {
     studentId,
     courseId,
     offeredCourseSectionId,
-  } = searchParams;
+  } = use(searchParams);
+  const router = useRouter();
 
   const [updateMarks] = useUpdateMarksMutation();
   const onSubmit = async (values: any) => {
@@ -21,6 +35,7 @@ export default function UpdateMarkPage({ searchParams }: Record<string, any>) {
       const res = await updateMarks(values).unwrap();
       if (res) {
         //   message.success("Marks updated");
+        router.back();
       }
     } catch (err: any) {
       console.error(err.message);

@@ -5,6 +5,8 @@ import SemesterRegistrationField from "@/components/Academic/SemesterRegistratio
 import CustomForm from "@/components/Forms/CustomForm";
 import CustomSelect from "@/components/Forms/CustomSelect";
 import CustomLoading from "@/components/Loader/CustomLoading";
+import { semesterRegistrationStatus } from "@/constants/global";
+import { SemesterRegistrationStatus } from "@/enums/global";
 import { useCoursesQuery } from "@/redux/api/courseApi";
 import {
   useAddOfferedCourseMutation,
@@ -27,6 +29,10 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
   const allSemesterRegistrations = useSemesterRegistrationsQuery({
     limit: 10,
     page: 1,
+    status: [
+      SemesterRegistrationStatus.ONGOING,
+      SemesterRegistrationStatus.UPCOMING,
+    ],
   });
 
   const semesterRegistrations =
@@ -67,7 +73,7 @@ export default function OfferedCourseForm({ id, popupCloseHandler }: IDProps) {
         }
       } else {
         const res = await addOfferedCourse(values).unwrap();
-        if (res?.id) {
+        if (res?.success) {
           reset?.();
           popupCloseHandler?.();
         }

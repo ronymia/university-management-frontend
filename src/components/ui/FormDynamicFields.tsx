@@ -8,8 +8,9 @@ import BuildingField from "./Fields/BuildingField";
 import RoomField from "./Fields/RoomField";
 import CustomButton from "../Button/CustomButton";
 import CoreFacultyField from "./Fields/CoreFacultyField";
+import { useState } from "react";
 
-const FormDynamicFields = () => {
+const FormDynamicFields = ({ academicDepartmentId }) => {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -17,9 +18,16 @@ const FormDynamicFields = () => {
     name: "classSchedules",
   });
 
+  const [buildingId, setBuildingId] = useState<string>("");
+
   return (
     <>
       <div>
+        <h1
+          className={`text-center text-2xl font-semibold drop-shadow-2xl my-3`}
+        >
+          Class Schedules
+        </h1>
         {fields.length > 0 ? (
           fields.map((item, index) => {
             return (
@@ -54,16 +62,24 @@ const FormDynamicFields = () => {
                   required
                 />
                 {/* building */}
-                <BuildingField name={`building`} label={`Building`} />
+                <BuildingField
+                  name={`building`}
+                  label={`Building`}
+                  onChange={(e) => {
+                    setBuildingId(e);
+                  }}
+                />
                 {/* roomId */}
                 <RoomField
                   name={`classSchedules.${index}.roomId`}
                   label={"Room"}
+                  buildingId={buildingId}
                 />
                 {/* facultyId */}
                 <CoreFacultyField
                   name={`classSchedules.${index}.facultyId`}
                   label={"Faculty"}
+                  academicDepartmentId={academicDepartmentId}
                 />
 
                 <CustomButton

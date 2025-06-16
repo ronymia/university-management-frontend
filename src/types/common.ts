@@ -271,7 +271,7 @@ export interface IOfferedCourseSection {
   id: string;
   title: string;
   maxCapacity: number;
-  currentlyEnrolledStudent: number;
+  currentEnrolledStudent: number;
   createdAt: string;
   updatedAt: string;
   deletedAt?: null;
@@ -379,4 +379,17 @@ export interface IStudentEnrolledCourse {
   academicSemester: IAcademicCoreSemester;
   student: ICoreStudent;
   course: ICourse;
+}
+
+export interface IStudentClassSchedule {
+  studentId: string;
+  student: IStudent;
+  semesterRegistrationId: string;
+  semesterRegistration: ISemesterRegistration;
+  offeredCourseId: string;
+  offeredCourse: IOfferedCourse;
+  offeredCourseSectionId: string;
+  offeredCourseSection: IOfferedCourseSection;
+  createdAt: string;
+  updatedAt: string;
 }

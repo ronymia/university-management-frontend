@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactElement, ReactNode } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 type FormConfig = {
   defaultValues?: Record<string, any>;
@@ -10,7 +10,7 @@ type FormConfig = {
 
 type FormProps = {
   children?: ReactElement | ReactNode;
-  submitHandler: (data: any, reset: any) => void;
+  submitHandler: SubmitHandler<any>;
   className?: string;
   cancelHandler?: () => void;
   confirmButtonLabel?: string;
@@ -34,12 +34,18 @@ export default function CustomForm({
 
   const { handleSubmit, reset } = methods;
 
-  const onSubmit = (data: any) => {
-    submitHandler(data, reset);
-    // reset();
+  const onSubmit = async (data: any) => {
+    try {
+      await submitHandler(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Server error:", { error });
+      } else {
+        console.log("Unknown error", { error });
+      }
+      reset(data, { keepValues: true });
+    }
   };
-
-  console.log({ errors: methods.formState.errors });
 
   // useEffect(() => {
   //   if (defaultValues) reset(defaultValues);

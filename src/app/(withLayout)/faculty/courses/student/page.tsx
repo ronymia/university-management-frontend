@@ -1,5 +1,6 @@
 "use client";
 
+import CustomButton from "@/components/Button/CustomButton";
 import ActionBar from "@/components/ui/ActionBar";
 import CustomTable, {
   IAction,
@@ -7,16 +8,23 @@ import CustomTable, {
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import { useFacultyCourseStudentsQuery } from "@/redux/api/facultyApi";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { RiEdit2Fill } from "react-icons/ri";
+import { use, useState } from "react";
+
+interface IFacultyCoursesStudentsPageProps {
+  searchParams: Promise<{
+    courseId: string;
+    offeredCourseSectionId: string;
+  }>;
+}
 
 export default function FacultyCoursesStudentsPage({
   searchParams,
-}: Record<string, any>) {
+}: IFacultyCoursesStudentsPageProps) {
   const router = useRouter();
   //   console.log(searchParams);
-  const { courseId, offeredCourseSectionId } = searchParams;
+  const { courseId, offeredCourseSectionId } = use(searchParams);
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -38,42 +46,27 @@ export default function FacultyCoursesStudentsPage({
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
   const { data, isLoading } = useFacultyCourseStudentsQuery({ ...queries });
-  console.log({ data });
+  // console.log({ data });
 
   const myCourseStudents = data?.myCourseStudents;
   const meta = data?.meta;
 
-  const handleViewMarks = (updateData: any) => {
-    console.log({ updateData });
-    router.push(
-      `/faculty/student-result?studentId=${updateData.id}&courseId=${courseId}&offeredCourseSectionId=${offeredCourseSectionId}`
-    );
-  };
-
   // ALL ACTION BUTTONS
-  const [actions] = useState<IAction[]>([
-    {
-      name: "View Marks",
-      handler: handleViewMarks,
-      Icon: RiEdit2Fill,
-      permissions: [],
-      disableOn: [],
-    },
-  ]);
+  const [actions] = useState<IAction[]>([]);
 
   // TABLE COLUMNS DEFINE
   const columns: IColumn[] = [
     // NAME
     {
-      header: "Student Name",
-      accessorKey: "customStudentName",
+      header: "Student ID",
+      accessorKey: "studentId",
       show: true,
       minWidth: 20,
     },
     // NAME
     {
-      header: "Student ID",
-      accessorKey: "studentId",
+      header: "Student Name",
+      accessorKey: "customStudentName",
       show: true,
       minWidth: 20,
     },
@@ -91,11 +84,17 @@ export default function FacultyCoursesStudentsPage({
       show: true,
       minWidth: 20,
     },
+    {
+      header: "View Marks.",
+      accessorKey: "viewMarks",
+      show: true,
+      minWidth: 20,
+    },
     // NAME
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -103,18 +102,33 @@ export default function FacultyCoursesStudentsPage({
   return (
     <>
       {/* ACTION BAR */}
-      <ActionBar
-        title={`My Course Students`}
-        addButtonLabel={`Add Course`}
-        // createHandler={handleAddNewCourse}
-      />
+      <ActionBar title={`My Course Students`} />
 
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={myCourseStudents || []}
+        rows={
+          myCourseStudents?.map((row) => ({
+            ...row,
+            customStudentName: `${row?.firstName} ${row?.middleName} ${row?.lastName}`,
+            viewMarks: (
+              <>
+                <Link
+                  href={`/faculty/student-result?studentId=${row?.studentId}&courseId=${courseId}&offeredCourseSectionId=${offeredCourseSectionId}`}
+                >
+                  <CustomButton
+                    className="btn btn-primary"
+                    // onClick={() => handleViewMarks(row)}
+                  >
+                    View Marks
+                  </CustomButton>
+                </Link>
+              </>
+            ),
+          })) || []
+        }
         isLoading={isLoading}
-        actions={actions}
+        actions={[]}
       />
     </>
   );

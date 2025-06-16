@@ -47,15 +47,15 @@ const studentEnrollCourseMarkApi = baseApi.injectEndpoints({
     updateMarks: build.mutation({
       query: (data) => ({
         url: `${BASE_STUDENT_COURSE_MARKS}/update-marks`,
-        method: "POST",
+        method: "PATCH",
         data,
       }),
       invalidatesTags: [tagTypes.student],
     }),
     updateFinalMarks: build.mutation({
       query: (data) => ({
-        url: `${BASE_STUDENT_COURSE_MARKS}/update-course-final-marks`,
-        method: "POST",
+        url: `${BASE_STUDENT_COURSE_MARKS}/update-final-marks`,
+        method: "PATCH",
         data,
       }),
       invalidatesTags: [tagTypes.student],

@@ -15,31 +15,29 @@ import {
 import { useRoomQuery } from "@/redux/api/roomApi";
 import { offeredCourseSectionSchema } from "@/schemas/admin/offeredCourseSection";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type IDProps = {
-  popupCloseHandler: () => void;
   id: string;
 };
 
-export default function OfferedCourseSectionForm({
-  id,
-  popupCloseHandler,
-}: IDProps) {
+export default function OfferedCourseSectionForm({ id }: IDProps) {
+  const router = useRouter();
   const { data, isLoading } = useRoomQuery(id, { skip: !id });
   const [addOfferedCourseSection, createResult] =
     useAddOfferedCourseSectionMutation();
   const [updateOfferedCourseSection, updateResult] =
     useUpdateOfferedCourseSectionMutation();
 
-  const [acDepartmentId, setAcDepartmentId] = useState<string>();
+  const [academicDepartmentId, setAcademicDepartmentId] = useState<string>();
   const [semesterRegistrationId, setSemesterRegistrationId] =
     useState<string>();
 
   const query: Record<string, any> = {};
 
-  if (!!acDepartmentId) {
-    query["academicDepartmentId"] = acDepartmentId;
+  if (!!academicDepartmentId) {
+    query["academicDepartmentId"] = academicDepartmentId;
   }
   if (!!semesterRegistrationId) {
     query["semesterRegistrationId"] = semesterRegistrationId;
@@ -73,13 +71,14 @@ export default function OfferedCourseSectionForm({
         console.log({ res });
         if (res?.id) {
           reset?.();
-          popupCloseHandler?.();
+          router.back();
         }
       } else {
         const res = await addOfferedCourseSection(values).unwrap();
+        console.log({ res });
         if (res?.id) {
           reset?.();
-          popupCloseHandler?.();
+          router.back();
         }
       }
     } catch (err: any) {
@@ -106,6 +105,11 @@ export default function OfferedCourseSectionForm({
         className={`grid grid-cols-2 gap-3`}
       >
         <div className="flex flex-col gap-2">
+          <h1
+            className={`text-center text-2xl font-semibold drop-shadow-2xl my-3`}
+          >
+            Course Section
+          </h1>
           {/* semesterRegistrationId */}
           <SemesterRegistrationField
             name="semesterRegistration"
@@ -117,11 +121,13 @@ export default function OfferedCourseSectionForm({
           <AcademicDepartmentField
             name={`academicDepartment`}
             label={`Academic department`}
-            onChange={(el) => setAcDepartmentId(el)}
+            onChange={(el) => setAcademicDepartmentId(el)}
           />
           {/* offeredCourseId */}
           <CustomSelect
-            isLoading={offeredCoursesQuery.isLoading}
+            isLoading={
+              offeredCoursesQuery.isLoading || offeredCoursesQuery.isFetching
+            }
             id={`offeredCourseId`}
             name={`offeredCourseId`}
             label={`Offered course`}
@@ -150,13 +156,14 @@ export default function OfferedCourseSectionForm({
         </div>
 
         <div className="">
-          <FormDynamicFields />
+          <FormDynamicFields academicDepartmentId={academicDepartmentId} />
         </div>
 
         <div className="flex justify-end gap-3 mt-5">
           <button
             type="button"
             disabled={updateResult.isLoading || createResult.isLoading}
+            onClick={() => router.back()}
             className={`px-3 py-2 border border-primary rounded-lg text-primary drop-shadow-2xl cursor-pointer w-xs`}
           >
             Cancel

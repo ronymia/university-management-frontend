@@ -3,13 +3,19 @@ import CustomSelect from "@/components/Forms/CustomSelect";
 
 type RoomProps = {
   name: string;
-  label?: string;
+  label: string;
+  buildingId?: string;
+  required?: boolean;
+  disabled?: boolean;
+  placeholder?: string;
+  onChange?: (value: string) => void;
 };
 
-const RoomField = ({ name, label }: RoomProps) => {
+const RoomField = ({ name, label, buildingId, onChange }: RoomProps) => {
   const { data, isLoading } = useRoomsQuery({
     limit: 100,
     page: 1,
+    buildingId: buildingId ?? "",
   });
   const rooms = data?.rooms;
   const roomsOptions = rooms?.map((room) => {
@@ -29,6 +35,7 @@ const RoomField = ({ name, label }: RoomProps) => {
       label={label}
       placeholder={label}
       required
+      changeHandler={(e) => onChange?.(e)}
     />
   );
 };

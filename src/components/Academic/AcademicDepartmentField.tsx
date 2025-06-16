@@ -8,7 +8,7 @@ export default function AcademicDepartmentField({
   label,
   onChange,
 }: {
-  academicFacultyId: string;
+  academicFacultyId?: string;
   name: string;
   label: string;
   onChange?: (e: any) => void;
@@ -21,7 +21,7 @@ export default function AcademicDepartmentField({
       academicFacultyId,
     },
     {
-      skip: !academicFacultyId,
+      skip: !!academicFacultyId && !academicFacultyId,
     }
   );
   const academicDepartments = data?.academicDepartments;
