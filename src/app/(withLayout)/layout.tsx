@@ -31,7 +31,7 @@ export default function DashboardLayout({
   return (
     <div className={`min-h-screen flex gap-3 bg-[#f9fbfc] p-3`}>
       {/* Sticky Sidebar */}
-      <div className="sticky top-3 h-[calc(100vh-1.5rem)] overflow-y-auto">
+      <div className="fixed md:sticky top-3 h-[calc(100vh-1.5rem)] overflow-y-auto z-50">
         <Sidebar />
       </div>
 

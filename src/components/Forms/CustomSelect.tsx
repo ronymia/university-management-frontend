@@ -7,6 +7,7 @@ import Select from "./Select";
 type IOption = { label: string; value: string | number };
 
 interface ICustomSelectProps {
+  position?: "top" | "bottom";
   id?: string;
   name: string;
   placeholder?: string;
@@ -36,6 +37,7 @@ export default function CustomSelect({
   multipleSelect = false,
   isLoading = false,
   changeHandler,
+  position,
   ...props
 }: ICustomSelectProps) {
   const {
@@ -80,6 +82,7 @@ export default function CustomSelect({
               label={label}
               required={required}
               options={options}
+              position={position}
             />
           );
         }}

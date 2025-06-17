@@ -1,7 +1,9 @@
 "use client";
 
+import { IGenericErrorResponse } from "@/types";
 import { ReactElement, ReactNode } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import FormActionButton from "./FormActionButton";
 
 type FormConfig = {
   defaultValues?: Record<string, any>;
@@ -13,10 +15,9 @@ type FormProps = {
   submitHandler: SubmitHandler<any>;
   className?: string;
   cancelHandler?: () => void;
-  confirmButtonLabel?: string;
   dataAuto?: string;
-  formActionClassName?: string;
   isPending?: boolean;
+  showFormActionButton?: boolean;
 } & FormConfig;
 
 export default function CustomForm({
@@ -25,6 +26,8 @@ export default function CustomForm({
   defaultValues,
   resolver,
   className,
+  cancelHandler,
+  showFormActionButton = true,
 }: FormProps) {
   const formConfig: FormConfig = {};
 
@@ -32,18 +35,25 @@ export default function CustomForm({
   if (resolver) formConfig["resolver"] = resolver;
   const methods = useForm<FormConfig>(formConfig);
 
-  const { handleSubmit, reset } = methods;
+  const {
+    handleSubmit,
+    setError,
+    formState: { isLoading, isSubmitting, isValidating },
+  } = methods;
 
   const onSubmit = async (data: any) => {
     try {
-      await submitHandler(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("Server error:", { error });
-      } else {
-        console.log("Unknown error", { error });
+      await Promise.resolve(submitHandler(data));
+    } catch (err) {
+      const error = err as IGenericErrorResponse;
+
+      // console.log("form error", { error });
+
+      if (error.statusCode === 422) {
+        error.errorMessages?.forEach((err) => {
+          setError(err.path as any, { type: "manual", message: err.message });
+        });
       }
-      reset(data, { keepValues: true });
     }
   };
 
@@ -55,6 +65,12 @@ export default function CustomForm({
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className={className}>
         {children}
+        {showFormActionButton ? (
+          <FormActionButton
+            isLoading={isLoading || isValidating || isSubmitting}
+            cancelHandler={cancelHandler}
+          />
+        ) : null}
       </form>
     </FormProvider>
   );

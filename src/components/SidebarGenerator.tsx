@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IMenuItems } from "./ui/Sidebar";
 import { usePathname } from "next/navigation";
+import { toggleSidebar } from "@/redux/slice/globalState";
+import { useAppDispatch } from "@/redux/hooks";
+import useDeviceWith from "@/hooks/useDeviceWith";
 
 interface SidebarItemProps extends IMenuItems {
   isSidebarCollapsed: boolean;
@@ -19,6 +22,8 @@ export default function SidebarGenerator({
   isSidebarCollapsed,
   isSubMenu = false,
 }: SidebarItemProps) {
+  const windowInnerWidth = useDeviceWith();
+  const appDispatch = useAppDispatch();
   const pathname = usePathname();
   const hasChildren = subItems && subItems.length > 0;
   const [isOpen, setIsOpen] = useState(false);
@@ -71,6 +76,9 @@ export default function SidebarGenerator({
       ) : (
         <Link
           href={path}
+          onClick={() => {
+            if (windowInnerWidth < 768) appDispatch(toggleSidebar());
+          }}
           className={`flex items-center justify-start gap-2.5 p-1.5 hover:bg-gray-300 hover:rounded-full cursor-pointer text-base
             ${
               isActive

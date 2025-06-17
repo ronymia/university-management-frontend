@@ -1,4 +1,4 @@
-import { IMeta } from "@/types";
+import { IGenericErrorResponse, IMeta } from "@/types";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query";
 import type { AxiosRequestConfig, AxiosError } from "axios";
 import { instance as axiosInstance } from "./axiosInstance";
@@ -33,11 +33,13 @@ export const axiosBaseQuery =
       return result;
     } catch (axiosError) {
       const err = axiosError as AxiosError;
-      return {
-        error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
-        },
+      // console.log({ err });
+      const data = err?.response?.data as IGenericErrorResponse;
+      const responseObject: IGenericErrorResponse = {
+        statusCode: err?.response?.status || 500,
+        message: data?.message || "Something went wrong",
+        errorMessages: data?.errorMessages || [],
       };
+      return { error: responseObject };
     }
   };

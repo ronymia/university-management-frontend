@@ -35,9 +35,13 @@ const popupVariants = {
 export default function FormModal({
   popupOptions,
   setPopupOptions,
+  customHeight,
+  customWidth,
 }: {
   popupOptions: IPopupOptions;
   setPopupOptions: Dispatch<SetStateAction<IPopupOptions>>;
+  customHeight?: string;
+  customWidth?: string;
 }) {
   const handleClosePopup = () =>
     setPopupOptions((prev) => ({ ...prev, open: false }));
@@ -293,7 +297,12 @@ export default function FormModal({
       </motion.div>
     </Popup>
   ) : (
-    <CustomPopup popupOptions={popupOptions} setPopupOptions={setPopupOptions}>
+    <CustomPopup
+      popupOptions={popupOptions}
+      setPopupOptions={setPopupOptions}
+      customHeight={customHeight}
+      customWidth={customWidth}
+    >
       {/* FORM CONTENT */}
 
       <FormContent />

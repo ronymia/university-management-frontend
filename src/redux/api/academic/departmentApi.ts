@@ -1,5 +1,5 @@
 import { tagTypes } from "@/redux/tag-types";
-import { IAcademicDepartment, IMeta } from "@/types";
+import { IAcademicCoreDepartment, IMeta } from "@/types";
 import { baseApi } from "../baseApi";
 
 const ACADEMIC_DEPARTMENT_URL = "/academic-departments";
@@ -15,7 +15,8 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
           params: arg,
         };
       },
-      transformResponse: (response: IAcademicDepartment[], meta: IMeta) => {
+      transformResponse: (response: IAcademicCoreDepartment[], meta: IMeta) => {
+        console.log({ meta });
         return {
           academicDepartments: response,
           meta,
@@ -29,6 +30,7 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
         url: `${ACADEMIC_DEPARTMENT_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IAcademicCoreDepartment) => response,
       providesTags: [tagTypes.academicDepartment],
     }),
     // create a new academic department
@@ -38,7 +40,8 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.academicDepartment],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.academicDepartment] : [],
     }),
     // update ac department
     updateAcademicDepartment: build.mutation({

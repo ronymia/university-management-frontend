@@ -136,7 +136,7 @@ export default function StudentPage() {
     {
       header: "Created at",
       accessorKey: "customCreatedAt",
-      show: true,
+      show: false,
       minWidth: 15,
     },
   ];
@@ -150,16 +150,9 @@ export default function StudentPage() {
       />
 
       {/* ACTION BAR */}
-      <ActionBar
-        title={`Manage Students`}
-        // addButtonLabel={`Add Student`}
-        // createHandler={handleAddNewStudent}
-        // createHandler={() => {
-        //   router.push("/super_admin/manage-student/create");
-        // }}
-      >
+      <ActionBar title={`Manage Students`}>
         <Link href={`/${role}/manage-student/create`}>
-          <CustomAddButton label={`Add Student`}></CustomAddButton>
+          <CustomAddButton label={`Add New`}></CustomAddButton>
         </Link>
       </ActionBar>
 

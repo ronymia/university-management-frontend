@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const globalState = createSlice({
   name: "globalState",
   initialState: {
-    isSidebarCollapsed: false,
+    isSidebarCollapsed: true,
     isHovering: false,
     isStickyNavbar: true,
     lastScrollTopNavbar: 0,

@@ -1,3 +1,4 @@
+import useDeviceWith from "@/hooks/useDeviceWith";
 import { IPopupOptions } from "@/types";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
@@ -14,34 +15,42 @@ export default function CustomPopup({
   children?: React.ReactNode;
   popupOptions: IPopupOptions;
   setPopupOptions: Dispatch<SetStateAction<IPopupOptions>>;
+  customHeight?: string;
+  customWidth?: string;
 }) {
+  // GET DEVICE WIDTH
+  const windowInnerWidth = useDeviceWith();
+  const isMobile = windowInnerWidth < 768;
   const handleClosePopup = () =>
     setPopupOptions((prev) => ({ ...prev, open: false }));
 
   return (
     <>
-      {/* <button
-        type="button"
-        className="button"
-        onClick={() => setPopupOptions((o) => ({ ...o, open: !o.open }))}
-      >
-        Controlled Popup
-      </button> */}
       <Popup
         modal={true}
+        lockScroll
+        position={isMobile ? "bottom center" : "center center"}
         open={popupOptions.open}
         closeOnDocumentClick={false}
-        // onClose={handleClosePopup}
-        overlayStyle={{ background: "rgba(0, 0, 0, 0.5)" }}
+        overlayStyle={{
+          background: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          justifyContent: isMobile ? "flex-end" : "center",
+          alignItems: isMobile ? "flex-end" : "center",
+        }}
         contentStyle={{
           display: "flex",
           flexDirection: "column",
-          width: customWidth ? customWidth : "50%",
-          // height: customHeight ? customHeight : "100%",
+          width: customWidth || (isMobile ? "98%" : "50%"),
+          height: customHeight || "auto",
           maxHeight: "90vh",
           borderRadius: "10px",
-          // padding: "10px",
           background: "#fff",
+          margin: isMobile ? "10px" : undefined,
+          ...(isMobile && {
+            width: "calc(100% - 20px)",
+            // maxWidth: "400px",
+          }),
         }}
       >
         {/* HEADER */}

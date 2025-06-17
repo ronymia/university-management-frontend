@@ -109,6 +109,7 @@ export default function SemesterRegistrationForm({
   return (
     <>
       <CustomForm
+        cancelHandler={popupCloseHandler}
         submitHandler={onSubmit}
         resolver={zodResolver(semesterRegistrationSchema)}
         defaultValues={!!defaultValues ? defaultValues : undefined}
@@ -151,9 +152,10 @@ export default function SemesterRegistrationForm({
           label={`Status`}
           options={statusOptions}
           required
+          position="top"
         />
 
-        <div className="flex justify-end gap-3 mt-5">
+        {/* <div className="flex justify-end gap-3 mt-5">
           <button
             type="button"
             disabled={updateResult.isLoading || createResult.isLoading}
@@ -168,7 +170,7 @@ export default function SemesterRegistrationForm({
           >
             Submit
           </button>
-        </div>
+        </div> */}
         {/* <FormAction
           disabled={updateResult.isLoading || createResult.isLoading}
           cancelHandler={popupCloseHandler}

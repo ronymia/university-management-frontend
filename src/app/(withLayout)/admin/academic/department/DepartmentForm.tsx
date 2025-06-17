@@ -27,22 +27,18 @@ export default function AcademicDepartmentForm({
   };
 
   const onSubmit = async (data: any) => {
-    console.log({ data });
-    try {
-      if (!!id) {
-        const res = await updateAcademicDepartment({ body: data, id });
-        if (!!res) {
-          popupCloseHandler?.();
-        }
-      } else {
-        const res = await addAcademicDepartment(data);
-        if (!!res) {
-          popupCloseHandler?.();
-        }
-        // console.log(data);
+    // console.log({ data });
+    if (!!id) {
+      const res = await updateAcademicDepartment({ body: data, id }).unwrap();
+      if (res?.id) {
+        popupCloseHandler?.();
       }
-    } catch (err: any) {
-      console.error(err.message);
+    } else {
+      const res = await addAcademicDepartment(data).unwrap();
+      if (res?.id) {
+        popupCloseHandler?.();
+      }
+      // console.log(data);
     }
   };
 
@@ -55,7 +51,8 @@ export default function AcademicDepartmentForm({
         submitHandler={onSubmit}
         resolver={zodResolver(academicDepartmentSchema)}
         defaultValues={defaultValues ? defaultValues : undefined}
-        className={`flex flex-col gap-2`}
+        cancelHandler={popupCloseHandler}
+        className={`flex flex-col gap-2 h-full flex-1`}
       >
         <CustomInputField
           id="title"
@@ -70,27 +67,6 @@ export default function AcademicDepartmentForm({
           name="academicFacultyId"
           label="Academic Faculty"
         />
-
-        <div className="flex justify-end gap-3 mt-5">
-          <button
-            type="button"
-            //   disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 border border-primary rounded-lg text-primary drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            //   disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 bg-primary rounded-lg text-base-300 drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Submit
-          </button>
-        </div>
-        {/* <FormAction
-            disabled={updateResult.isLoading || createResult.isLoading}
-            cancelHandler={popupCloseHandler}
-          /> */}
       </CustomForm>
     </>
   );

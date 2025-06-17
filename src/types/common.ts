@@ -1,7 +1,10 @@
 export interface IMeta {
-  limit: number;
   page: number;
+  limit: number;
+  skip: number;
   total: number;
+  paginationTotal: number;
+  totalPages: number;
 }
 
 export type ResponseSuccessType = {
@@ -217,6 +220,7 @@ export interface IAcademicCoreDepartment {
   updatedAt: string;
   deletedAt?: null;
   academicFacultyId: string;
+  academicFaculty?: IAcademicFaculty;
 }
 
 export interface IOfferedCourse {

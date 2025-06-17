@@ -52,22 +52,9 @@ export default function CustomInputField({
   const {
     control,
     formState: { errors },
-    setError,
   } = useFormContext();
 
-  // ADD SERVER ERRORS
-  // useEffect(() => {
-  //   if (Object.keys(error).length > 0) {
-  //     Object.entries(error).forEach(([field, messages]) => {
-  //       setError(field, {
-  //         type: "server",
-  //         message: Array.isArray(messages) ? messages[0] : messages,
-  //       });
-  //     });
-  //   }
-  // }, [error, setError]);
   const errorMessage = getErrorMessageByPropertyName(errors, name);
-  // console.log({ fieldErrors: errors, errorMessage });
 
   return (
     <div

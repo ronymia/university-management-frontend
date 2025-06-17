@@ -62,6 +62,7 @@ const LoginPage = () => {
             submitHandler={onSubmit}
             resolver={zodResolver(loginSchema)}
             className={`flex flex-col gap-1 w-xs sm:w-md`}
+            showFormActionButton={false}
           >
             <CustomInputField
               id="id"
@@ -82,6 +83,7 @@ const LoginPage = () => {
             <CustomButton
               htmlType="submit"
               disabled={loginResult.isLoading}
+              isLoading={loginResult.isLoading}
               className={`mt-5`}
             >
               Login

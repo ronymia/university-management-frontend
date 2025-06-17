@@ -55,7 +55,7 @@ export default function Navbar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={`h-18 z-50 relative px-3 flex items-center justify-between rounded-2xl bg-base-300 shadow`}
+          className={`h-18 z-40 relative px-3 flex items-center justify-end md:justify-between rounded-2xl bg-base-300 shadow`}
         >
           <button
             type="button"
@@ -66,7 +66,7 @@ export default function Navbar() {
           </button>
 
           {/* LEFT SIDE */}
-          <div className="pl-10">
+          <div className="pl-10 hidden md:block">
             <input
               type="search"
               placeholder="Search"

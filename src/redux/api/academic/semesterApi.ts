@@ -1,4 +1,4 @@
-import { IAcademicSemester, IMeta } from "@/types";
+import { IAcademicCoreSemester, IMeta } from "@/types";
 import { baseApi } from "../baseApi";
 import { tagTypes } from "@/redux/tag-types";
 
@@ -25,7 +25,7 @@ export const academicSemesterApi = baseApi.injectEndpoints({
           params: arg,
         };
       },
-      transformResponse: (response: IAcademicSemester[], meta: IMeta) => {
+      transformResponse: (response: IAcademicCoreSemester[], meta: IMeta) => {
         return {
           academicSemesters: response,
           meta,
@@ -40,6 +40,7 @@ export const academicSemesterApi = baseApi.injectEndpoints({
         url: `${ACADEMIC_SEMESTER_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IAcademicCoreSemester) => response,
       providesTags: [tagTypes.academicSemester],
     }),
 

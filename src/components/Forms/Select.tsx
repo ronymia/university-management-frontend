@@ -9,6 +9,7 @@ import { RxCrossCircled } from "react-icons/rx";
 type IOption = { label: string; value: string | number };
 
 interface ISelectProps {
+  position?: "top" | "bottom";
   id?: string;
   name?: string;
   placeholder?: string;
@@ -46,6 +47,7 @@ export default function Select({
   options = [],
   multipleSelect = false,
   isLoading,
+  position = "bottom",
 }: ISelectProps) {
   const [selectedOptions, setSelectedOptions] = useState<IOption[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -231,7 +233,9 @@ export default function Select({
       <AnimatePresence>
         {isOpen && (
           <motion.ul
-            className={`absolute top-full mt-1.5 z-50 w-full bg-base-300 shadow-lg drop-shadow-2xs rounded overflow-y-auto max-h-80 border border-primary/10`}
+            className={`absolute ${
+              position === "bottom" ? "top-full" : "bottom-full"
+            } mt-1.5 z-50 w-full bg-base-300 shadow-lg drop-shadow-2xs rounded overflow-y-auto max-h-80 border border-primary/10`}
             role="listbox"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -243,7 +247,7 @@ export default function Select({
               options.map((option) => (
                 <motion.li
                   key={option?.value}
-                  whileHover={{ scale: 1.02 }}
+                  // whileHover={{ scale: 1.02 }}
                   onClick={() => handleSelect(option)}
                   className={`cursor-pointer px-3 py-2 m-2  hover:bg-primary rounded-md hover:text-base-300 drop-shadow-lg
                         ${

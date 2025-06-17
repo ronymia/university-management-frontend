@@ -1,5 +1,4 @@
 import React from "react";
-import CustomFilterButton from "../Button/CustomFilterButton";
 import CustomAddButton from "../Button/CustomAddButton";
 
 type IActionBarProps = {
@@ -17,10 +16,12 @@ export default function ActionBar({
 }: IActionBarProps) {
   return (
     <div className={`flex items-center justify-between my-3`}>
-      <h1 className={`font-medium text-2xl drop-shadow-2xl`}>{title}</h1>
+      <h1 className={`font-medium text-base md:text-2xl drop-shadow-2xl`}>
+        {title}
+      </h1>
       <div className={`flex gap-3`}>
         {/* FILTER BUTTON */}
-        <CustomFilterButton />
+        {/* <CustomFilterButton /> */}
         {children}
 
         {/* ADD BUTTON */}

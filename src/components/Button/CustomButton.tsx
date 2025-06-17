@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useState, MouseEvent } from "react";
+import { FaSync } from "react-icons/fa";
 
 interface ICustomButtonProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface ICustomButtonProps {
   htmlType?: "button" | "submit" | "reset" | undefined;
   variant?: "outlined" | "filled";
   disabled?: boolean;
+  isLoading?: boolean;
 }
 
 export default function CustomButton({
@@ -18,6 +20,7 @@ export default function CustomButton({
   htmlType = "button",
   variant = "filled",
   disabled = false,
+  isLoading = false,
 }: ICustomButtonProps) {
   const [rippleStyle, setRippleStyle] = useState({});
   const [rippleVisible, setRippleVisible] = useState(false);
@@ -45,14 +48,20 @@ export default function CustomButton({
     <button
       type={htmlType}
       onClick={handleClick}
-      disabled={disabled}
-      className={`relative overflow-hidden rounded  px-4 py-2 text-base-300 cursor-pointer ${
+      disabled={disabled || isLoading}
+      className={`relative overflow-hidden rounded  px-4 text-base-300 cursor-pointer disabled:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed ${
         variant === "outlined"
           ? "border border-primary text-primary font-medium"
           : "bg-primary"
-      } ${className}`}
+      }
+        ${isLoading ? "py-5.5" : "py-2.5"}
+       ${className}`}
     >
-      {children}
+      {isLoading ? (
+        <FaSync className="text-primary animate-spin absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 !opacity-100" />
+      ) : (
+        children
+      )}
 
       {rippleVisible && (
         <motion.span

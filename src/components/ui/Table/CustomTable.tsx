@@ -8,11 +8,14 @@ import { hasPermission } from "@/utils/hasPermission";
 import { getFromLocalStorage } from "@/utils/local-storage";
 import Pagination from "./Pagination";
 import ActionButtons from "./ActionButtons";
+import CustomLoading from "@/components/Loader/CustomLoading";
 
 export interface IAction {
   name: string;
+  type: "link" | "button";
+  href?: string | ((row: any) => string);
   handler: (row: any) => void;
-  Icon: IconType | React.ReactElement | React.ReactNode;
+  Icon?: IconType | React.ReactElement | React.ReactNode;
   permissions: string[];
   disableOn: { accessorKey: string; value: any }[];
 }
@@ -45,8 +48,10 @@ interface ICustomTableProps {
   paginationConfig?: {
     page: number;
     limit: number;
+    skip: number;
     total: number;
-    totalPage: number;
+    paginationTotal: number;
+    totalPages: number;
     showPagination: boolean;
     paginationHandler: (page: number) => void;
     changeLimitHandler: (limit: number) => void;
@@ -60,15 +65,13 @@ export default function CustomTable({
   isLoading = false,
   actions = [],
   dataAuto,
-  limit,
-  totalData,
   showPagination = true,
-  paginationHandler = () => {},
   paginationConfig = {
     page: 1,
     limit: 10,
+    skip: 0,
     total: 0,
-    totalPage: 0,
+    totalPages: 0,
     showPagination: true,
     paginationHandler: () => {},
     changeLimitHandler: () => {},
@@ -178,95 +181,54 @@ export default function CustomTable({
         </thead>
         {/* <===================================== Table Body ===================================> */}
         <tbody className="block w-full md:table-row-group">
-          {!isLoading
-            ? sortedRows?.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className=" block md:table-row border md:border-0 md:border-b border-primary-content  text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg "
-                >
-                  {/* <===================================== Action for Mobile ====================================> */}
-                  {windowInnerWidth < 768 && actions?.length > 0 && (
+          {!isLoading ? (
+            sortedRows?.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className=" block md:table-row border md:border-0 md:border-b border-primary-content  text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg "
+              >
+                {/* <===================================== Action for Mobile ====================================> */}
+                {windowInnerWidth < 768 && actions?.length > 0 && (
+                  <td
+                    // align={col?.align || "left"}
+                    style={{
+                      minWidth: "1%",
+                    }}
+                    colSpan={columns?.length + 1}
+                    className="w-full p-2 flex items-center justify-center space-x-2"
+                  >
+                    <ActionButtons
+                      key={row?.id}
+                      actions={actions}
+                      row={row}
+                      dataAuto={dataAuto}
+                      permissions={permissions}
+                    />
+                  </td>
+                )}
+                {/* <===================================== Table Columns ===================================> */}
+                {columnsWithSort?.map((col, index) =>
+                  col.show ? (
                     <td
-                      // align={col?.align || "left"}
+                      key={col?.accessorKey}
+                      align={col?.align || "left"}
                       style={{
-                        minWidth: "1%",
+                        width:
+                          windowInnerWidth > 768
+                            ? col?.minWidth
+                              ? `${col?.minWidth}%`
+                              : "auto"
+                            : "100%",
                       }}
-                      colSpan={columns?.length + 1}
-                      className="w-full p-2 flex items-center justify-center"
+                      data-label={col?.["header"]}
+                      className="block md:table-cell  border md:border-none border-gray-200"
                     >
-                      {actions
-                        .filter((action) => {
-                          return !action?.disableOn?.some((disable) => {
-                            return (
-                              row?.[disable?.accessorKey] === disable?.value
-                            );
-                          });
-                        })
-                        .map((action) => (
-                          // CHECK PERMISSIONS
-                          <React.Fragment key={action?.name}>
-                            {hasPermission(action.permissions, permissions) ? (
-                              <button
-                                data-auto={`${dataAuto}_${action?.name}-${row?.id}`}
-                                key={action?.name}
-                                type="button"
-                                onClick={() => {
-                                  action?.handler?.(row);
-                                }}
-                              >
-                                <action.Icon
-                                  className={`text-xl ${
-                                    action?.name === "delete"
-                                      ? " text-red-500"
-                                      : "text-primary"
-                                  }`}
-                                />
-                              </button>
-                            ) : (
-                              <button
-                                data-auto={`${dataAuto}_${action?.name}-${row?.id}`}
-                                key={action?.name}
-                                type="button"
-                                onClick={() => {
-                                  action?.handler?.(row);
-                                }}
-                              >
-                                <action.Icon
-                                  className={`text-xl ${
-                                    action?.name === "delete"
-                                      ? " text-red-500"
-                                      : "text-primary"
-                                  }`}
-                                />
-                              </button>
-                            )}
-                          </React.Fragment>
-                        ))}
-                    </td>
-                  )}
-                  {/* <===================================== Table Columns ===================================> */}
-                  {columnsWithSort?.map((col, index) =>
-                    col.show ? (
-                      <td
-                        key={col?.accessorKey}
-                        align={col?.align || "left"}
-                        style={{
-                          width:
-                            windowInnerWidth > 768
-                              ? col?.minWidth
-                                ? `${col?.minWidth}%`
-                                : "auto"
-                              : "100%",
-                        }}
-                        data-label={col?.["header"]}
-                        className="block md:table-cell  border md:border-none border-gray-200"
-                      >
-                        <div
-                          className={`drop-shadow border-t border-b border-primary/20 ${rowHeight} flex items-center justify-start px-4 
+                      <div
+                        className={`drop-shadow md:border-t md:border-b md:border-primary/20 ${rowHeight} flex items-center justify-start px-4 
                             ${
                               index === 0
-                                ? "border-l rounded-tl-xl rounded-bl-xl"
-                                : "border-l-0"
+                                ? "md:border-l md:rounded-tl-xl md:rounded-bl-xl"
+                                : "md:border-l-0"
                             }
                              ${
                                actions.length === 0 &&
@@ -275,65 +237,65 @@ export default function CustomTable({
                                  : "border-r-0"
                              }
                            `}
-                        >
-                          <div className="flex justify-between md:block">
-                            <span className="font-normal md:hidden">
-                              {col?.["header"]}
-                            </span>
-                            <span>
-                              {col?.accessorFn
-                                ? col?.accessorFn({
-                                    row,
-                                    value: row?.[col?.accessorKey],
-                                  })
-                                : row?.[col?.accessorKey] || "N/A"}
-                            </span>
-                          </div>
+                      >
+                        {/* <div className="flex justify-between md:block w-full"> */}
+                        <div className="flex md:block w-full">
+                          <span className="font-normal md:hidden w-32 shrink-0">
+                            {col?.["header"]}{" "}
+                            <span className="font-bold">:</span>
+                          </span>
+                          <span className="flex-1">
+                            {col?.accessorFn
+                              ? col?.accessorFn({
+                                  row,
+                                  value: row?.[col?.accessorKey],
+                                })
+                              : row?.[col?.accessorKey] || "N/A"}
+                          </span>
                         </div>
-                      </td>
-                    ) : null
-                  )}
-                  {/* <===================================== Action for Desktop ==================================> */}
-                  {windowInnerWidth > 768 && actions?.length > 0 && (
-                    <td className="hidden md:table-cell text-right">
-                      <div className="flex justify-end space-x-4 h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5">
-                        <ActionButtons
-                          key={row?.id}
-                          actions={actions}
-                          row={row}
-                          dataAuto={dataAuto}
-                          permissions={permissions}
-                        />
                       </div>
                     </td>
-                  )}
-                </tr>
-              ))
-            : Array.from({ length: 4 }).map((_, index) => (
-                <motion.tr
-                  key={index}
-                  initial={{ opacity: 0.5, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 10 }}
-                  transition={{
-                    duration: 0.5,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                  className="border-b"
-                >
-                  {Array.from({ length: columns.length + 1 }).map(
-                    (_, colIndex) => (
-                      <td key={colIndex} className="py-4 px-6">
-                        <div className="h-4 w-full bg-gray-300 animate-pulse rounded"></div>
-                      </td>
-                    )
-                  )}
-                </motion.tr>
-              ))}
+                  ) : null
+                )}
+                {/* <===================================== Action for Desktop ==================================> */}
+                {windowInnerWidth > 768 && actions?.length > 0 && (
+                  <td className="hidden md:table-cell text-right">
+                    <div className="flex justify-end space-x-1.5 h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5">
+                      <ActionButtons
+                        key={row?.id}
+                        actions={actions}
+                        row={row}
+                        dataAuto={dataAuto}
+                        permissions={permissions}
+                      />
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))
+          ) : (
+            <motion.tr
+              initial={{ opacity: 0.5, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              transition={{
+                duration: 0.5,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className="border-b"
+            >
+              <td
+                colSpan={windowInnerWidth > 768 ? columns.length + 1 : 1}
+                className="py-4 px-6"
+              >
+                <CustomLoading />
+              </td>
+            </motion.tr>
+          )}
         </tbody>
         {/* <===================================== Table Footer ==================================> */}
-        {showPagination && !isLoading && (
+        {showPagination && (
           <tfoot className="h-16 sticky bottom-3 bg-base-300 z-10">
             <tr className="text-sm font-semibold">
               <td colSpan={columns.length + 1}>
@@ -341,7 +303,10 @@ export default function CustomTable({
                   {/* Pagination Info */}
                   <div className="flex items-center gap-2">
                     <span className="font-bold">
-                      Showing {0}-{0} of {totalData}
+                      Showing {paginationConfig?.skip}-
+                      {paginationConfig?.skip +
+                        paginationConfig?.paginationTotal}{" "}
+                      of {paginationConfig?.total}
                     </span>
                   </div>
 
@@ -350,7 +315,7 @@ export default function CustomTable({
                     <label className="font-bold">
                       Rows Per Page:
                       <select
-                        value={limit}
+                        value={paginationConfig.limit}
                         onChange={(e) =>
                           paginationConfig?.changeLimitHandler?.(
                             parseInt(e.target.value)
@@ -358,6 +323,7 @@ export default function CustomTable({
                         }
                         className="ml-2 border border-primary rounded"
                       >
+                        <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -366,10 +332,8 @@ export default function CustomTable({
                     </label>
 
                     <Pagination
-                      limit={paginationConfig?.limit}
-                      totalData={paginationConfig?.total}
+                      totalPages={paginationConfig?.totalPages}
                       changeHandler={paginationConfig?.paginationHandler}
-                      dataAuto={dataAuto}
                     />
                   </div>
                 </div>

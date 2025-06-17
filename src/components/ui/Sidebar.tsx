@@ -15,8 +15,14 @@ import { USER_ROLE } from "@/constants/role";
 import SidebarGenerator from "../SidebarGenerator";
 import UserAvatar from "../Avatar/CustomUserAvatar";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { collapseSidebar, expandSidebar } from "@/redux/slice/globalState";
+import {
+  collapseSidebar,
+  expandSidebar,
+  toggleSidebar,
+} from "@/redux/slice/globalState";
 import { IconType } from "react-icons";
+import useDeviceWith from "@/hooks/useDeviceWith";
+import { MdOutlineMenuOpen } from "react-icons/md";
 
 export interface IMenuItems {
   icon: JSX.Element | ReactNode | ReactElement | IconType;
@@ -27,6 +33,7 @@ export interface IMenuItems {
 }
 
 export default function Sidebar() {
+  const windowWidth = useDeviceWith();
   const { isSidebarCollapsed, isHovering } = useAppSelector(
     (state) => state.globalState
   );
@@ -116,13 +123,13 @@ export default function Sidebar() {
       path: `management`,
       show: true,
       subItems: [
-        {
-          icon: FaTableCells,
-          label: "Departments",
-          path: `/${role}/department`,
-          show: true,
-          subItems: [],
-        },
+        // {
+        //   icon: FaTableCells,
+        //   label: "Departments",
+        //   path: `/${role}/department`,
+        //   show: true,
+        //   subItems: [],
+        // },
         {
           icon: FaTableCells,
           label: "Buildings",
@@ -266,9 +273,13 @@ export default function Sidebar() {
 
   return (
     <motion.aside
-      animate={{ width: isSidebarCollapsed ? 60 : 240 }}
+      animate={{
+        width: isSidebarCollapsed ? (windowWidth < 768 ? 0 : 60) : 240,
+      }}
       transition={{ duration: 0.3, type: "tween" }}
-      className="flex flex-col shadow-lg relative bg-base-300 text-primary border-r-2 border-gray-300 rounded-2xl h-full"
+      className={`flex flex-col shadow-lg relative bg-base-300 text-primary rounded-2xl h-full ${
+        !isSidebarCollapsed ? "border-r-2 border-gray-300" : ""
+      }`}
       onHoverStart={() => {
         if (isHovering) appDispatch(expandSidebar());
       }}
@@ -277,11 +288,22 @@ export default function Sidebar() {
       }}
     >
       {/* top */}
-      <div className="h-16 border-b-2 border-gray-300 flex items-center justify-center relative">
+      <div className="h-16 border-b-2 border-gray-300 flex items-center justify-start md:justify-center relative">
         {isSidebarCollapsed ? (
           <UserAvatar size="10" />
         ) : (
-          <h1 className={`my-5 font-bold`}>University Management</h1>
+          <h1 className={`my-5 font-bold ml-2 md:ml-0`}>
+            University Management
+          </h1>
+        )}
+        {windowWidth < 768 && (
+          <button
+            type="button"
+            onClick={() => appDispatch(toggleSidebar())}
+            className={`absolute right-5 top-1/2 -translate-y-1/2 translate-x-1/2 bg-[#d9d9d9] rounded-full p-0.5 border border-primary/10`}
+          >
+            <MdOutlineMenuOpen size={34} />
+          </button>
         )}
       </div>
 

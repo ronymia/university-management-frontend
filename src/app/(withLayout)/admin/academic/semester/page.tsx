@@ -12,11 +12,13 @@ import {
   useAcademicSemestersQuery,
   useDeleteAcademicSemesterMutation,
 } from "@/redux/api/academic/semesterApi";
+import { IAcademicCoreSemester } from "@/types";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 
 export default function AcademicSemesterPage() {
+  // DATABASE QUERY
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -25,9 +27,13 @@ export default function AcademicSemesterPage() {
     searchTerm: "",
   });
 
+  // POPUP
   const { popupOptions, setPopupOptions, handleAddNewAcademicSemester } =
     usePopup();
-  const [deleteAcademicSemester] = useDeleteAcademicSemesterMutation();
+
+  // DELETE
+  const [deleteAcademicSemester, deleteResult] =
+    useDeleteAcademicSemesterMutation();
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
@@ -41,7 +47,7 @@ export default function AcademicSemesterPage() {
 
   const academicSemesters: any[] = data?.academicSemesters || [];
   const meta = data?.meta;
-  const deleteHandler = async (id: string) => {
+  const deleteHandler = async (id: IAcademicCoreSemester) => {
     try {
       //   console.log(data);
       await deleteAcademicSemester(id);
@@ -50,15 +56,15 @@ export default function AcademicSemesterPage() {
     }
   };
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: IAcademicCoreSemester) => {
+    // console.log({ updateData });
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
       data: updateData,
       actionType: "update",
       form: "academic_semester",
-      title: "Update Academic Semster",
+      title: "Update Academic Semester",
     }));
   };
 
@@ -118,12 +124,12 @@ export default function AcademicSemesterPage() {
       minWidth: 10,
     },
     // NAME
-    // {
-    //   header: "Created at",
-    //   accessorKey: "createdAt",
-    //   show: true,
-    //   minWidth: 20,
-    // },
+    {
+      header: "Created at",
+      accessorKey: "createdAt",
+      show: false,
+      minWidth: 20,
+    },
   ];
   return (
     <>
@@ -142,10 +148,23 @@ export default function AcademicSemesterPage() {
 
       {/* TABLE */}
       <CustomTable
+        isLoading={isLoading || deleteResult.isLoading}
         columns={columns}
-        rows={academicSemesters || []}
-        isLoading={isLoading}
         actions={actions}
+        paginationConfig={{
+          page: queries.page,
+          limit: queries.limit,
+          total: meta?.total || 0,
+          onPageChange: (page: number) => setQueries({ ...queries, page }),
+          onLimitChange: (limit: number) => setQueries({ ...queries, limit }),
+          onPageLimitChange: (page, limit) =>
+            setQueries({ ...queries, page, limit }),
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
+        rows={academicSemesters || []}
       />
     </>
   );
