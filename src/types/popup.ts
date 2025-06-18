@@ -7,7 +7,8 @@ type IForm_NAME =
   | "building"
   | "room"
   | "course"
-  | "semester_registration";
+  | "semester_registration"
+  | "offered_course";
 
 export interface IPopupOptions {
   open: boolean;
