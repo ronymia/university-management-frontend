@@ -20,19 +20,19 @@ type IDProps = {
 
 export default function CourseForm({ id, popupCloseHandler }: IDProps) {
   const { data, isLoading } = useCourseQuery(id, { skip: !id });
-  const [addCourse, createResult] = useAddCourseMutation();
-  const [updateCourse, updateResult] = useUpdateCourseMutation();
+  const [addCourse] = useAddCourseMutation();
+  const [updateCourse] = useUpdateCourseMutation();
 
   const allCourses = useCoursesQuery({ limit: 10, page: 1 });
   // console.log({ course: allCourses.data });
-  const courses = allCourses?.data?.courses?.data ?? [];
+  const courses = allCourses?.data?.courses ?? [];
   const coursesOptions = courses?.map((course: any) => {
     return {
       label: course?.title,
       value: course?.id,
     };
   });
-  const onSubmit = async (values: any, reset: any) => {
+  const onSubmit = async (values: any) => {
     const tempFormData = { ...values };
     tempFormData.credits = parseInt(tempFormData?.credits);
     const coursePreRequisitesOptions = tempFormData?.preRequisiteCourses?.map(
@@ -44,25 +44,16 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
     );
 
     tempFormData.preRequisiteCourses = coursePreRequisitesOptions;
-    try {
-      if (id) {
-        const res = await updateCourse({ id, body: tempFormData }).unwrap();
-        console.log({ res });
-        if (res?.id) {
-          reset?.();
-          popupCloseHandler?.();
-        }
-      } else {
-        const res = await addCourse(tempFormData).unwrap();
-        if (res?.id) {
-          reset?.();
-          popupCloseHandler?.();
-        }
+    if (id) {
+      const res = await updateCourse({ id, body: tempFormData }).unwrap();
+      if (res?.id) {
+        popupCloseHandler?.();
       }
-    } catch (err: any) {
-      reset?.(values);
-      console.error(err.message);
-      // message.error(err.message);
+    } else {
+      const res = await addCourse(tempFormData).unwrap();
+      if (res?.id) {
+        popupCloseHandler?.();
+      }
     }
   };
 
@@ -79,11 +70,11 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
     return <CustomLoading />;
   }
 
-  console.log({ defaultValues });
   return (
     <>
       <CustomForm
         submitHandler={onSubmit}
+        cancelHandler={popupCloseHandler}
         resolver={zodResolver(courseSchema)}
         defaultValues={!!defaultValues ? defaultValues : undefined}
         className={`flex flex-col gap-2`}
@@ -110,7 +101,7 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
         <CustomInputField
           id="credits"
           name="credits"
-          type="text"
+          type="number"
           label="Course credits"
           placeholder="Course credits"
           required
@@ -126,27 +117,6 @@ export default function CourseForm({ id, popupCloseHandler }: IDProps) {
           options={coursesOptions}
           label={`Pre Requisite Courses`}
         />
-
-        <div className="flex justify-end gap-3 mt-5">
-          <button
-            type="button"
-            disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 border border-primary rounded-lg text-primary drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 bg-primary rounded-lg text-base-300 drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Submit
-          </button>
-        </div>
-        {/* <FormAction
-          disabled={updateResult.isLoading || createResult.isLoading}
-          cancelHandler={popupCloseHandler}
-        /> */}
       </CustomForm>
     </>
   );

@@ -15,10 +15,11 @@ export const courseApi = baseApi.injectEndpoints({
           params: arg,
         };
       },
-      transformResponse: (response: ICourse[], meta: IMeta) => {
+      transformResponse: (response: any) => {
+        // console.log({ response });
         return {
-          courses: response,
-          meta,
+          courses: response.data as ICourse[],
+          meta: response.meta as IMeta,
         };
       },
       providesTags: [tagTypes.course],
@@ -38,7 +39,7 @@ export const courseApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.course],
+      invalidatesTags: (result) => (result ? [tagTypes.course] : []),
     }),
     // update
     updateCourse: build.mutation({
@@ -47,7 +48,7 @@ export const courseApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.course],
+      invalidatesTags: (result) => (result ? [tagTypes.course] : []),
     }),
     // delete
     deleteCourse: build.mutation({
@@ -55,7 +56,7 @@ export const courseApi = baseApi.injectEndpoints({
         url: `${COURSE_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.course],
+      invalidatesTags: (result) => (result ? [tagTypes.course] : []),
     }),
   }),
 });

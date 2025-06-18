@@ -12,11 +12,11 @@ import {
   useCoursesQuery,
   useDeleteCourseMutation,
 } from "@/redux/api/courseApi";
+import { ICourse } from "@/types";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function CoursePage() {
+  // ALL QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -24,10 +24,10 @@ export default function CoursePage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  //   POPUP
   const { popupOptions, setPopupOptions, handleAddNewCourse } = usePopup();
-  const [deleteCourse] = useDeleteCourseMutation();
-
+  const [deleteCourse, deleteResult] = useDeleteCourseMutation();
+  //   DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -37,22 +37,17 @@ export default function CoursePage() {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
   const { data, isLoading } = useCoursesQuery({ ...queries });
-  console.log({ data });
+  // console.log({ data });
 
-  const courses: any[] = data?.courses?.data || [];
+  const courses = data?.courses || [];
   const meta = data?.meta;
 
   const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteCourse(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+    await deleteCourse(id);
   };
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: ICourse) => {
+    // console.log({ updateData });
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
@@ -67,15 +62,15 @@ export default function CoursePage() {
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
+      type: "button",
       handler: deleteHandler,
-      Icon: MdDelete,
       permissions: [],
       disableOn: [],
     },
@@ -88,7 +83,7 @@ export default function CoursePage() {
       header: "Title",
       accessorKey: "title",
       show: true,
-      minWidth: 20,
+      minWidth: 50,
     },
     // NAME
     {
@@ -108,7 +103,7 @@ export default function CoursePage() {
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -124,16 +119,35 @@ export default function CoursePage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Manage Courses`}
-        addButtonLabel={`Add Course`}
+        addButtonLabel={`Add New`}
         createHandler={handleAddNewCourse}
       />
 
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={courses || []}
-        isLoading={isLoading}
+        isLoading={isLoading || deleteResult.isLoading}
         actions={actions}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
+        rows={courses || []}
       />
     </>
   );
