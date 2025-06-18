@@ -27,12 +27,10 @@ export default function SemesterRegistrationForm({
   popupCloseHandler,
 }: IDProps) {
   const { data, isLoading } = useSemesterRegistrationQuery(id, { skip: !id });
-  const [addSemesterRegistrations, createResult] =
-    useAddSemesterRegistrationsMutation();
-  const [updateSemesterRegistration, updateResult] =
-    useUpdateSemesterRegistrationsMutation();
+  const [addSemesterRegistrations] = useAddSemesterRegistrationsMutation();
+  const [updateSemesterRegistration] = useUpdateSemesterRegistrationsMutation();
 
-  const onSubmit = async (values: any, reset: any) => {
+  const onSubmit = async (values: any) => {
     const tempObject = { ...values };
     tempObject["startDate"] = dayjs(
       tempObject["startDate"],
@@ -44,28 +42,21 @@ export default function SemesterRegistrationForm({
     ).toISOString();
     tempObject["minCredit"] = Number(tempObject["minCredit"]);
     tempObject["maxCredit"] = Number(tempObject["maxCredit"]);
-    try {
-      if (id) {
-        const res = await updateSemesterRegistration({
-          id,
-          body: tempObject,
-        }).unwrap();
-        console.log({ res });
-        if (res?.id) {
-          reset?.();
-          popupCloseHandler?.();
-        }
-      } else {
-        const res = await addSemesterRegistrations(tempObject).unwrap();
-        if (res?.id) {
-          reset?.();
-          popupCloseHandler?.();
-        }
+
+    if (id) {
+      const res = await updateSemesterRegistration({
+        id,
+        body: tempObject,
+      }).unwrap();
+
+      if (res?.id) {
+        popupCloseHandler?.();
       }
-    } catch (err: any) {
-      reset?.(tempObject);
-      console.error(err.message);
-      // message.error(err.message);
+    } else {
+      const res = await addSemesterRegistrations(tempObject).unwrap();
+      if (res?.id) {
+        popupCloseHandler?.();
+      }
     }
   };
 
@@ -109,8 +100,8 @@ export default function SemesterRegistrationForm({
   return (
     <>
       <CustomForm
-        cancelHandler={popupCloseHandler}
         submitHandler={onSubmit}
+        cancelHandler={popupCloseHandler}
         resolver={zodResolver(semesterRegistrationSchema)}
         defaultValues={!!defaultValues ? defaultValues : undefined}
         className={`flex flex-col gap-2`}
@@ -154,27 +145,6 @@ export default function SemesterRegistrationForm({
           required
           position="top"
         />
-
-        {/* <div className="flex justify-end gap-3 mt-5">
-          <button
-            type="button"
-            disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 border border-primary rounded-lg text-primary drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 bg-primary rounded-lg text-base-300 drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Submit
-          </button>
-        </div> */}
-        {/* <FormAction
-          disabled={updateResult.isLoading || createResult.isLoading}
-          cancelHandler={popupCloseHandler}
-        /> */}
       </CustomForm>
     </>
   );

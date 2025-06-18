@@ -34,7 +34,8 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.semesterRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.semesterRegistration] : [],
     }),
     updateSemesterRegistrations: build.mutation({
       query: (data) => ({
@@ -42,14 +43,16 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.semesterRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.semesterRegistration] : [],
     }),
     deleteSemesterRegistrations: build.mutation({
       query: (id) => ({
         url: `${BASE_SEMESTER_REGISTRATION}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.semesterRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.semesterRegistration] : [],
     }),
     myRegistration: build.query({
       query: () => ({
@@ -78,7 +81,8 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.courseRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.courseRegistration] : [],
     }),
     withdrawFromCourse: build.mutation({
       query: (data) => ({
@@ -86,21 +90,24 @@ export const semesterRegistrationApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.courseRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.courseRegistration] : [],
     }),
     confirmMyRegistration: build.mutation({
       query: () => ({
         url: `${BASE_SEMESTER_REGISTRATION}/confirm-my-registration`,
         method: "POST",
       }),
-      invalidatesTags: [tagTypes.courseRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.courseRegistration] : [],
     }),
     startNewSemester: build.mutation({
       query: (id) => ({
         url: `${BASE_SEMESTER_REGISTRATION}/${id}/start-new-semester`,
         method: "POST",
       }),
-      invalidatesTags: [tagTypes.courseRegistration],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.courseRegistration] : [],
     }),
   }),
 });

@@ -17,10 +17,10 @@ import {
 import { ISemesterRegistration } from "@/types";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { MdDelete, MdPlayCircleOutline } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
+import { MdPlayCircleOutline } from "react-icons/md";
 
 export default function SemesterRegistrationPage() {
+  // Queries
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -28,13 +28,15 @@ export default function SemesterRegistrationPage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  // POPUP
   const { popupOptions, setPopupOptions, handleAddNewSemesterRegistration } =
     usePopup();
+  // DELETE
   const [deleteSemesterRegistrations, deleteResult] =
     useDeleteSemesterRegistrationsMutation();
+  // START
   const [startNewSemester] = useStartNewSemesterMutation();
-
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -43,6 +45,7 @@ export default function SemesterRegistrationPage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
+  // QUERIES
   const { data, isLoading } = useSemesterRegistrationsQuery({ ...queries });
 
   const semesterRegistrations = data?.semesterRegistrations || [];
@@ -51,28 +54,11 @@ export default function SemesterRegistrationPage() {
   const handleStartSemester = async (
     startSemesterData: ISemesterRegistration
   ) => {
-    try {
-      const res = await startNewSemester(startSemesterData?.id).unwrap();
-      console.log(res);
-    } catch (err: any) {
-      console.error(err?.message);
-    }
+    await startNewSemester(startSemesterData?.id).unwrap();
   };
 
   const deleteHandler = async (deleteData: ISemesterRegistration) => {
-    try {
-      //   console.log(data);
-      await deleteSemesterRegistrations(deleteData.id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-    // setPopupOptions((prev) => ({
-    //   ...prev,
-    //   open: true,
-    //   data: deleteData,
-    //   actionType: "delete",
-    //   form: "semester_registration",
-    // }));
+    await deleteSemesterRegistrations(deleteData.id);
   };
 
   const handleEdit = (updateData: ISemesterRegistration) => {
@@ -90,6 +76,7 @@ export default function SemesterRegistrationPage() {
   const [actions] = useState<IAction[]>([
     {
       name: "Start Semester",
+      type: "button",
       handler: handleStartSemester,
       Icon: MdPlayCircleOutline,
       permissions: [],
@@ -106,13 +93,14 @@ export default function SemesterRegistrationPage() {
     },
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
+      type: "button",
       handler: (deleteData) => {
         setPopupOptions((prev) => ({
           ...prev,
@@ -123,7 +111,6 @@ export default function SemesterRegistrationPage() {
           deleteHandler: () => deleteHandler(deleteData),
         }));
       },
-      Icon: MdDelete,
       permissions: [],
       disableOn: [],
     },
@@ -163,7 +150,7 @@ export default function SemesterRegistrationPage() {
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -178,7 +165,7 @@ export default function SemesterRegistrationPage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Semester Registration`}
-        addButtonLabel={`Add Semester Registration`}
+        addButtonLabel={`Add New`}
         createHandler={handleAddNewSemesterRegistration}
       />
 
@@ -187,12 +174,26 @@ export default function SemesterRegistrationPage() {
         showPagination
         isLoading={isLoading || deleteResult.isLoading}
         actions={actions}
-        limit={queries.limit}
-        totalData={meta?.total || 0}
         columns={columns}
-        paginationHandler={(page: number) => {
-          setQueries((prev) => ({ ...prev, page }));
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
         }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           semesterRegistrations?.map((row) => ({
             ...row,
