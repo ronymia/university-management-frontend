@@ -27,6 +27,7 @@ const offeredCourseSectionApi = baseApi.injectEndpoints({
         url: `${BASE_OFFERED_COURSES_SECTION}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IOfferedCourseSection) => response,
       providesTags: [tagTypes.offeredCourseSection],
     }),
     addOfferedCourseSection: build.mutation({
@@ -35,7 +36,8 @@ const offeredCourseSectionApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.offeredCourseSection],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.offeredCourseSection] : [],
     }),
     updateOfferedCourseSection: build.mutation({
       query: (data) => ({
@@ -43,14 +45,16 @@ const offeredCourseSectionApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.offeredCourseSection],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.offeredCourseSection] : [],
     }),
     deleteOfferedCourseSection: build.mutation({
       query: (id) => ({
         url: `${BASE_OFFERED_COURSES_SECTION}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.offeredCourseSection],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.offeredCourseSection] : [],
     }),
   }),
 });

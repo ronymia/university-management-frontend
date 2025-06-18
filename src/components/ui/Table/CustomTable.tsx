@@ -261,7 +261,7 @@ export default function CustomTable({
                 {/* <===================================== Action for Desktop ==================================> */}
                 {windowInnerWidth > 768 && actions?.length > 0 && (
                   <td className="hidden md:table-cell text-right">
-                    <div className="flex justify-end space-x-1.5 h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5">
+                    <div className="flex items-center justify-end space-x-1.5 h-16 drop-shadow border-t border-b border-r border-primary/20 rounded-tr-xl rounded-br-xl pr-5">
                       <ActionButtons
                         key={row?.id}
                         actions={actions}

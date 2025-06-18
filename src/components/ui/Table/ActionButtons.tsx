@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { hasPermission } from "@/utils/hasPermission";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { BiShow } from "react-icons/bi";

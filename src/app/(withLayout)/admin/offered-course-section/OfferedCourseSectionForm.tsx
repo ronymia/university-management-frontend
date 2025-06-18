@@ -10,9 +10,9 @@ import FormDynamicFields from "@/components/ui/FormDynamicFields";
 import { useOfferedCoursesQuery } from "@/redux/api/offeredCourseApi";
 import {
   useAddOfferedCourseSectionMutation,
+  useOfferedCourseSectionQuery,
   useUpdateOfferedCourseSectionMutation,
 } from "@/redux/api/offeredCourseSectionApi";
-import { useRoomQuery } from "@/redux/api/roomApi";
 import { offeredCourseSectionSchema } from "@/schemas/admin/offeredCourseSection";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ type IDProps = {
 
 export default function OfferedCourseSectionForm({ id }: IDProps) {
   const router = useRouter();
-  const { data, isLoading } = useRoomQuery(id, { skip: !id });
+  const { data, isLoading } = useOfferedCourseSectionQuery(id, { skip: !id });
   const [addOfferedCourseSection, createResult] =
     useAddOfferedCourseSectionMutation();
   const [updateOfferedCourseSection, updateResult] =
@@ -59,38 +59,30 @@ export default function OfferedCourseSectionForm({ id }: IDProps) {
 
   /* !!!need to pass academic_semester data */
 
-  const onSubmit = async (values: any, reset: any) => {
+  const onSubmit = async (values: any) => {
     values.maxCapacity = parseInt(values?.maxCapacity);
-    console.log({ values });
-    try {
-      if (id) {
-        const res = await updateOfferedCourseSection({
-          id,
-          body: values,
-        }).unwrap();
-        console.log({ res });
-        if (res?.id) {
-          reset?.();
-          router.back();
-        }
-      } else {
-        const res = await addOfferedCourseSection(values).unwrap();
-        console.log({ res });
-        if (res?.id) {
-          reset?.();
-          router.back();
-        }
+    if (id) {
+      const res = await updateOfferedCourseSection({
+        id,
+        body: values,
+      }).unwrap();
+
+      if (res?.id) {
+        router.back();
       }
-    } catch (err: any) {
-      reset?.(values);
-      console.error(err.message);
-      // message.error(err.message);
+    } else {
+      const res = await addOfferedCourseSection(values).unwrap();
+      if (res?.id) {
+        router.back();
+      }
     }
   };
 
   const defaultValues = {
-    semesterRegistrationId: data?.semesterRegistrationId || "",
-    academicDepartmentId: data?.academicDepartmentId || "",
+    title: data?.title || "",
+    semesterRegistration: data?.semesterRegistrationId || "",
+    academicDepartment: data?.offeredCourse.academicDepartmentId || "",
+    maxCapacity: data?.maxCapacity || "",
   };
 
   if (isLoading) {
@@ -176,10 +168,6 @@ export default function OfferedCourseSectionForm({ id }: IDProps) {
             Submit
           </button>
         </div>
-        {/* <FormAction
-          disabled={updateResult.isLoading || createResult.isLoading}
-          cancelHandler={popupCloseHandler}
-        /> */}
       </CustomForm>
     </>
   );

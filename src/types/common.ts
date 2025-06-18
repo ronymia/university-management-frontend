@@ -282,6 +282,8 @@ export interface IOfferedCourseSection {
   offeredCourseId: string;
   offeredCourse: IOfferedCourse;
   offeredCourseClassSchedules?: IOfferedCourseSchedule[] | null;
+  semesterRegistrationId: string;
+  semesterRegistration: ISemesterRegistration;
   isTaken?: boolean;
 }
 

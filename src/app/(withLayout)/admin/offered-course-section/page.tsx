@@ -1,5 +1,6 @@
 "use client";
 
+import CustomAddButton from "@/components/Button/CustomAddButton";
 import FormModal from "@/components/Forms/FormModal";
 import { usePopup } from "@/components/Popup/CustomPopup";
 import ActionBar from "@/components/ui/ActionBar";
@@ -12,13 +13,14 @@ import {
   useDeleteOfferedCourseSectionMutation,
   useOfferedCourseSectionsQuery,
 } from "@/redux/api/offeredCourseSectionApi";
+import { IOfferedCourseSection } from "@/types";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function OfferedCourseSectionPage() {
   const router = useRouter();
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -26,58 +28,48 @@ export default function OfferedCourseSectionPage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  // POPUP
   const { popupOptions, setPopupOptions } = usePopup();
-  const [deleteOfferedCourseSection] = useDeleteOfferedCourseSectionMutation();
-
+  // DELETION
+  const [deleteOfferedCourseSection, deleteResult] =
+    useDeleteOfferedCourseSectionMutation();
+  // DEBOUNCE
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
   });
-
+  // DEBOUNCE FOR SEARCH
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
   const { data, isLoading } = useOfferedCourseSectionsQuery({ ...queries });
 
-  const offeredCourseSections: any[] = data?.offeredCourseSections || [];
+  const offeredCourseSections = data?.offeredCourseSections || [];
   const meta = data?.meta;
 
-  const deleteHandler = async (deleteData: any) => {
-    try {
-      //   console.log(data);
-      await deleteOfferedCourseSection(deleteData?.id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  const deleteHandler = async (deleteData: IOfferedCourseSection) => {
+    await deleteOfferedCourseSection(deleteData?.id);
   };
 
-  const handleEdit = (updateData: any) => {
+  const handleEdit = (updateData: IOfferedCourseSection) => {
     console.log({ updateData });
     router.push(`/admin/offered-course-section/edit/${updateData.id}`);
-    // setPopupOptions((prev) => ({
-    //   ...prev,
-    //   open: true,
-    //   data: updateData,
-    //   actionType: "update",
-    //   form: "offered_course_section",
-    //   title: "Update Offered Course Section",
-    // }));
   };
 
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "link",
+      href: (row) => `/admin/offered-course-section/edit/${row?.id}`,
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
+      type: "button",
       handler: deleteHandler,
-      Icon: MdDelete,
       permissions: [],
       disableOn: [],
     },
@@ -85,6 +77,13 @@ export default function OfferedCourseSectionPage() {
 
   // TABLE COLUMNS DEFINE
   const columns: IColumn[] = [
+    // NAME
+    {
+      header: "Semester Registration",
+      accessorKey: "customSemesterRegistration",
+      show: true,
+      minWidth: 20,
+    },
     // NAME
     {
       header: "Offered courses",
@@ -97,7 +96,7 @@ export default function OfferedCourseSectionPage() {
       header: "Section",
       accessorKey: "title",
       show: true,
-      minWidth: 15,
+      minWidth: 20,
     },
     // NAME
     {
@@ -108,7 +107,7 @@ export default function OfferedCourseSectionPage() {
     },
     // NAME
     {
-      header: "Currently Enrolled Student",
+      header: "Enrolled Student",
       accessorKey: "currentEnrolledStudent",
       show: true,
       minWidth: 25,
@@ -117,7 +116,7 @@ export default function OfferedCourseSectionPage() {
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -132,24 +131,48 @@ export default function OfferedCourseSectionPage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Manage Offered Course Sections`}
-        addButtonLabel={`Add Offered Course Section`}
-        createHandler={() =>
-          router.push("/admin/offered-course-section/create")
-        }
-      />
+        // addButtonLabel={`Add New`}
+        // createHandler={() =>
+        //   router.push("/admin/offered-course-section/create")
+        // }
+      >
+        <Link href="/admin/offered-course-section/create">
+          <CustomAddButton label="Add New"></CustomAddButton>
+        </Link>
+      </ActionBar>
 
       {/* TABLE */}
       <CustomTable
         columns={columns}
+        isLoading={isLoading || deleteResult.isLoading}
+        actions={actions}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
-          offeredCourseSections?.map((row: any) => ({
+          offeredCourseSections?.map((row) => ({
             ...row,
+            customSemesterRegistration:
+              row?.semesterRegistration?.academicSemester?.title,
             customOfferedCourse: row?.offeredCourse?.course?.title,
-            customAcademicDepartment: row?.customAcademicDepartment?.title,
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );
