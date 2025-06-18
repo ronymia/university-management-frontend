@@ -54,7 +54,7 @@ export default function AcademicSemesterPage() {
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
-      data: updateData,
+      data: updateData as IAcademicCoreSemester,
       actionType: "update",
       form: "academic_semester",
       title: "Update Academic Semester",

@@ -29,6 +29,7 @@ export const roomApi = baseApi.injectEndpoints({
         url: `${ROOM_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IRoom) => response,
       providesTags: [tagTypes.room],
     }),
     // create a new room
@@ -38,7 +39,7 @@ export const roomApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.room],
+      invalidatesTags: (result) => (result ? [tagTypes.room] : []),
     }),
     // update room
     updateRoom: build.mutation({
@@ -47,7 +48,7 @@ export const roomApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.room],
+      invalidatesTags: (result) => (result ? [tagTypes.room] : []),
     }),
     // delete room
     deleteRoom: build.mutation({
@@ -55,7 +56,7 @@ export const roomApi = baseApi.injectEndpoints({
         url: `${ROOM_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.room],
+      invalidatesTags: (result) => (result ? [tagTypes.room] : []),
     }),
   }),
 });

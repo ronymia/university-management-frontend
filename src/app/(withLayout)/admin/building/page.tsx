@@ -12,11 +12,11 @@ import {
   useBuildingsQuery,
   useDeleteBuildingMutation,
 } from "@/redux/api/buildingApi";
-import React, { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
+import { IBuilding } from "@/types";
+import { useState } from "react";
 
 export default function BuildingPage() {
+  // DATABASE QUERY
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -24,10 +24,11 @@ export default function BuildingPage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  // POPUP
   const { popupOptions, setPopupOptions, handleAddNewBuilding } = usePopup();
-  const [deleteBuilding] = useDeleteBuildingMutation();
-
+  // DELETE
+  const [deleteBuilding, deleteResult] = useDeleteBuildingMutation();
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -38,20 +39,15 @@ export default function BuildingPage() {
   }
   const { data, isLoading } = useBuildingsQuery({ ...queries });
 
-  const buildings: any[] = data?.buildings || [];
+  const buildings = data?.buildings || [];
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteBuilding(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  const deleteHandler = async (id: IBuilding) => {
+    await deleteBuilding(id.id);
   };
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: IBuilding) => {
+    // console.log({ updateData });
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
@@ -66,15 +62,24 @@ export default function BuildingPage() {
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
-      handler: deleteHandler,
-      Icon: MdDelete,
+      type: "button",
+      handler: (deleteData) => {
+        setPopupOptions((prev) => ({
+          ...prev,
+          open: true,
+          data: deleteData,
+          actionType: "delete",
+          form: "building",
+          deleteHandler: () => deleteHandler(deleteData),
+        }));
+      },
       permissions: [],
       disableOn: [],
     },
@@ -108,16 +113,35 @@ export default function BuildingPage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Manage Buildings`}
-        addButtonLabel={`Add Building`}
+        addButtonLabel={`Add New`}
         createHandler={handleAddNewBuilding}
       />
 
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={buildings || []}
-        isLoading={isLoading}
+        isLoading={isLoading || deleteResult.isLoading}
         actions={actions}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
+        rows={buildings || []}
       />
     </>
   );

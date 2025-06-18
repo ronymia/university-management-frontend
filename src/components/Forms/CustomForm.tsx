@@ -51,7 +51,15 @@ export default function CustomForm({
 
       if (error.statusCode === 422) {
         error.errorMessages?.forEach((err) => {
-          setError(err.path as any, { type: "manual", message: err.message });
+          if (Array.isArray(err.path)) {
+            setError(err.path as any, { type: "manual", message: err.message });
+          } else {
+            const fields = (err?.path as string)?.replace(/`/g, "").split(",");
+
+            fields?.forEach((field) => {
+              setError(field as any, { type: "manual", message: err.message });
+            });
+          }
         });
       }
     }

@@ -9,11 +9,11 @@ import CustomTable, {
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import { useDeleteRoomMutation, useRoomsQuery } from "@/redux/api/roomApi";
+import { IRoom } from "@/types";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function RoomPage() {
+  // DATABASE QUERY
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -21,9 +21,10 @@ export default function RoomPage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  // POPUP
   const { popupOptions, setPopupOptions, handleAddNewRoom } = usePopup();
-  const [deleteRoom] = useDeleteRoomMutation();
+  // DELETE
+  const [deleteRoom, deleteResult] = useDeleteRoomMutation();
 
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
@@ -35,19 +36,14 @@ export default function RoomPage() {
   }
   const { data, isLoading } = useRoomsQuery({ ...queries });
 
-  const rooms: any[] = data?.rooms || [];
+  const rooms = data?.rooms || [];
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteRoom(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  const deleteHandler = async (id: IRoom) => {
+    await deleteRoom(id.id);
   };
 
-  const handleEdit = (updateData: any) => {
+  const handleEdit = (updateData: IRoom) => {
     console.log({ updateData });
     setPopupOptions((prev) => ({
       ...prev,
@@ -63,15 +59,24 @@ export default function RoomPage() {
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
-      handler: deleteHandler,
-      Icon: MdDelete,
+      type: "button",
+      handler: (deleteData) => {
+        setPopupOptions((prev) => ({
+          ...prev,
+          open: true,
+          data: deleteData,
+          actionType: "delete",
+          form: "building",
+          deleteHandler: () => deleteHandler(deleteData),
+        }));
+      },
       permissions: [],
       disableOn: [],
     },
@@ -81,7 +86,7 @@ export default function RoomPage() {
   const columns: IColumn[] = [
     // NAME
     {
-      header: "Title",
+      header: "Room Number",
       accessorKey: "roomNumber",
       show: true,
       minWidth: 20,
@@ -104,7 +109,7 @@ export default function RoomPage() {
     {
       header: "Created At",
       accessorKey: "createdAt",
-      show: true,
+      show: false,
       minWidth: 20,
     },
   ];
@@ -119,21 +124,40 @@ export default function RoomPage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Manage Rooms`}
-        addButtonLabel={`Add Room`}
+        addButtonLabel={`Add New`}
         createHandler={handleAddNewRoom}
       />
 
       {/* TABLE */}
       <CustomTable
+        isLoading={isLoading || deleteResult.isLoading}
+        actions={actions}
         columns={columns}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
-          rooms?.map((room: any) => ({
+          rooms?.map((room) => ({
             ...room,
             customBuilding: room?.building?.title,
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );

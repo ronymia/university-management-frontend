@@ -1,8 +1,17 @@
+type IAction_TYPE = "create" | "update" | "delete" | "view";
+
+type IForm_NAME =
+  | "academic_semester"
+  | "academic_faculty"
+  | "academic_department"
+  | "building"
+  | "room";
+
 export interface IPopupOptions {
   open: boolean;
   closeOnDocumentClick?: boolean;
-  actionType: string;
-  form: string;
+  actionType: IAction_TYPE;
+  form: IForm_NAME;
   data?: any;
   title: string;
   deleteHandler?: () => void;

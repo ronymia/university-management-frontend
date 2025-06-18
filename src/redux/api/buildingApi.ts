@@ -29,6 +29,7 @@ export const buildingApi = baseApi.injectEndpoints({
         url: `${BUILDING_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IBuilding) => response,
       providesTags: [tagTypes.building],
     }),
     // create a new building
@@ -38,7 +39,7 @@ export const buildingApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.building],
+      invalidatesTags: (result) => (result ? [tagTypes.building] : []),
     }),
     // update existing building
     updateBuilding: build.mutation({
@@ -47,7 +48,7 @@ export const buildingApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.building],
+      invalidatesTags: (result) => (result ? [tagTypes.building] : []),
     }),
     // delete existing building
     deleteBuilding: build.mutation({
@@ -55,7 +56,7 @@ export const buildingApi = baseApi.injectEndpoints({
         url: `${BUILDING_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.building],
+      invalidatesTags: (result) => (result ? [tagTypes.building] : []),
     }),
   }),
 });
