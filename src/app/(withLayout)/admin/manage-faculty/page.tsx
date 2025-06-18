@@ -1,10 +1,9 @@
 import FacultyPage from "@/components/ui/Common/FacultyPage";
 import { Metadata } from "next";
-import React from "react";
 
-export const metaData: Metadata = {
-  title: "Manage Faculty",
-  description: "Manage Faculty",
+export const metadata: Metadata = {
+  title: "UMS | Manage Faculty",
+  description: "University Management System",
 };
 
 export default function AdminFacultyPage() {

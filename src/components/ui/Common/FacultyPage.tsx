@@ -14,15 +14,13 @@ import {
   useFacultiesQuery,
 } from "@/redux/api/facultyApi";
 import { getUserInfo } from "@/services/auth.service";
+import { IFaculty } from "@/types";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function FacultyPage() {
-  const router = useRouter();
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -31,9 +29,11 @@ export default function FacultyPage() {
     searchTerm: "",
   });
   const { role } = getUserInfo() as any;
+  // POPUP
   const { popupOptions, setPopupOptions } = usePopup();
-  const [deleteFaculty] = useDeleteFacultyMutation();
-
+  // DELETE API
+  const [deleteFaculty, deleteResult] = useDeleteFacultyMutation();
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -47,41 +47,24 @@ export default function FacultyPage() {
   const faculties = data?.faculties;
   const meta = data?.meta;
   // console.log(faculties);
-  const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteFaculty(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
-    router.push(`manage-faculty/edit/${updateData.id}`);
-    // setPopupOptions((prev) => ({
-    //   ...prev,
-    //   open: true,
-    //   data: updateData,
-    //   actionType: "update",
-    //   form: "faculty",
-    //   title: "Update Faculty",
-    // }));
+  const deleteHandler = async (id: IFaculty) => {
+    await deleteFaculty(id);
   };
 
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
-      handler: handleEdit,
-      Icon: RiEdit2Fill,
+      type: "link",
+      href: (row) => `/manage-faculty/edit/${row?.id}`,
+      handler: () => {},
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
+      type: "button",
       handler: deleteHandler,
-      Icon: MdDelete,
       permissions: [],
       disableOn: [],
     },
@@ -142,7 +125,7 @@ export default function FacultyPage() {
     {
       header: "Created at",
       accessorKey: "customCreatedAt",
-      show: true,
+      show: false,
       minWidth: 15,
     },
   ];
@@ -164,13 +147,28 @@ export default function FacultyPage() {
 
       {/* TABLE */}
       <CustomTable
-        isLoading={isLoading}
+        isLoading={isLoading || deleteResult.isLoading}
         actions={actions}
-        showPagination
         columns={columns}
-        limit={queries.limit}
-        totalData={meta?.total || 0}
-        paginationHandler={(page: number) => setQueries({ ...queries, page })}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           faculties?.map((row) => ({
             ...row,

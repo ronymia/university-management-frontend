@@ -73,7 +73,7 @@ export const facultyApi = baseApi.injectEndpoints({
         data,
         contentType: "multipart/form-data",
       }),
-      invalidatesTags: [tagTypes.faculty],
+      invalidatesTags: (result) => (result ? [tagTypes.faculty] : []),
     }),
     // update faculty user endpoint
     updateFaculty: build.mutation({
@@ -82,7 +82,7 @@ export const facultyApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.faculty],
+      invalidatesTags: (result) => (result ? [tagTypes.faculty] : []),
     }),
     // delete faculty user endpoint
     deleteFaculty: build.mutation({
@@ -90,7 +90,7 @@ export const facultyApi = baseApi.injectEndpoints({
         url: `${BASE_FACULTY_API_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.faculty],
+      invalidatesTags: (result) => (result ? [tagTypes.faculty] : []),
     }),
 
     facultyCourses: build.query({
@@ -107,7 +107,7 @@ export const facultyApi = baseApi.injectEndpoints({
           meta,
         };
       },
-      providesTags: [tagTypes.student],
+      providesTags: (result) => (result ? [tagTypes.student] : []),
     }),
 
     facultyCourseStudents: build.query({
@@ -124,7 +124,7 @@ export const facultyApi = baseApi.injectEndpoints({
           meta,
         };
       },
-      providesTags: [tagTypes.student],
+      providesTags: (result) => (result ? [tagTypes.student] : []),
     }),
   }),
 });
