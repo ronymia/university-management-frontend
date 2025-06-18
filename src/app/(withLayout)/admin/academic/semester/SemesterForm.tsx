@@ -31,12 +31,11 @@ export default function AcademicSemesterForm({
   id: string;
   popupCloseHandler: () => void;
 }) {
-  const [addAcademicSemester, createResult] = useAddAcademicSemesterMutation();
-  const [updateAcademicSemester, updateResult] =
-    useUpdateAcademicSemesterMutation();
+  const [addAcademicSemester] = useAddAcademicSemesterMutation();
+  const [updateAcademicSemester] = useUpdateAcademicSemesterMutation();
 
   const { data, isLoading } = useAcademicSemesterQuery(id, { skip: !id });
-  console.log({ data });
+  // console.log({ data });
 
   const defaultValues = {
     title: data?.title,
@@ -55,22 +54,19 @@ export default function AcademicSemesterForm({
 
     // console.log(data);
 
-    try {
-      if (!!id) {
-        const res = await updateAcademicSemester({ body: data, id }).unwrap();
-        if (!!res) {
-          popupCloseHandler?.();
-        }
-      } else {
-        const res = await addAcademicSemester(data).unwrap();
-        if (!!res) {
-          popupCloseHandler?.();
-        }
+    if (!!id) {
+      const res = await updateAcademicSemester({ body: data, id }).unwrap();
+      if (!!res) {
+        popupCloseHandler?.();
       }
-    } catch (err: any) {
-      console.error(err.message);
+    } else {
+      const res = await addAcademicSemester(data).unwrap();
+      if (!!res) {
+        popupCloseHandler?.();
+      }
     }
   };
+
   if (isLoading) {
     return <CustomLoading />;
   }
@@ -78,6 +74,7 @@ export default function AcademicSemesterForm({
     <>
       <CustomForm
         submitHandler={onSubmit}
+        cancelHandler={popupCloseHandler}
         resolver={zodResolver(academicSemesterSchema)}
         defaultValues={defaultValues ? defaultValues : undefined}
         className={`flex flex-col gap-2`}
@@ -104,6 +101,7 @@ export default function AcademicSemesterForm({
         />
         {/* endMonth */}
         <CustomSelect
+          // position={"top"}
           isLoading={false}
           name={"endMonth"}
           id={"endMonth"}
@@ -114,6 +112,7 @@ export default function AcademicSemesterForm({
         />
         {/* year */}
         <CustomSelect
+          position={"top"}
           isLoading={false}
           name={"year"}
           id={"year"}
@@ -122,27 +121,6 @@ export default function AcademicSemesterForm({
           placeholder={"Select Year"}
           required
         />
-
-        <div className="flex justify-end gap-3 mt-5">
-          <button
-            type="button"
-            disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 border border-primary rounded-lg text-primary drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={updateResult.isLoading || createResult.isLoading}
-            className={`px-3 py-2 bg-primary rounded-lg text-base-300 drop-shadow-2xl cursor-pointer w-xs`}
-          >
-            Submit
-          </button>
-        </div>
-        {/* <FormAction
-              disabled={updateResult.isLoading || createResult.isLoading}
-              cancelHandler={popupCloseHandler}
-            /> */}
       </CustomForm>
     </>
   );

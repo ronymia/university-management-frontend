@@ -50,7 +50,8 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.academicDepartment],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.academicDepartment] : [],
     }),
 
     // delete ac department
@@ -59,7 +60,8 @@ export const academicDepartmentApi = baseApi.injectEndpoints({
         url: `${ACADEMIC_DEPARTMENT_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.academicDepartment],
+      invalidatesTags: (result) =>
+        result ? [tagTypes.academicDepartment] : [],
     }),
   }),
 });

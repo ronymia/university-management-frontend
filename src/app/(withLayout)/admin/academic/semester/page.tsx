@@ -14,8 +14,6 @@ import {
 } from "@/redux/api/academic/semesterApi";
 import { IAcademicCoreSemester } from "@/types";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function AcademicSemesterPage() {
   // DATABASE QUERY
@@ -45,15 +43,10 @@ export default function AcademicSemesterPage() {
   }
   const { data, isLoading } = useAcademicSemestersQuery({ ...queries });
 
-  const academicSemesters: any[] = data?.academicSemesters || [];
+  const academicSemesters = data?.academicSemesters || [];
   const meta = data?.meta;
   const deleteHandler = async (id: IAcademicCoreSemester) => {
-    try {
-      //   console.log(data);
-      await deleteAcademicSemester(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+    await deleteAcademicSemester(id?.id);
   };
 
   const handleEdit = (updateData: IAcademicCoreSemester) => {
@@ -72,15 +65,24 @@ export default function AcademicSemesterPage() {
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
-      handler: deleteHandler,
-      Icon: MdDelete,
+      type: "button",
+      handler: (deleteData) => {
+        setPopupOptions((prev) => ({
+          ...prev,
+          open: true,
+          data: deleteData,
+          actionType: "delete",
+          form: "academic_semester",
+          deleteHandler: () => deleteHandler(deleteData),
+        }));
+      },
       permissions: [],
       disableOn: [],
     },
@@ -142,7 +144,7 @@ export default function AcademicSemesterPage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Manage Academic Semesters`}
-        addButtonLabel={`Add Academic Semester`}
+        addButtonLabel={`Add New`}
         createHandler={handleAddNewAcademicSemester}
       />
 
@@ -152,13 +154,19 @@ export default function AcademicSemesterPage() {
         columns={columns}
         actions={actions}
         paginationConfig={{
-          page: queries.page,
-          limit: queries.limit,
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
           total: meta?.total || 0,
-          onPageChange: (page: number) => setQueries({ ...queries, page }),
-          onLimitChange: (limit: number) => setQueries({ ...queries, limit }),
-          onPageLimitChange: (page, limit) =>
-            setQueries({ ...queries, page, limit }),
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
         }}
         // searchConfig={{
         //   searchTerm: queries.searchTerm,

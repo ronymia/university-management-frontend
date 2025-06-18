@@ -72,7 +72,8 @@ export default function CustomTable({
     skip: 0,
     total: 0,
     totalPages: 0,
-    showPagination: true,
+    paginationTotal: 0,
+    showPagination: false,
     paginationHandler: () => {},
     changeLimitHandler: () => {},
   },
@@ -295,7 +296,7 @@ export default function CustomTable({
           )}
         </tbody>
         {/* <===================================== Table Footer ==================================> */}
-        {showPagination && (
+        {paginationConfig?.showPagination && (
           <tfoot className="h-16 sticky bottom-3 bg-base-300 z-10">
             <tr className="text-sm font-semibold">
               <td colSpan={columns.length + 1}>

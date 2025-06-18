@@ -12,12 +12,12 @@ import {
   useAcademicFacultiesQuery,
   useDeleteAcademicFacultyMutation,
 } from "@/redux/api/academic/facultyApi";
+import { IAcademicCoreFaculty } from "@/types";
 import dayjs from "dayjs";
-import React, { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
+import { useState } from "react";
 
 export default function AcademicFacultyPage() {
+  // DATABASE QUERY
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -26,10 +26,13 @@ export default function AcademicFacultyPage() {
     searchTerm: "",
   });
 
+  // POPUP
   const { popupOptions, setPopupOptions, handleAddNewAcademicFaculty } =
     usePopup();
-  const [deleteDepartment] = useDeleteAcademicFacultyMutation();
-
+  // DELETE
+  const [deleteAcademicFaculty, deleteResult] =
+    useDeleteAcademicFacultyMutation();
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -40,20 +43,15 @@ export default function AcademicFacultyPage() {
   }
   const { data, isLoading } = useAcademicFacultiesQuery({ ...queries });
 
-  const academicFaculties: any[] = data?.academicFaculties || [];
+  const academicFaculties = data?.academicFaculties || [];
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteDepartment(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  const deleteHandler = async (id: IAcademicCoreFaculty) => {
+    await deleteAcademicFaculty(id.id);
   };
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: IAcademicCoreFaculty) => {
+    // console.log({ updateData });
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
@@ -68,15 +66,24 @@ export default function AcademicFacultyPage() {
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
-      handler: deleteHandler,
-      Icon: MdDelete,
+      type: "button",
+      handler: (deleteData) => {
+        setPopupOptions((prev) => ({
+          ...prev,
+          open: true,
+          data: deleteData,
+          actionType: "delete",
+          form: "academic_faculty",
+          deleteHandler: () => deleteHandler(deleteData),
+        }));
+      },
       permissions: [],
       disableOn: [],
     },
@@ -95,7 +102,7 @@ export default function AcademicFacultyPage() {
     {
       header: "Created At",
       accessorKey: "customCreatedAt",
-      show: true,
+      show: false,
       minWidth: 30,
     },
   ];
@@ -111,21 +118,40 @@ export default function AcademicFacultyPage() {
       {/* ACTION BAR */}
       <ActionBar
         title={`Manage Academic Faculty`}
-        addButtonLabel={`Add Academic Faculty`}
+        addButtonLabel={`Add New`}
         createHandler={handleAddNewAcademicFaculty}
       />
 
       {/* TABLE */}
       <CustomTable
+        isLoading={isLoading || deleteResult.isLoading}
         columns={columns}
+        actions={actions}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           academicFaculties?.map((row) => ({
             ...row,
             customCreatedAt: dayjs(row.createdAt).format("MMM D, YYYY hh:mm A"),
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );

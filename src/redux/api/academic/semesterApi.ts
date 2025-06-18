@@ -13,7 +13,7 @@ export const academicSemesterApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.academicSemester],
+      invalidatesTags: (result) => (result ? [tagTypes.academicSemester] : []),
     }),
 
     // get all ac semesters endpoint
@@ -51,7 +51,7 @@ export const academicSemesterApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.academicSemester],
+      invalidatesTags: (result) => (result ? [tagTypes.academicSemester] : []),
     }),
 
     // delete existing ac semester endpoint
@@ -60,7 +60,7 @@ export const academicSemesterApi = baseApi.injectEndpoints({
         url: `${ACADEMIC_SEMESTER_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.academicSemester],
+      invalidatesTags: (result) => (result ? [tagTypes.academicSemester] : []),
     }),
   }),
 });

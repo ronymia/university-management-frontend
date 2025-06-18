@@ -30,6 +30,7 @@ export const academicFacultyApi = baseApi.injectEndpoints({
         url: `${ACADEMIC_FACULTY_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IAcademicFaculty) => response,
       providesTags: [tagTypes.academicFaculty],
     }),
     // create academic faculty api endpoint
@@ -39,7 +40,7 @@ export const academicFacultyApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.academicFaculty],
+      invalidatesTags: (result) => (result ? [tagTypes.academicFaculty] : []),
     }),
     // update academic faculty api endpoint
     updateAcademicFaculty: build.mutation({
@@ -48,7 +49,7 @@ export const academicFacultyApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.academicFaculty],
+      invalidatesTags: (result) => (result ? [tagTypes.academicFaculty] : []),
     }),
     // delete academic faculty api endpoint
     deleteAcademicFaculty: build.mutation({
@@ -56,7 +57,7 @@ export const academicFacultyApi = baseApi.injectEndpoints({
         url: `${ACADEMIC_FACULTY_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.academicFaculty],
+      invalidatesTags: (result) => (result ? [tagTypes.academicFaculty] : []),
     }),
   }),
 });
