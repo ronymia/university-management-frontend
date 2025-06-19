@@ -20,7 +20,6 @@ interface ICustomRadioButton {
 }
 
 export default function CustomRadioButton({
-  id,
   name,
   options,
   required,
@@ -42,7 +41,6 @@ export default function CustomRadioButton({
         name={`${name}`}
         render={({ field }) => (
           <RadioButton
-            id={id}
             defaultChecked={field.value}
             {...field}
             label={label}

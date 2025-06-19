@@ -98,6 +98,7 @@ export interface IStudent {
   guardian: Guardian & { id: string };
   localGuardian: LocalGuardian & { id: string };
   department: string;
+  profileImage: string;
   academicDepartment: IAcademicDepartment;
   academicSemester: IAcademicSemester;
   academicFaculty: IAcademicFaculty;

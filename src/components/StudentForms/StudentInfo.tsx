@@ -19,7 +19,7 @@ const StudentInfo = ({
   );
   return (
     <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
-      <div className={`grid grid-cols-3 gap-3`}>
+      <div className={`grid grid-cols-1 md:grid-cols-3 gap-3`}>
         {/* firstName */}
         <CustomInputField
           id="student.name.firstName"
@@ -102,7 +102,7 @@ const StudentInfo = ({
           ]}
         />
         {!studentId ? (
-          <CustomFileUpload name="file" required label="Image" />
+          <CustomFileUpload id="file" name="file" required label="Image" />
         ) : null}
       </div>
     </div>

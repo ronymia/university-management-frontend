@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import StudentForm from "../StudentForm";
+import StudentForm from "../../../../../components/ui/Common/StudentForm";
 import { studentStepSchemas } from "@/schemas/student";
 
 export default function CreateStudentPage() {

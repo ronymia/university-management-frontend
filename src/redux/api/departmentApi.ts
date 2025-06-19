@@ -12,7 +12,7 @@ export const departmentApi = baseApi.injectEndpoints({
         method: "GET",
         params: arg,
       }),
-      transformResponse: (response: IDepartment, meta: IMeta) => {
+      transformResponse: (response: IDepartment[], meta: IMeta) => {
         return {
           departments: response,
           meta,
@@ -27,7 +27,7 @@ export const departmentApi = baseApi.injectEndpoints({
         method: "POST",
         data,
       }),
-      invalidatesTags: [tagTypes.department],
+      invalidatesTags: (result) => (result ? [tagTypes.department] : []),
     }),
 
     // get single department by id
@@ -36,6 +36,7 @@ export const departmentApi = baseApi.injectEndpoints({
         url: `${DEPARTMENT_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IDepartment) => response,
       providesTags: [tagTypes.department],
     }),
 
@@ -46,7 +47,7 @@ export const departmentApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.department],
+      invalidatesTags: (result) => (result ? [tagTypes.department] : []),
     }),
 
     // delete single department by id
@@ -55,7 +56,7 @@ export const departmentApi = baseApi.injectEndpoints({
         url: `${DEPARTMENT_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.department],
+      invalidatesTags: (result) => (result ? [tagTypes.department] : []),
     }),
   }),
 });

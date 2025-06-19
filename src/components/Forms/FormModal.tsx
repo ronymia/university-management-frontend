@@ -16,7 +16,7 @@ import OfferedCourseSectionForm from "@/app/(withLayout)/admin/offered-course-se
 import Popup from "reactjs-popup";
 import { motion } from "motion/react";
 import CustomButton from "../Button/CustomButton";
-import StudentForm from "@/app/(withLayout)/admin/manage-student/StudentForm";
+import StudentForm from "@/components/ui/Common/StudentForm";
 import FacultyForm from "../ui/Common/FacultyForm";
 const popupVariants = {
   hidden: { opacity: 0, scale: 0.9 },

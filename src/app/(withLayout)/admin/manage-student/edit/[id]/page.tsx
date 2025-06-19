@@ -1,5 +1,5 @@
 import React, { use } from "react";
-import StudentForm from "../../StudentForm";
+import StudentForm from "../../../../../../components/ui/Common/StudentForm";
 
 type IUpdateStudentPageProps = {
   params: Promise<{

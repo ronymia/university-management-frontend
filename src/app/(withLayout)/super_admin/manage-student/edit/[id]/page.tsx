@@ -1,5 +1,5 @@
 "use client";
-import StudentForm from "@/app/(withLayout)/admin/manage-student/StudentForm";
+import StudentForm from "@/components/ui/Common/StudentForm";
 import React, { use } from "react";
 
 interface IUpdateStudentPageProps {

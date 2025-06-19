@@ -51,24 +51,19 @@ export default function StudentForm({ id = "" }: { id?: string }) {
     const formData = new FormData();
     formData.append("file", file as Blob);
     formData.append("data", data);
-    try {
-      if (!!id) {
-        const body = values.student;
-        delete body["profileImage"];
-        const res = await updateStudent({ id, body });
-        if (!!res) {
-          router.back();
-        }
-        console.log({ formData });
-      } else {
-        const res = await addStudentWithFormData(formData);
-        if (!!res) {
-          router.back();
-        }
-        console.log({ formData });
+
+    if (!!id) {
+      const body = values.student;
+      // delete body["profileImage"];
+      const res = await updateStudent({ id, body }).unwrap();
+      if (res?.id) {
+        router.back();
       }
-    } catch (err: any) {
-      console.error(err.message);
+    } else {
+      const res = await addStudentWithFormData(formData).unwrap();
+      if (res?.id) {
+        router.back();
+      }
     }
   };
 

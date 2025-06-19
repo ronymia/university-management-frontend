@@ -8,6 +8,7 @@ import CustomButton from "../Button/CustomButton";
 import { CustomStepper } from "../ui/CustomStepper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { IGenericErrorResponse } from "@/types";
 
 interface ISteps {
   title?: string;
@@ -97,15 +98,40 @@ export default function StepperForm({
     setToLocalStorage(persistKey, JSON.stringify(watch));
   }, [watch, persistKey, methods]);
 
-  const { handleSubmit, reset } = methods;
+  const {
+    handleSubmit,
+    reset,
+    setError,
+    formState: { isLoading, isSubmitting, isValidating },
+  } = methods;
 
-  const handleStudentOnSubmit = (data: any) => {
-    submitHandler(data);
-    reset();
-    setToLocalStorage("step", JSON.stringify({ step: 0 }));
-    setToLocalStorage(persistKey, JSON.stringify({}));
-    if (navigateLink) {
-      router.push(navigateLink);
+  const handleStudentOnSubmit = async (data: any) => {
+    try {
+      await Promise.resolve(submitHandler(data));
+      reset();
+      setToLocalStorage("step", JSON.stringify({ step: 0 }));
+      setToLocalStorage(persistKey, JSON.stringify({}));
+      if (navigateLink) {
+        router.push(navigateLink);
+      }
+    } catch (err) {
+      const error = err as IGenericErrorResponse;
+
+      // console.log("form error", { error });
+
+      if (error.statusCode === 422) {
+        error.errorMessages?.forEach((err) => {
+          if (Array.isArray(err.path)) {
+            setError(err.path as any, { type: "manual", message: err.message });
+          } else {
+            const fields = (err?.path as string)?.replace(/`/g, "").split(",");
+
+            fields?.forEach((field) => {
+              setError(field as any, { type: "manual", message: err.message });
+            });
+          }
+        });
+      }
     }
   };
 
@@ -128,14 +154,22 @@ export default function StepperForm({
           <div className={`flex items-center justify-center mt-5 gap-5`}>
             {/* PREVIOUS */}
             {current > 0 && (
-              <CustomButton onClick={() => prev()} className={`w-md`}>
+              <CustomButton
+                isLoading={isLoading || isSubmitting || isValidating}
+                onClick={() => prev()}
+                className={`w-md`}
+              >
                 Previous
               </CustomButton>
             )}
 
             {/* FORM SUBMIT */}
             {current === steps.length - 1 && (
-              <CustomButton htmlType="submit" className={`w-md`}>
+              <CustomButton
+                isLoading={isLoading || isSubmitting || isValidating}
+                htmlType="submit"
+                className={`w-md`}
+              >
                 Done
               </CustomButton>
             )}
@@ -143,6 +177,7 @@ export default function StepperForm({
             {/* NEXT */}
             {current < steps.length - 1 && (
               <CustomButton
+                isLoading={isLoading || isSubmitting || isValidating}
                 onClick={async () => {
                   // CLEAR ERRORS
                   methods.clearErrors();

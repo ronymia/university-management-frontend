@@ -12,11 +12,11 @@ import {
   useDeleteDepartmentMutation,
   useDepartmentsQuery,
 } from "@/redux/api/departmentApi";
+import { IDepartment } from "@/types";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function DepartmentPage() {
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -24,10 +24,12 @@ export default function DepartmentPage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  // POPUP
   const { popupOptions, setPopupOptions, handleAddNewDepartment } = usePopup();
-  const [deleteDepartment] = useDeleteDepartmentMutation();
+  // DELETE
+  const [deleteDepartment, deleteResult] = useDeleteDepartmentMutation();
 
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -38,20 +40,15 @@ export default function DepartmentPage() {
   }
   const { data, isLoading } = useDepartmentsQuery({ ...queries });
 
-  const departments: any[] = data?.departments || [];
+  const departments = data?.departments;
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteDepartment(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+  const deleteHandler = async (id: IDepartment) => {
+    await deleteDepartment(id?.id);
   };
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: IDepartment) => {
+    // console.log({ updateData });
     setPopupOptions((prev) => ({
       ...prev,
       open: true,
@@ -66,15 +63,24 @@ export default function DepartmentPage() {
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
+      type: "button",
       handler: handleEdit,
-      Icon: RiEdit2Fill,
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
-      handler: deleteHandler,
-      Icon: MdDelete,
+      type: "button",
+      handler: (deleteData) => {
+        setPopupOptions((prev) => ({
+          ...prev,
+          open: true,
+          data: deleteData,
+          actionType: "delete",
+          form: "department",
+          deleteHandler: () => deleteHandler(deleteData),
+        }));
+      },
       permissions: [],
       disableOn: [],
     },
@@ -109,9 +115,24 @@ export default function DepartmentPage() {
       {/* TABLE */}
       <CustomTable
         columns={columns}
-        rows={departments || []}
-        isLoading={isLoading}
+        isLoading={isLoading || deleteResult.isLoading}
         actions={actions}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.totalPages ? meta?.totalPages > 1 : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        rows={departments || []}
       />
     </>
   );

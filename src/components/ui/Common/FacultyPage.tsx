@@ -56,7 +56,7 @@ export default function FacultyPage() {
     {
       name: "edit",
       type: "link",
-      href: (row) => `/manage-faculty/edit/${row?.id}`,
+      href: (row) => `manage-faculty/edit/${row?.id}`,
       handler: () => {},
       permissions: [],
       disableOn: [],

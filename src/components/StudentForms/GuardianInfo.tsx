@@ -5,7 +5,7 @@ const GuardianInfo = () => {
   return (
     <>
       <div
-        className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5 grid grid-cols-3 gap-3`}
+        className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5 grid grid-cols-1 md:grid-cols-3 gap-3`}
       >
         {/* email */}
         <CustomInputField
@@ -68,7 +68,7 @@ const GuardianInfo = () => {
           label="Address"
           placeholder="Address"
           required
-          wrapperClassName={`col-span-3`}
+          wrapperClassName={`col-span-1 md:col-span-3`}
         />
       </div>
     </>

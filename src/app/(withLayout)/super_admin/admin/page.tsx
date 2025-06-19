@@ -10,17 +10,13 @@ import CustomTable, {
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import { useAdminsQuery, useDeleteAdminMutation } from "@/redux/api/adminApi";
-import { getUserInfo } from "@/services/auth.service";
+import { IAdmin } from "@/types";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function AdminPage() {
-  const router = useRouter();
-  const { role } = getUserInfo() as any;
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -29,8 +25,12 @@ export default function AdminPage() {
     searchTerm: "",
     adminId: "",
   });
+  // POPUP
   const { popupOptions, setPopupOptions } = usePopup();
-  const [deleteAdmin] = useDeleteAdminMutation();
+  // DELETE
+  const [deleteAdmin, deleteResult] = useDeleteAdminMutation();
+
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -43,33 +43,24 @@ export default function AdminPage() {
   const admins = data?.admins;
   const meta = data?.meta;
 
-  const deleteHandler = async (id: string) => {
-    try {
-      //   console.log(data);
-      await deleteAdmin(id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
-  const handleEdit = (updateData: any) => {
-    // console.log({ updateData });
-    router.push(`/${role}/admin/edit/${updateData.id}`);
+  const deleteHandler = async (id: IAdmin) => {
+    await deleteAdmin(id?.id);
   };
 
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
-      handler: handleEdit,
-      Icon: RiEdit2Fill,
+      type: "link",
+      href: (row: IAdmin) => `admin/edit/${row?.id}`,
+      handler: () => {},
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
+      type: "button",
       handler: deleteHandler,
-      Icon: MdDelete,
       permissions: [],
       disableOn: [],
     },
@@ -123,7 +114,7 @@ export default function AdminPage() {
     {
       header: "Created at",
       accessorKey: "customCreatedAt",
-      show: true,
+      show: false,
       minWidth: 15,
     },
   ];
@@ -141,19 +132,31 @@ export default function AdminPage() {
         // addButtonLabel={`Add Admin`}
         // createHandler={handleAddNewAdmin}
       >
-        <Link href={`/${role}/admin/create`}>
+        <Link href={`admin/create`}>
           <CustomAddButton label={`Add Admin`} />
         </Link>
       </ActionBar>
 
       {/* TABLE */}
       <CustomTable
-        isLoading={isLoading}
-        actions={actions}
         columns={columns}
-        limit={queries?.limit}
-        totalData={meta?.total ?? 0}
-        paginationHandler={(page: number) => setQueries({ ...queries, page })}
+        isLoading={isLoading || deleteResult.isLoading}
+        actions={actions}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.totalPages ? meta?.totalPages > 1 : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
         rows={
           admins?.map((row) => ({
             ...row,

@@ -28,6 +28,7 @@ export const studentApi = baseApi.injectEndpoints({
         url: `${STUDENT_URL}/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: IStudent) => response,
       providesTags: [tagTypes.student],
     }),
     // create a new student
@@ -38,7 +39,7 @@ export const studentApi = baseApi.injectEndpoints({
         data,
         contentType: "multipart/form-data",
       }),
-      invalidatesTags: [tagTypes.student],
+      invalidatesTags: (result) => (result ? [tagTypes.student] : []),
     }),
     // update student
     updateStudent: build.mutation({
@@ -47,7 +48,7 @@ export const studentApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.student],
+      invalidatesTags: (result) => (result ? [tagTypes.student] : []),
     }),
     // delete student
     deleteStudent: build.mutation({
@@ -55,7 +56,7 @@ export const studentApi = baseApi.injectEndpoints({
         url: `${STUDENT_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.student],
+      invalidatesTags: (result) => (result ? [tagTypes.student] : []),
     }),
     myCourses: build.query({
       query: (arg: Record<string, any>) => {

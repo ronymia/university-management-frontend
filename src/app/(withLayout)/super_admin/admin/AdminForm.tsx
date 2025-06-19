@@ -22,8 +22,7 @@ export default function AdminForm({ id = "" }: { id?: string }) {
   const { data: adminData, isLoading: adminLoading } = useAdminByIdQuery(id);
   const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
   const [updateAdmin] = useUpdateAdminMutation();
-  //@ts-ignore
-  const departments: IDepartment[] = data?.departments;
+  const departments = data?.departments;
 
   const departmentOptions =
     departments &&
@@ -64,20 +63,20 @@ export default function AdminForm({ id = "" }: { id?: string }) {
     const formData = new FormData();
     formData.append("file", file as Blob);
     formData.append("data", data);
-    try {
-      if (!!id) {
-        const body = values.admin;
-        delete body["profileImage"];
-        const res = await updateAdmin({ id, body });
-        if (!!res) {
-          router.back();
-          console.log("res", { res });
-        }
-      } else {
-        await addAdminWithFormData(formData);
+
+    // console.log({ formData });
+    if (!!id) {
+      const body = values.admin;
+      delete body["profileImage"];
+      const res = await updateAdmin({ id, body }).unwrap();
+      if (res?.id) {
+        router.back();
       }
-    } catch (err: any) {
-      console.error(err.message);
+    } else {
+      const res = await addAdminWithFormData(formData).unwrap();
+      if (res?.id) {
+        router.back();
+      }
     }
   };
 
@@ -85,13 +84,14 @@ export default function AdminForm({ id = "" }: { id?: string }) {
   return (
     <CustomForm
       submitHandler={onSubmit}
+      cancelHandler={() => router.back()}
       resolver={zodResolver(id ? updateAdminSchema : createAdminSchema)}
       defaultValues={defaultValues ? defaultValues : undefined}
     >
       {/* ADMIN INFORMATION */}
       <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
         <p className={`font-bold mb-2.5 drop-shadow-sm`}>Admin Information</p>
-        <div className={`grid grid-cols-3 gap-3`}>
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-3`}>
           {!id && (
             <CustomFileUpload id="file" name="file" required label="Image" />
           )}
@@ -155,10 +155,12 @@ export default function AdminForm({ id = "" }: { id?: string }) {
 
       {/* basic info */}
       <div
-        className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5 grid grid-cols-3 gap-3`}
+        className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5 grid grid-cols-1 md:grid-cols-3 gap-3`}
       >
         <>
-          <p className={`font-bold mb-2.5 drop-shadow-sm col-span-3`}>
+          <p
+            className={`font-bold mb-2.5 drop-shadow-sm col-span-1 md:col-span-3`}
+          >
             Basic Information
           </p>
           {/* email */}
@@ -221,7 +223,7 @@ export default function AdminForm({ id = "" }: { id?: string }) {
             label="Present address"
             placeholder="Present address"
             required
-            wrapperClassName={`col-span-3`}
+            wrapperClassName={`col-span-1 md:col-span-3`}
             height={`h-24`}
           />
           {/* permanentAddress */}
@@ -231,26 +233,10 @@ export default function AdminForm({ id = "" }: { id?: string }) {
             label="Permanent address"
             placeholder="Permanent address"
             required
-            wrapperClassName={`col-span-3`}
+            wrapperClassName={`col-span-1 md:col-span-3`}
             height={`h-24`}
           />
         </>
-      </div>
-      <div className="flex justify-end gap-3 mt-5">
-        <button
-          type="button"
-          //   disabled={updateResult.isLoading || createResult.isLoading}
-          className={`px-3 py-2 border border-primary rounded-lg text-primary drop-shadow-2xl cursor-pointer w-xs`}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          //   disabled={updateResult.isLoading || createResult.isLoading}
-          className={`px-3 py-2 bg-primary rounded-lg text-base-300 drop-shadow-2xl cursor-pointer w-xs`}
-        >
-          Submit
-        </button>
       </div>
     </CustomForm>
   );

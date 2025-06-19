@@ -1,4 +1,4 @@
-import StudentPage from "../../StudentPage";
+import StudentPage from "../../../../components/ui/Common/StudentPage";
 
 export const metadata = {
   title: "UMS | Manage Student",

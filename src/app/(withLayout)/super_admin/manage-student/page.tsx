@@ -1,5 +1,5 @@
 import React from "react";
-import StudentPage from "../../StudentPage";
+import StudentPage from "../../../../components/ui/Common/StudentPage";
 
 export default function SuperAdminStudentPage() {
   return <StudentPage />;

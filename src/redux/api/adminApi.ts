@@ -13,7 +13,7 @@ export const adminApi = baseApi.injectEndpoints({
         data,
         contentType: "multipart/form-data",
       }),
-      invalidatesTags: [tagTypes.admin],
+      invalidatesTags: (result) => (result ? [tagTypes.admin] : []),
     }),
 
     admins: build.query({
@@ -48,14 +48,14 @@ export const adminApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: data.body,
       }),
-      invalidatesTags: [tagTypes.admin],
+      invalidatesTags: (result) => (result ? [tagTypes.admin] : []),
     }),
     deleteAdmin: build.mutation({
       query: (id) => ({
         url: `${ADMIN_URL}/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.admin],
+      invalidatesTags: (result) => (result ? [tagTypes.admin] : []),
     }),
   }),
 });

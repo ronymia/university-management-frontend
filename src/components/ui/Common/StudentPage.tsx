@@ -13,19 +13,14 @@ import {
   useDeleteStudentMutation,
   useStudentsQuery,
 } from "@/redux/api/studentApi";
-import { getUserInfo } from "@/services/auth.service";
 import type { IStudent } from "@/types";
 import { getFullName } from "@/utils/getFullName";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function StudentPage() {
-  const { role } = getUserInfo() as any;
-  const router = useRouter();
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -34,8 +29,11 @@ export default function StudentPage() {
     searchTerm: "",
     adminId: "",
   });
+  // POPUP
   const { popupOptions, setPopupOptions } = usePopup();
-  const [deleteStudent] = useDeleteStudentMutation();
+  // DELETE API
+  const [deleteStudent, deleteResult] = useDeleteStudentMutation();
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -44,45 +42,30 @@ export default function StudentPage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
+  // QUERIES
   const { data, isLoading } = useStudentsQuery({ ...queries });
 
   const students = data?.students;
   const meta = data?.meta;
   // console.log(students);
   const deleteHandler = async (deleteData: IStudent) => {
-    try {
-      //   console.log(data);
-      await deleteStudent(deleteData?.id);
-    } catch (err: any) {
-      console.error(err.message);
-    }
+    await deleteStudent(deleteData?.id);
   };
 
-  const handleEdit = (updateData: IStudent) => {
-    console.log({ updateData });
-    router.push(`manage-student/edit/${updateData.id}`);
-    // setPopupOptions((prev) => ({
-    //   ...prev,
-    //   open: true,
-    //   data: updateData,
-    //   actionType: "update",
-    //   form: "department",
-    //   title: "Update Department",
-    // }));
-  };
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
     {
       name: "edit",
-      handler: handleEdit,
-      Icon: RiEdit2Fill,
+      type: "link",
+      href: (row: IStudent) => `manage-student/edit/${row?.id}`,
+      handler: () => {},
       permissions: [],
       disableOn: [],
     },
     {
       name: "delete",
+      type: "button",
       handler: deleteHandler,
-      Icon: MdDelete,
       permissions: [],
       disableOn: [],
     },
@@ -151,28 +134,24 @@ export default function StudentPage() {
 
       {/* ACTION BAR */}
       <ActionBar title={`Manage Students`}>
-        <Link href={`/${role}/manage-student/create`}>
+        <Link href={`manage-student/create`}>
           <CustomAddButton label={`Add New`}></CustomAddButton>
         </Link>
       </ActionBar>
 
       {/* TABLE */}
       <CustomTable
-        isLoading={isLoading}
-        showPagination={true}
+        isLoading={isLoading || deleteResult.isLoading}
         actions={actions}
         columns={columns}
-        limit={queries?.limit}
-        totalData={meta?.total || 0}
-        paginationHandler={(page: number) => {
-          setQueries((prev) => ({ ...prev, page: page }));
-        }}
         paginationConfig={{
-          page: queries?.page || 1,
-          limit: queries?.limit || 10,
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
           total: meta?.total || 0,
-          totalPage: meta?.totalPage || 0,
-          showPagination: true,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
           paginationHandler: (page: number) => {
             setQueries((prev) => ({ ...prev, page: page }));
           },
@@ -180,12 +159,16 @@ export default function StudentPage() {
             setQueries((prev) => ({ ...prev, limit: limit }));
           },
         }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           students?.map((row) => ({
             ...row,
             fullName: row?.name ? getFullName(row?.name) : `N/A`,
             customAcademicDepartment: row?.academicDepartment?.title,
-            customAcademicSemester: row?.academicSemester?.title,
+            customAcademicSemester: `${row?.academicSemester?.title} - ${row?.academicSemester?.year}`,
             customCreatedAt: row?.createdAt
               ? dayjs(row?.createdAt).format("MMM D, YYYY hh:mm A")
               : "",

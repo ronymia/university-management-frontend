@@ -1,10 +1,4 @@
-import {
-  ICoreFaculty,
-  ICoreStudent,
-  IFaculty,
-  IFacultyCourse,
-  IMeta,
-} from "@/types";
+import { ICoreStudent, IFaculty, IFacultyCourse, IMeta } from "@/types";
 import { baseApi } from "./baseApi";
 import { tagTypes } from "../tag-types";
 
