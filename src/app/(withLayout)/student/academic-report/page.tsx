@@ -49,7 +49,7 @@ export default function AcademicReportPage() {
       <CustomTable
         columns={columns}
         rows={
-          data?.courses?.map((row) => ({
+          data?.courses?.map((row: any) => ({
             ...row,
             customGradeReport: (
               <>
