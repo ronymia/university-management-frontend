@@ -11,8 +11,10 @@ import { IOfferedCourseSchedule } from "@/types";
 import React, { useState } from "react";
 
 export default function MyCourseSchedulePage() {
+  const [queries, setQueries] = useState({});
   const { data, isLoading } = useMyCourseSchedulesQuery({});
   const myCourseSchedules = data?.myCourseSchedules;
+  const meta = data?.meta;
 
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
@@ -79,14 +81,24 @@ export default function MyCourseSchedulePage() {
         isLoading={isLoading}
         actions={actions}
         paginationConfig={{
-          page: 1,
-          limit: 10,
-          total: 0,
-          totalPage: 0,
-          showPagination: true,
-          paginationHandler: () => {},
-          changeLimitHandler: () => {},
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
         }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           myCourseSchedules?.map((row) => ({
             customCourseName: row?.offeredCourse?.course?.title,

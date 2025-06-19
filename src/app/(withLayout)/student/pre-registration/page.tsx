@@ -277,7 +277,7 @@ export default function ViewPreregistrationPage() {
             margin: "15px 0px",
           }}
         >
-          <CustomButton onClick={handleConfirmRegistration} type="primary">
+          <CustomButton onClick={handleConfirmRegistration}>
             Confirm Registration
           </CustomButton>
         </div>

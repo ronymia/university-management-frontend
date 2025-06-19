@@ -10,6 +10,7 @@ import { useMyCoursesQuery } from "@/redux/api/studentApi";
 import { useState } from "react";
 
 export default function StudentCoursePage() {
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -17,6 +18,7 @@ export default function StudentCoursePage() {
     sortOrder: "",
     searchTerm: "",
   });
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -25,8 +27,8 @@ export default function StudentCoursePage() {
   if (!!debouncedSearchTerm) {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
+  // DATABASE QUERY
   const { data, isLoading } = useMyCoursesQuery({ ...queries });
-  console.log({ data });
   const myCourses = data?.myCourses;
   const meta = data?.meta;
 
@@ -122,15 +124,24 @@ export default function StudentCoursePage() {
         actions={actions}
         columns={columns}
         paginationConfig={{
-          showPagination: true,
-          page: queries.page,
-          limit: queries.limit,
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
           total: meta?.total || 0,
-          totalPage: meta?.totalPage || 0,
-          paginationHandler: (page: number) => setQueries({ ...queries, page }),
-          changeLimitHandler: (limit: number) =>
-            setQueries({ ...queries, limit }),
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
         }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           myCourses?.map((row) => ({
             ...row,
