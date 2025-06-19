@@ -11,7 +11,7 @@ export default function FormActionButton({
   cancelHandler?: () => void;
 }) {
   return (
-    <div className="flex justify-end gap-3 mt-auto">
+    <div className="flex flex-col md:flex-row justify-end gap-3 mt-auto w-full">
       {cancelHandler ? (
         <button
           type="button"

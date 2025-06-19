@@ -9,7 +9,6 @@ import CustomTable, {
 import { useDebounced } from "@/hooks/useDebounced";
 import { useFacultyCourseStudentsQuery } from "@/redux/api/facultyApi";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 
 interface IFacultyCoursesStudentsPageProps {
@@ -22,7 +21,6 @@ interface IFacultyCoursesStudentsPageProps {
 export default function FacultyCoursesStudentsPage({
   searchParams,
 }: IFacultyCoursesStudentsPageProps) {
-  const router = useRouter();
   //   console.log(searchParams);
   const { courseId, offeredCourseSectionId } = use(searchParams);
   const [queries, setQueries] = useState({
@@ -50,9 +48,6 @@ export default function FacultyCoursesStudentsPage({
 
   const myCourseStudents = data?.myCourseStudents;
   const meta = data?.meta;
-
-  // ALL ACTION BUTTONS
-  const [actions] = useState<IAction[]>([]);
 
   // TABLE COLUMNS DEFINE
   const columns: IColumn[] = [
@@ -106,7 +101,28 @@ export default function FacultyCoursesStudentsPage({
 
       {/* TABLE */}
       <CustomTable
+        isLoading={isLoading}
+        actions={[]}
         columns={columns}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           myCourseStudents?.map((row) => ({
             ...row,
@@ -127,8 +143,6 @@ export default function FacultyCoursesStudentsPage({
             ),
           })) || []
         }
-        isLoading={isLoading}
-        actions={[]}
       />
     </>
   );

@@ -50,7 +50,7 @@ const studentEnrollCourseMarkApi = baseApi.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: [tagTypes.student],
+      invalidatesTags: (result) => (result ? [tagTypes.student] : []),
     }),
     updateFinalMarks: build.mutation({
       query: (data) => ({
@@ -58,7 +58,7 @@ const studentEnrollCourseMarkApi = baseApi.injectEndpoints({
         method: "PATCH",
         data,
       }),
-      invalidatesTags: [tagTypes.student],
+      invalidatesTags: (result) => (result ? [tagTypes.student] : []),
     }),
   }),
 });

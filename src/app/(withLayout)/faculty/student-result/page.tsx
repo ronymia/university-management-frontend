@@ -2,10 +2,7 @@
 
 import CustomButton from "@/components/Button/CustomButton";
 import ActionBar from "@/components/ui/ActionBar";
-import CustomTable, {
-  IAction,
-  IColumn,
-} from "@/components/ui/Table/CustomTable";
+import CustomTable, { IColumn } from "@/components/ui/Table/CustomTable";
 import { ExamType } from "@/constants/global";
 import { useDebounced } from "@/hooks/useDebounced";
 import {
@@ -14,9 +11,7 @@ import {
 } from "@/redux/api/studentEnrollCourseMarkApi";
 import { IStudentEnrolledCourseMark } from "@/types";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Fragment, use, useState } from "react";
-import { RiEdit2Fill } from "react-icons/ri";
 
 interface IStudentResultPageProps {
   searchParams: Promise<{
@@ -29,7 +24,6 @@ interface IStudentResultPageProps {
 export default function StudentResultPage({
   searchParams,
 }: IStudentResultPageProps) {
-  const router = useRouter();
   //   console.log(searchParams);
   const { studentId, courseId, offeredCourseSectionId } = use(searchParams);
   const [queries, setQueries] = useState({
@@ -44,7 +38,6 @@ export default function StudentResultPage({
       ? offeredCourseSectionId
       : "",
   });
-  const [academicSemesterId, setAcademicSemesterId] = useState<string>();
   const [updateFinalMarks] = useUpdateFinalMarksMutation();
 
   const debouncedSearchTerm = useDebounced({
@@ -58,36 +51,20 @@ export default function StudentResultPage({
   const { data, isLoading } = useStudentEnrolledCourseMarksQuery({
     ...queries,
   });
-  console.log({ data });
 
   const studentEnrolledCourseMarks = data?.studentEnrolledCourseMarks;
   const meta = data?.meta;
-  const handleUpdateFinalMarks = async (values: any) => {
+  const handleUpdateFinalMarks = async (values: {
+    studentId: string;
+    courseId: string;
+    academicSemesterId: string;
+  }) => {
     // console.log(values);
-    try {
-      const res = await updateFinalMarks(values);
-      if (res) {
-        // message.success("Final Marks Updated");
-      }
-    } catch (err: any) {
-      console.error(err.message);
+    const res = await updateFinalMarks(values);
+    if (res) {
+      // message.success("Final Marks Updated");
     }
   };
-
-  const handleUpdateMarks = (updateData: any) => {
-    console.log({ updateData });
-    router.push(``);
-  };
-  // ALL ACTION BUTTONS
-  const [actions] = useState<IAction[]>([
-    // {
-    //   name: "Update marks",
-    //   handler: handleUpdateMarks,
-    //   Icon: RiEdit2Fill,
-    //   permissions: [],
-    //   disableOn: [],
-    // },
-  ]);
 
   // TABLE COLUMNS DEFINE
   const columns: IColumn[] = [
@@ -154,7 +131,7 @@ export default function StudentResultPage({
                         handleUpdateFinalMarks({
                           studentId,
                           courseId: el.studentEnrolledCourse.course.id,
-                          academicSemesterId,
+                          academicSemesterId: el.academicSemesterId,
                         })
                       }
                     >
@@ -169,7 +146,28 @@ export default function StudentResultPage({
 
       {/* TABLE */}
       <CustomTable
+        isLoading={isLoading}
+        actions={[]}
         columns={columns}
+        paginationConfig={{
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
+          total: meta?.total || 0,
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
+        }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           studentEnrolledCourseMarks?.map((row) => ({
             ...row,
@@ -209,8 +207,6 @@ export default function StudentResultPage({
             ),
           })) || []
         }
-        isLoading={isLoading}
-        actions={actions}
       />
     </>
   );

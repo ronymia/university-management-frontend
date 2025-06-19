@@ -7,13 +7,13 @@ import CustomTable, {
 } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import { useFacultyCoursesQuery } from "@/redux/api/facultyApi";
-import { useRouter } from "next/navigation";
+import { IFacultyCourse } from "@/types";
 import { useState } from "react";
 import { FaUsersViewfinder } from "react-icons/fa6";
-import { RiEdit2Fill } from "react-icons/ri";
 
 export default function FacultyCoursePage() {
-  const router = useRouter();
+  //
+  // QUERIES
   const [queries, setQueries] = useState({
     page: 1,
     limit: 10,
@@ -21,7 +21,7 @@ export default function FacultyCoursePage() {
     sortOrder: "",
     searchTerm: "",
   });
-
+  // DEBOUNCE FOR SEARCH
   const debouncedSearchTerm = useDebounced({
     searchQuery: queries.searchTerm,
     delay: 600,
@@ -31,27 +31,26 @@ export default function FacultyCoursePage() {
     setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
   }
   const { data, isLoading } = useFacultyCoursesQuery({ ...queries });
-  console.log({ data });
+  // console.log({ data });
 
-  const myCourses = data?.myCourses || [];
+  const myCourses = data?.myCourses;
   const meta = data?.meta;
 
-  const handleEdit = (updateData: any) => {
-    console.log({ updateData });
+  const handleEdit = (updateData: IFacultyCourse) => {
     const courseId = updateData?.course?.id;
     const offeredCourseSectionId =
-      updateData?.sections[0]?.classSchedules[0]?.offeredCourseSectionId;
-    console.log({ offeredCourseSectionId });
-    router.push(
-      `/faculty/courses/student?courseId=${courseId}&offeredCourseSectionId=${offeredCourseSectionId}`
-    );
+      updateData?.sections?.[0]?.classSchedules?.[0]?.offeredCourseSectionId;
+    // console.log({ offeredCourseSectionId });
+    return `/faculty/courses/student?courseId=${courseId}&offeredCourseSectionId=${offeredCourseSectionId}`;
   };
 
   // ALL ACTION BUTTONS
   const [actions] = useState<IAction[]>([
     {
       name: "View all students",
-      handler: handleEdit,
+      type: "link",
+      href: (row: IFacultyCourse) => handleEdit(row),
+      handler: () => {},
       Icon: FaUsersViewfinder,
       permissions: [],
       disableOn: [],
@@ -108,18 +107,28 @@ export default function FacultyCoursePage() {
 
       {/* TABLE */}
       <CustomTable
-        columns={columns}
         isLoading={isLoading}
         actions={actions}
+        columns={columns}
         paginationConfig={{
-          page: queries.page,
-          limit: queries.limit,
+          page: meta?.page || 0,
+          limit: meta?.limit || 0,
+          skip: meta?.skip || 0,
           total: meta?.total || 0,
-          totalPage: meta?.totalPage || 0,
-          showPagination: true,
-          paginationHandler: (page) => setQueries({ ...queries, page }),
-          changeLimitHandler: (limit) => setQueries({ ...queries, limit }),
+          paginationTotal: meta?.paginationTotal || 0,
+          totalPages: meta?.totalPages || 0,
+          showPagination: meta?.total ? meta?.total > meta?.limit : false,
+          paginationHandler: (page: number) => {
+            setQueries((prev) => ({ ...prev, page: page }));
+          },
+          changeLimitHandler: (limit: number) => {
+            setQueries((prev) => ({ ...prev, limit: limit }));
+          },
         }}
+        // searchConfig={{
+        //   searchTerm: queries.searchTerm,
+        //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
+        // }}
         rows={
           myCourses?.map((row) => ({
             ...row,
