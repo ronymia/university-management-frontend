@@ -25,7 +25,7 @@ export default function AcademicDepartmentField({
     }
   );
   const academicDepartments = data?.academicDepartments;
-  const acDepartmentOptions = academicDepartments?.map((acDepartment: any) => {
+  const acDepartmentOptions = academicDepartments?.map((acDepartment) => {
     // console.log(acDepartment?.id);
     return {
       label: acDepartment?.title,

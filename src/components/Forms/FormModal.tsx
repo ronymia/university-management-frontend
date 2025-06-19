@@ -3,7 +3,6 @@ import DepartmentForm from "@/app/(withLayout)/super_admin/department/Department
 import { IPopupOptions } from "@/types";
 import { Dispatch, SetStateAction } from "react";
 import CustomPopup from "../Popup/CustomPopup";
-import AdminForm from "@/app/(withLayout)/super_admin/admin/AdminForm";
 import AcademicDepartmentForm from "@/app/(withLayout)/admin/academic/department/DepartmentForm";
 import AcademicFacultyForm from "@/app/(withLayout)/admin/academic/faculty/FacultyForm";
 import AcademicSemesterForm from "@/app/(withLayout)/admin/academic/semester/SemesterForm";
@@ -12,12 +11,9 @@ import RoomForm from "@/app/(withLayout)/admin/room/RoomForm";
 import CourseForm from "@/app/(withLayout)/admin/course/CourseForm";
 import OfferedCourseForm from "@/app/(withLayout)/admin/offered-course/OfferedCourseForm";
 import SemesterRegistrationForm from "@/app/(withLayout)/admin/semester-registration/SemesterRegistrationForm";
-import OfferedCourseSectionForm from "@/app/(withLayout)/admin/offered-course-section/OfferedCourseSectionForm";
 import Popup from "reactjs-popup";
 import { motion } from "motion/react";
 import CustomButton from "../Button/CustomButton";
-import StudentForm from "@/components/ui/Common/StudentForm";
-import FacultyForm from "../ui/Common/FacultyForm";
 const popupVariants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: {
@@ -134,28 +130,6 @@ export default function FormModal({
                 popupCloseHandler={handleClosePopup}
               />
             );
-          case "admin":
-            return (
-              <AdminForm
-                id={
-                  popupOptions?.actionType === "update" && popupOptions?.data
-                    ? popupOptions?.data?.id
-                    : ""
-                }
-                popupCloseHandler={handleClosePopup}
-              />
-            );
-          case "faculty":
-            return (
-              <FacultyForm
-                id={
-                  popupOptions?.actionType === "update" && popupOptions?.data
-                    ? popupOptions?.data?.id
-                    : ""
-                }
-                popupCloseHandler={handleClosePopup}
-              />
-            );
           case "academic_department":
             return (
               <AcademicDepartmentForm
@@ -233,31 +207,9 @@ export default function FormModal({
                 popupCloseHandler={handleClosePopup}
               />
             );
-          case "offered_course_section":
-            return (
-              <OfferedCourseSectionForm
-                id={
-                  popupOptions?.actionType === "update" && popupOptions?.data
-                    ? popupOptions?.data?.id
-                    : ""
-                }
-                popupCloseHandler={handleClosePopup}
-              />
-            );
           case "semester_registration":
             return (
               <SemesterRegistrationForm
-                id={
-                  popupOptions?.actionType === "update" && popupOptions?.data
-                    ? popupOptions?.data?.id
-                    : ""
-                }
-                popupCloseHandler={handleClosePopup}
-              />
-            );
-          case "student":
-            return (
-              <StudentForm
                 id={
                   popupOptions?.actionType === "update" && popupOptions?.data
                     ? popupOptions?.data?.id

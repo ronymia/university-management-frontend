@@ -181,12 +181,12 @@ export default function DatePicker({
   const handleDateClick = (day) => {
     const now = moment(); // current time
 
-    const combined = day
-      .clone()
-      .hour(now.hour())
-      .minute(now.minute())
-      .second(now.second())
-      .millisecond(now.millisecond());
+    // const combined = day
+    //   .clone()
+    //   .hour(now.hour())
+    //   .minute(now.minute())
+    //   .second(now.second())
+    //   .millisecond(now.millisecond());
 
     // const formattedDateTime = combined.toISOString(); // or .format("YYYY-MM-DD HH:mm:ss") for SQL
 

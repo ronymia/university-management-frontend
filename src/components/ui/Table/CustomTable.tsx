@@ -4,7 +4,6 @@ import React, { useMemo, useState } from "react";
 import { IconType } from "react-icons";
 import { motion } from "motion/react";
 import useDeviceWith from "@/hooks/useDeviceWith";
-import { hasPermission } from "@/utils/hasPermission";
 import { getFromLocalStorage } from "@/utils/local-storage";
 import Pagination from "./Pagination";
 import ActionButtons from "./ActionButtons";
@@ -65,7 +64,6 @@ export default function CustomTable({
   isLoading = false,
   actions = [],
   dataAuto,
-  showPagination = true,
   paginationConfig = {
     page: 1,
     limit: 10,

@@ -5,7 +5,6 @@ import { useAppSelector } from "@/redux/hooks";
 import { USER_ROLE } from "@/constants/role";
 import { getFullName } from "@/utils/getFullName";
 import { motion } from "motion/react";
-import { IconType } from "react-icons";
 
 export default function CustomProfileAvatar({
   name = "User",
@@ -15,13 +14,13 @@ export default function CustomProfileAvatar({
   name?: string;
   avatarUrl?: string;
   dropdownItems?: {
-    Icon: React.ElementType | IconType | React.ReactElement;
+    Icon: React.ElementType;
     label: string;
     onClick: () => void;
   }[];
   size?: string;
 }) {
-  const { user } = useAppSelector((state) => state.auth);
+  const { user }: { user: any } = useAppSelector((state) => state.auth);
   const userDetails = getUserInfo() as any;
   console.log({ user });
   const initials = name

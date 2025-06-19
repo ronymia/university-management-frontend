@@ -54,13 +54,12 @@ export default function SidebarGenerator({
             `}
           onClick={handleClick}
         >
-          <AnimatePresence key={label} initial={false}>
+          <AnimatePresence initial={false}>
             <span className={`rounded-full bg-gray-300 p-2.5`}>
               {<Icon className={`text-primary`} />}
             </span>
             {!isSidebarCollapsed && (
               <motion.span
-                key={label}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}

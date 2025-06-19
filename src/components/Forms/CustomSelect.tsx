@@ -38,7 +38,6 @@ export default function CustomSelect({
   isLoading = false,
   changeHandler,
   position,
-  ...props
 }: ICustomSelectProps) {
   const {
     control,

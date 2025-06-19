@@ -25,7 +25,7 @@ import useDeviceWith from "@/hooks/useDeviceWith";
 import { MdOutlineMenuOpen } from "react-icons/md";
 
 export interface IMenuItems {
-  icon: JSX.Element | ReactNode | ReactElement | IconType;
+  icon: React.ElementType;
   label: string | JSX.Element;
   path: string;
   show: boolean;

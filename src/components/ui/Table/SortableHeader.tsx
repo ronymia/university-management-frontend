@@ -1,3 +1,5 @@
+import { IColumn } from "./CustomTable";
+
 const SortableHeader = ({
   column,
   isFirstColumn,

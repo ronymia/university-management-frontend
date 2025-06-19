@@ -5,19 +5,31 @@ import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import { BiShow } from "react-icons/bi";
 
-export default function ActionButtons({ actions, row, dataAuto, permissions }) {
+interface IActionButtonsProps {
+  actions: any;
+  row: any;
+  dataAuto: string;
+  permissions: any;
+}
+
+export default function ActionButtons({
+  actions,
+  row,
+  dataAuto,
+  permissions,
+}: IActionButtonsProps) {
   return (
     <>
       {actions
         .filter(
-          (action) =>
+          (action: any) =>
             !action?.disableOn?.some(
-              (disable) => row?.[disable?.accessorKey] === disable?.value
+              (disable: any) => row?.[disable?.accessorKey] === disable?.value
             )
         )
-        .map((action) => {
+        .map((action: any) => {
           const isPermitted = true;
-          const Icon =
+          const Icon: any =
             action?.name === "edit"
               ? FiEdit
               : action?.name === "delete"
