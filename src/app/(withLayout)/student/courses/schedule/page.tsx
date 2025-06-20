@@ -11,6 +11,7 @@ import { IOfferedCourseSchedule } from "@/types";
 import React, { useState } from "react";
 
 export default function MyCourseSchedulePage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [queries, setQueries] = useState({});
   const { data, isLoading } = useMyCourseSchedulesQuery({});
   const myCourseSchedules = data?.myCourseSchedules;

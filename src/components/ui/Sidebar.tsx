@@ -1,13 +1,7 @@
 "use client";
 
 import { getUserInfo } from "@/services/auth.service";
-import React, {
-  JSX,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import React, { JSX, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaRegUser, FaTableCells } from "react-icons/fa6";
 import { AiOutlineAppstore } from "react-icons/ai";
@@ -20,7 +14,6 @@ import {
   expandSidebar,
   toggleSidebar,
 } from "@/redux/slice/globalState";
-import { IconType } from "react-icons";
 import useDeviceWith from "@/hooks/useDeviceWith";
 import { MdOutlineMenuOpen } from "react-icons/md";
 

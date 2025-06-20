@@ -2,7 +2,6 @@ import moment from "moment";
 
 export const generateYears = ({
   startOfYear,
-  endOfYear,
   length,
 }: {
   startOfYear: number;

@@ -2,10 +2,7 @@
 
 import CustomButton from "@/components/Button/CustomButton";
 import ActionBar from "@/components/ui/ActionBar";
-import CustomTable, {
-  IAction,
-  IColumn,
-} from "@/components/ui/Table/CustomTable";
+import CustomTable, { IColumn } from "@/components/ui/Table/CustomTable";
 import { useDebounced } from "@/hooks/useDebounced";
 import { useFacultyCourseStudentsQuery } from "@/redux/api/facultyApi";
 import Link from "next/link";

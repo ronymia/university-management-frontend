@@ -135,9 +135,9 @@ export default function StepperForm({
     }
   };
 
-  useEffect(() => {
-    console.log("Form values", methods.getValues());
-  }, [watch]);
+  // useEffect(() => {
+  //   console.log("Form values", methods.getValues());
+  // }, [watch]);
 
   return (
     <>

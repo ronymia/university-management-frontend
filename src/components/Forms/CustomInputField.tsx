@@ -1,7 +1,7 @@
 "use client";
 // import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
 import { getErrorMessageByPropertyName } from "@/utils/schema-validator";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 

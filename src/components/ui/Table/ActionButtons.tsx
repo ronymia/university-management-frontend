@@ -9,14 +9,13 @@ interface IActionButtonsProps {
   actions: any;
   row: any;
   dataAuto: string;
-  permissions: any;
+  permissions?: any;
 }
 
 export default function ActionButtons({
   actions,
   row,
   dataAuto,
-  permissions,
 }: IActionButtonsProps) {
   return (
     <>

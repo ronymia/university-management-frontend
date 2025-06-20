@@ -1,50 +1,38 @@
 "use client";
 
-import { getUserInfo } from "@/services/auth.service";
 import CustomProfileAvatar from "../Avatar/CustomProfileAvatar";
 import { MdOutlineLogout, MdOutlineMenuOpen } from "react-icons/md";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import {
-  setLastScrollTopNavbar,
-  toggleSidebar,
-  toggleStickyNavbar,
-} from "@/redux/slice/globalState";
+import { useAppDispatch } from "@/redux/hooks";
+import { toggleSidebar } from "@/redux/slice/globalState";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GrUserSettings } from "react-icons/gr";
-import { FaRegUser } from "react-icons/fa";
 import { TbUserEdit } from "react-icons/tb";
 
 export default function Navbar() {
   const router = useRouter();
-  const { user } = useAppSelector((state) => state.auth);
-  const { isStickyNavbar, lastScrollTopNavbar } = useAppSelector(
-    (state) => state.globalState
-  );
   const appDispatch = useAppDispatch();
-  const userDetails = getUserInfo();
 
-  const lastScrollTopRef = useRef(0);
+  // const lastScrollTopRef = useRef(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollTop =
+  //       window.pageYOffset || document.documentElement.scrollTop;
 
-      if (scrollTop < lastScrollTopRef.current) {
-        appDispatch(toggleStickyNavbar(true));
-      } else {
-        appDispatch(toggleStickyNavbar(false));
-      }
+  //     if (scrollTop < lastScrollTopRef.current) {
+  //       appDispatch(toggleStickyNavbar(true));
+  //     } else {
+  //       appDispatch(toggleStickyNavbar(false));
+  //     }
 
-      lastScrollTopRef.current = scrollTop <= 0 ? 0 : scrollTop;
-      appDispatch(setLastScrollTopNavbar(lastScrollTopRef.current));
-    };
+  //     lastScrollTopRef.current = scrollTop <= 0 ? 0 : scrollTop;
+  //     appDispatch(setLastScrollTopNavbar(lastScrollTopRef.current));
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
   return (
     <AnimatePresence mode="wait">

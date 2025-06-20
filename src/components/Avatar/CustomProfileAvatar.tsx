@@ -77,6 +77,7 @@ export default function CustomProfileAvatar({
             className={`cursor-pointer px-3 py-2 m-2  hover:bg-primary rounded-md hover:text-base-300 drop-shadow-lg flex gap-3 items-start justify-start last:m-0 last:bg-error last:rounded-none last:text-base-300
           `}
             role="option"
+            aria-selected="false"
           >
             {item.Icon && <item.Icon size={24} className={``} />} {item.label}
           </li>

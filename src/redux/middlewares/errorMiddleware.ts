@@ -6,9 +6,10 @@ import type { MiddlewareAPI, Middleware } from "@reduxjs/toolkit";
  * Log a warning and show a toast!
  */
 export const rtkQueryErrorLogger: Middleware =
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (apiStore: MiddlewareAPI) => (next) => (action) => {
     if (isRejectedWithValue(action)) {
-      const auth = apiStore.getState().auth;
+      // const auth = apiStore.getState().auth;
       //   console.log({ auth });
       console.log("We got a rejected action!", action.payload);
       //   toast.warn({

@@ -1,4 +1,3 @@
-import { SemesterRegistrationStatus } from "@/enums/global";
 import {
   IBloodGroup,
   IDesignation,

@@ -1,7 +1,4 @@
-import {
-  useFacultiesFromCoreQuery,
-  useFacultiesQuery,
-} from "@/redux/api/facultyApi";
+import { useFacultiesFromCoreQuery } from "@/redux/api/facultyApi";
 import CustomSelect from "@/components/Forms/CustomSelect";
 
 type FacultyProps = {

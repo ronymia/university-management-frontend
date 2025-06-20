@@ -145,7 +145,14 @@ export default function DatePicker({
     if (error) {
       setInvalidDateError(error);
     }
-  }, [error, value]);
+  }, [
+    error,
+    value,
+    disableBeforeDate,
+    disableAfterDate,
+    disabledDates,
+    formatDate,
+  ]);
 
   // SET CURRENT MONTH
   useEffect(() => {
@@ -178,8 +185,8 @@ export default function DatePicker({
   }, [calendarVisible]);
 
   // SELECT DATE
-  const handleDateClick = (day) => {
-    const now = moment(); // current time
+  const handleDateClick = (day: any) => {
+    // const now = moment(); // current time
 
     // const combined = day
     //   .clone()

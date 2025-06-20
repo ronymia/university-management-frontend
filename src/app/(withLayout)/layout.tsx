@@ -23,7 +23,7 @@ export default function DashboardLayout({
     } else {
       setIsLoading(false);
     }
-  }, [router]);
+  }, [router, userLoggedIn]);
 
   if (isLoading) {
     return <CustomLoading height={"h-screen"} />;
