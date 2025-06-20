@@ -10,7 +10,11 @@ import CustomButton from "../Button/CustomButton";
 import CoreFacultyField from "./Fields/CoreFacultyField";
 import { useState } from "react";
 
-const FormDynamicFields = ({ academicDepartmentId }) => {
+const FormDynamicFields = ({
+  academicDepartmentId,
+}: {
+  academicDepartmentId?: string;
+}) => {
   const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -37,6 +41,7 @@ const FormDynamicFields = ({ academicDepartmentId }) => {
               >
                 {/* dayOfWeek */}
                 <CustomSelect
+                  isLoading={false}
                   id={`classSchedules.${index}.dayOfWeek`}
                   name={`classSchedules.${index}.dayOfWeek`}
                   label={`Day of week`}

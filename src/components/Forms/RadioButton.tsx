@@ -10,7 +10,7 @@ interface ICustomRadioButton {
     value: string;
     Icon?: React.ReactNode | IconType | React.ReactElement;
   }[];
-  onChange?: (e) => void;
+  onChange?: (e: any) => void;
   wrapperClassName?: string;
   label?: string;
   disabled?: boolean;

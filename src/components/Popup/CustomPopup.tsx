@@ -107,7 +107,7 @@ export function usePopup() {
   const [popupOptions, setPopupOptions] = useState<IPopupOptions>({
     open: false,
     closeOnDocumentClick: true,
-    actionType: "add",
+    actionType: "create",
     form: "",
     data: null,
     title: "",

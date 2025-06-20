@@ -200,7 +200,7 @@ export default function CustomTable({
                       key={row?.id}
                       actions={actions}
                       row={row}
-                      dataAuto={dataAuto}
+                      dataAuto={dataAuto || ""}
                       permissions={permissions}
                     />
                   </td>
@@ -264,7 +264,7 @@ export default function CustomTable({
                         key={row?.id}
                         actions={actions}
                         row={row}
-                        dataAuto={dataAuto}
+                        dataAuto={dataAuto || ""}
                         permissions={permissions}
                       />
                     </div>

@@ -1,6 +1,11 @@
 type IAction_TYPE = "create" | "update" | "delete" | "view";
 
 type IForm_NAME =
+  | ""
+  | "admin"
+  | "faculty"
+  | "student"
+  | "offered_course_section"
   | "academic_semester"
   | "academic_faculty"
   | "academic_department"

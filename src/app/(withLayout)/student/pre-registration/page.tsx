@@ -46,13 +46,10 @@ export default function ViewPreregistrationPage() {
     }
   };
   const handleConfirmRegistration = async () => {
-    try {
-      const res = await confirmMyRegistration({}).unwrap();
-      if (res) {
-        // message.success("Successfully registered");
-      }
-    } catch (err: any) {
-      console.error(err?.message);
+    const res = await confirmMyRegistration({}).unwrap();
+    if (res) {
+      // message.success("Successfully registered");
+      console.log({ res });
     }
   };
 
@@ -289,7 +286,7 @@ export default function ViewPreregistrationPage() {
 function CustomCollapse({ items }: any) {
   return (
     <div>
-      {items.map((item) => (
+      {items.map((item: any) => (
         <div
           key={item.key}
           style={{

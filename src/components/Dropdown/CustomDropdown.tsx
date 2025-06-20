@@ -9,6 +9,7 @@ interface CustomDropdownProps {
   children: React.ReactNode;
   align?: "left" | "right";
   width?: number | string;
+  isLoading?: boolean;
 }
 
 export const CustomDropdown = ({

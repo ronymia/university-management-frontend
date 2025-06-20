@@ -1,7 +1,7 @@
 "use client";
 import useClickOutside from "@/hooks/useClickOutside";
 import { AnimatePresence, motion } from "motion/react";
-import { useState, useEffect, ReactNode, ReactElement } from "react";
+import { useState, useEffect, ReactNode, ReactElement, RefObject } from "react";
 import { IconType } from "react-icons";
 import { FaSync } from "react-icons/fa";
 import { RxCrossCircled } from "react-icons/rx";
@@ -123,7 +123,7 @@ export default function Select({
 
   return (
     <div
-      ref={selectRef}
+      ref={selectRef as RefObject<HTMLDivElement>}
       data-testid={`${testId}_container`}
       className={`${wrapperClassName} flex flex-col justify-start gap-y-1.5 relative`}
     >

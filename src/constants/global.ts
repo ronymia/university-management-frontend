@@ -1,3 +1,4 @@
+import { SemesterRegistrationStatus } from "@/enums/global";
 import {
   IBloodGroup,
   IDesignation,
@@ -164,9 +165,9 @@ export const daysOptions = days.map((day: string) => {
 });
 
 export const semesterRegistrationStatus: ISemesterRegistrationStatus[] = [
-  "UPCOMING",
-  "ONGOING",
-  "ENDED",
+  SemesterRegistrationStatus.UPCOMING,
+  SemesterRegistrationStatus.ONGOING,
+  SemesterRegistrationStatus.ENDED,
 ];
 
 export enum ExamType {

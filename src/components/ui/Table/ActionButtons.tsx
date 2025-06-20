@@ -36,7 +36,7 @@ export default function ActionButtons({
               : action?.name === "view"
               ? BiShow
               : undefined;
-          const dataAutoAttr = `${dataAuto}_${action?.name}-${row?.id}`;
+          const dataAutoAttr = `${dataAuto}_${action?.name}-${row?.id}` || "";
           const iconClass = `text-3xl p-1 bg-gray-50 rounded border border-primary/20 drop-shadow cursor-pointer ${
             action?.name === "delete" ? "text-red-500" : "text-primary"
           }`;

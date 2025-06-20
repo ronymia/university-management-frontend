@@ -142,7 +142,7 @@ export default function AdminForm({ id = "" }: { id?: string }) {
             isLoading={isLoading}
             name={"admin.managementDepartment"}
             id={"admin.managementDepartment"}
-            options={departmentOptions}
+            options={departmentOptions || []}
             label="Department"
             placeholder={`Select Department`}
             required

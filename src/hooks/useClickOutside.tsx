@@ -1,11 +1,21 @@
 import { useEffect, useRef } from "react";
 
-export default function useClickOutside(callbackFn) {
-  const ref = useRef(null);
+interface UseClickOutsideCallback {
+  (): void;
+}
+
+// interface UseClickOutsideRef {
+//   current: HTMLElement | null;
+// }
+
+export default function useClickOutside(
+  callbackFn: UseClickOutsideCallback
+): React.RefObject<HTMLElement | null> {
+  const ref = useRef<HTMLElement | null>(null);
   // Close the options list when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
         callbackFn?.();
       }
     };
