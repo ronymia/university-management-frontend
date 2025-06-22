@@ -8,6 +8,9 @@ interface IErrorHandlerProps {
 
 export default function ErrorHandler({ errors }: IErrorHandlerProps) {
     // SEND ERROR MESSAGE BASED ON STATUS
+    if (errors.statusCode && errors.statusCode === 400) {
+        return CustomToaster({ type: 'error', text: errors.message });
+    }
     if (errors.statusCode && errors.statusCode === 401) {
         return CustomToaster({ type: 'error', text: errors.message });
     }

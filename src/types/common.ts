@@ -222,6 +222,7 @@ export interface IAcademicCoreDepartment {
     deletedAt?: null;
     academicFacultyId: string;
     academicFaculty?: IAcademicFaculty;
+    offeredCourses: IOfferedCourse[];
 }
 
 export interface IOfferedCourse {
