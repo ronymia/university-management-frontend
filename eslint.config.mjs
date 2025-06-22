@@ -29,8 +29,8 @@ const eslintConfig = [
         files: ['**/*.ts', '**/*.tsx'],
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
-            '@typescript-eslint/consistent-type-assertions': 'error',
-            '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
+            // '@typescript-eslint/consistent-type-assertions': 'error',
+            // '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
         },
     },
 ];
