@@ -25,9 +25,9 @@ export default function CustomToaster({
         >
             {/* LEFT - CONTENT */}
             <div className="flex-1 flex flex-col justify-center p-4">
-                {type === 'success' && <h3 className="font-semibold">{text}</h3>}
+                {type === 'success' && <h3 className="font-semibold text-sm">{text}</h3>}
 
-                {type === 'error' && Object.keys(errors).length > 0 && (
+                {type === 'error' && errors?.length > 0 ? (
                     <div className="text-sm mt-1 text-neutral">
                         <h5 className="font-semibold mb-1">
                             {pageId} - {text}
@@ -40,6 +40,8 @@ export default function CustomToaster({
                             )}
                         </ul>
                     </div>
+                ) : (
+                    <h3 className="font-semibold text-sm">{text}</h3>
                 )}
             </div>
 
