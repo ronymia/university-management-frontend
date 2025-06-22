@@ -17,9 +17,14 @@ const eslintConfig = [
       "dist/**",
       "build/**",
       "coverage/**",
+      "prettier.config.mjs",
     ],
   },
+  // ESLint rules from Next.js & TS
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // Disable ESLint rules that conflict with Prettier
+  ...compat.extends("prettier"),
   {
     files: ["**/*.ts", "**/*.tsx"],
     rules: {
