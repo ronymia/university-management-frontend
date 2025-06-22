@@ -158,6 +158,7 @@ export interface IAcademicSemester {
 export interface IBuilding {
     id: string;
     title: string;
+    rooms: IRoom[];
     createdAt: string;
     updatedAt: string;
     deletedAt?: null;
