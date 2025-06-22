@@ -3,10 +3,11 @@ import CustomToaster from '../Notification/CustomToaster';
 
 interface IErrorHandlerProps {
     errors: IGenericErrorResponse;
-    pageId: string;
+    pageId?: string;
 }
 
-export default function ErrorHandler({ errors, pageId }: IErrorHandlerProps) {
+export default function ErrorHandler({ errors }: IErrorHandlerProps) {
+    console.log({ errors });
     // SEND ERROR MESSAGE BASED ON STATUS
     if (errors.statusCode && errors.statusCode === 401) {
         return CustomToaster({ type: 'error', text: errors.message });
