@@ -3,14 +3,14 @@ import { toast } from 'react-hot-toast';
 export interface ICustomToasterProps {
     type: 'success' | 'error';
     text: string;
-    errors?: { [key: string]: string };
+    errors?: { [key: string]: string }[];
     pageId?: string;
 }
 
 export default function CustomToaster({
     type,
     text,
-    errors = {},
+    errors = [],
     pageId = '000',
 }: ICustomToasterProps) {
     return toast.custom((toastId) => (
@@ -33,9 +33,11 @@ export default function CustomToaster({
                             {pageId} - {text}
                         </h5>
                         <ul className="list-decimal ml-5">
-                            {Object.entries(errors).map(([field, message], index) => (
-                                <li key={`${field}-${index}`}>{message}</li>
-                            ))}
+                            {errors.map((error, i) =>
+                                Object.entries(error).map(([key, message]) => (
+                                    <li key={`${key}-${i}`}>{message}</li>
+                                )),
+                            )}
                         </ul>
                     </div>
                 )}
