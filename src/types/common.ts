@@ -402,3 +402,21 @@ export interface IStudentClassSchedule {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface IClassSchedule {
+    id: string;
+    startTime: string;
+    endTime: string;
+    dayOfWeek: string;
+    roomId: string;
+    room: IRoom;
+    offeredCourseSectionId: string;
+    offeredCourseSection: IOfferedCourseSection;
+    semesterRegistrationId: string;
+    semesterRegistration: ISemesterRegistration;
+    facultyId: string;
+    faculty: IAcademicCoreFaculty;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt?: null;
+}

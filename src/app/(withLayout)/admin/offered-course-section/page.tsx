@@ -1,6 +1,7 @@
 'use client';
 
 import CustomAddButton from '@/components/Button/CustomAddButton';
+import CustomButton from '@/components/Button/CustomButton';
 import FormModal from '@/components/Forms/FormModal';
 import { usePopup } from '@/components/Popup/CustomPopup';
 import ActionBar from '@/components/ui/ActionBar';
@@ -85,7 +86,7 @@ export default function OfferedCourseSectionPage() {
             header: 'Offered courses',
             accessorKey: 'customOfferedCourse',
             show: true,
-            minWidth: 30,
+            minWidth: 20,
         },
         // NAME
         {
@@ -106,7 +107,14 @@ export default function OfferedCourseSectionPage() {
             header: 'Enrolled Student',
             accessorKey: 'currentEnrolledStudent',
             show: true,
-            minWidth: 25,
+            minWidth: 20,
+        },
+        // NAME
+        {
+            header: 'View Schedule',
+            accessorKey: 'customClassSchedules',
+            show: true,
+            minWidth: 20,
         },
         // NAME
         {
@@ -163,6 +171,13 @@ export default function OfferedCourseSectionPage() {
                         ...row,
                         customSemesterRegistration: `${row?.semesterRegistration?.academicSemester?.title} - ${row?.semesterRegistration?.academicSemester?.year}`,
                         customOfferedCourse: row?.offeredCourse?.course?.title,
+                        customClassSchedules: (
+                            <Link
+                                href={`/admin/offered-course-section/class-schedules?offeredCourseSectionId=${row?.id}`}
+                            >
+                                <CustomButton variant="outlined">View Schedule</CustomButton>
+                            </Link>
+                        ),
                     })) || []
                 }
             />
