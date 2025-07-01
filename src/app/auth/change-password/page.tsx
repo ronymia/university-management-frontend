@@ -1,7 +1,5 @@
 import React from 'react';
 
-const ProfilePage = () => {
+export default function PasswordChangePage() {
     return <div>Under development</div>;
-};
-
-export default ProfilePage;
+}

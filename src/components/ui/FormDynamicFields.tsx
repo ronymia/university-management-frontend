@@ -42,7 +42,7 @@ const FormDynamicFields = ({ academicDepartmentId }: { academicDepartmentId?: st
                                     options={daysOptions}
                                     required
                                 />
-                                {/* startTime */}
+
                                 <CustomInputField
                                     id={`classSchedules.${index}.startTime`}
                                     name={`classSchedules.${index}.startTime`}
