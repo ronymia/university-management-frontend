@@ -5,7 +5,7 @@ import CustomButton from '@/components/Button/CustomButton';
 import FormModal from '@/components/Forms/FormModal';
 import { usePopup } from '@/components/Popup/CustomPopup';
 import ActionBar from '@/components/ui/ActionBar';
-import CustomTable, { IAction, IColumn } from '@/components/ui/Table/CustomTable';
+import CustomTable, { IAction, IColumn } from '@/components/Table/CustomTable';
 import { useDebounced } from '@/hooks/useDebounced';
 import {
     useDeleteOfferedCourseSectionMutation,

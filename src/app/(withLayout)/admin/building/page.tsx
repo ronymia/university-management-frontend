@@ -3,7 +3,7 @@
 import FormModal from '@/components/Forms/FormModal';
 import { usePopup } from '@/components/Popup/CustomPopup';
 import ActionBar from '@/components/ui/ActionBar';
-import CustomTable, { IAction, IColumn } from '@/components/ui/Table/CustomTable';
+import CustomTable, { IAction, IColumn } from '@/components/Table/CustomTable';
 import { useDebounced } from '@/hooks/useDebounced';
 import { useBuildingsQuery, useDeleteBuildingMutation } from '@/redux/api/buildingApi';
 import { IBuilding } from '@/types';

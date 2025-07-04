@@ -1,18 +1,19 @@
 'use client';
 
+import CustomAddButton from '@/components/Button/CustomAddButton';
 import FormModal from '@/components/Forms/FormModal';
 import { usePopup } from '@/components/Popup/CustomPopup';
 import ActionBar from '@/components/ui/ActionBar';
 import CustomTable, { IAction, IColumn } from '@/components/Table/CustomTable';
 import { useDebounced } from '@/hooks/useDebounced';
-import {
-    useDeleteOfferedCourseMutation,
-    useOfferedCoursesQuery,
-} from '@/redux/api/offeredCourseApi';
-import { IOfferedCourse } from '@/types';
+import { useDeleteStudentMutation, useStudentsQuery } from '@/redux/api/studentApi';
+import type { IStudent } from '@/types';
+import { getFullName } from '@/utils/getFullName';
+import dayjs from 'dayjs';
+import Link from 'next/link';
 import { useState } from 'react';
 
-export default function OfferedCoursePage() {
+export default function StudentPage() {
     // QUERIES
     const [queries, setQueries] = useState({
         page: 1,
@@ -20,12 +21,13 @@ export default function OfferedCoursePage() {
         sortBy: '',
         sortOrder: '',
         searchTerm: '',
+        adminId: '',
     });
     // POPUP
-    const { popupOptions, setPopupOptions, handleAddNewOfferedCourse } = usePopup();
-    // DELETION
-    const [deleteOfferedCourse, deleteResult] = useDeleteOfferedCourseMutation();
-    //   DEBOUNCE FOR SEARCH
+    const { popupOptions, setPopupOptions } = usePopup();
+    // DELETE API
+    const [deleteStudent, deleteResult] = useDeleteStudentMutation();
+    // DEBOUNCE FOR SEARCH
     const debouncedSearchTerm = useDebounced({
         searchQuery: queries.searchTerm,
         delay: 600,
@@ -34,33 +36,31 @@ export default function OfferedCoursePage() {
     if (!!debouncedSearchTerm) {
         setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
     }
-    const { data, isLoading } = useOfferedCoursesQuery({ ...queries });
+    // QUERIES
+    const { data, isLoading } = useStudentsQuery({ ...queries });
 
-    const offeredCourses = data?.offeredCourses || [];
+    const students = data?.students;
     const meta = data?.meta;
-
-    const deleteHandler = async (deleteData: IOfferedCourse) => {
-        await deleteOfferedCourse(deleteData?.id);
-    };
-
-    const handleEdit = (updateData: IOfferedCourse) => {
-        // console.log({ updateData });
-        setPopupOptions((prev) => ({
-            ...prev,
-            open: true,
-            data: updateData,
-            actionType: 'update',
-            form: 'offered_course',
-            title: 'Update Offered Course',
-        }));
+    // console.log(students);
+    const deleteHandler = async (deleteData: IStudent) => {
+        await deleteStudent(deleteData?.id);
     };
 
     // ALL ACTION BUTTONS
     const [actions] = useState<IAction[]>([
         {
+            name: 'view',
+            type: 'link',
+            href: (row: IStudent) => `manage-student/view/${row?.id}`,
+            handler: () => {},
+            permissions: [],
+            disableOn: [],
+        },
+        {
             name: 'edit',
-            type: 'button',
-            handler: handleEdit,
+            type: 'link',
+            href: (row: IStudent) => `manage-student/edit/${row?.id}`,
+            handler: () => {},
             permissions: [],
             disableOn: [],
         },
@@ -77,37 +77,66 @@ export default function OfferedCoursePage() {
     const columns: IColumn[] = [
         // NAME
         {
-            header: 'Course',
-            accessorKey: 'customCourse',
+            header: 'Student Id',
+            accessorKey: 'id',
             show: true,
-            minWidth: 30,
+            minWidth: 10,
         },
         // NAME
         {
-            header: 'Academic department',
-            accessorKey: 'customAcademicDepartment',
+            header: 'Name',
+            accessorKey: 'fullName',
             show: true,
-            minWidth: 30,
-        },
-        // NAME
-        {
-            header: 'Created At',
-            accessorKey: 'createdAt',
-            show: false,
             minWidth: 20,
         },
+        // NAME
+        {
+            header: 'Email',
+            accessorKey: 'email',
+            show: true,
+            minWidth: 20,
+        },
+        // NAME
+        {
+            header: 'Semester',
+            accessorKey: 'customAcademicSemester',
+            show: true,
+            minWidth: 10,
+        },
+        // NAME
+        {
+            header: 'Department',
+            accessorKey: 'customAcademicDepartment',
+            show: true,
+            minWidth: 20,
+        },
+        // NAME
+        {
+            header: 'Contact no.',
+            accessorKey: 'contactNo',
+            show: true,
+            minWidth: 20,
+        },
+        // NAME
+        {
+            header: 'Created at',
+            accessorKey: 'customCreatedAt',
+            show: false,
+            minWidth: 15,
+        },
     ];
+
     return (
         <>
             {/* FORM MODAL */}
             <FormModal popupOptions={popupOptions} setPopupOptions={setPopupOptions} />
 
             {/* ACTION BAR */}
-            <ActionBar
-                title={`Manage Offered Courses`}
-                addButtonLabel={`Add New`}
-                createHandler={handleAddNewOfferedCourse}
-            />
+            <ActionBar title={`Manage Students`}>
+                <Link href={`manage-student/create`}>
+                    <CustomAddButton label={`Add New`}></CustomAddButton>
+                </Link>
+            </ActionBar>
 
             {/* TABLE */}
             <CustomTable
@@ -134,10 +163,14 @@ export default function OfferedCoursePage() {
                 //   onSearch: (searchTerm) => setQueries({ ...queries, searchTerm }),
                 // }}
                 rows={
-                    offeredCourses?.map((row) => ({
+                    students?.map((row) => ({
                         ...row,
-                        customCourse: row?.course?.title,
+                        fullName: row?.name ? getFullName(row?.name) : `N/A`,
                         customAcademicDepartment: row?.academicDepartment?.title,
+                        customAcademicSemester: `${row?.academicSemester?.title} - ${row?.academicSemester?.year}`,
+                        customCreatedAt: row?.createdAt
+                            ? dayjs(row?.createdAt).format('MMM D, YYYY hh:mm A')
+                            : '',
                     })) || []
                 }
             />

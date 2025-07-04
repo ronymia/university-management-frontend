@@ -1,7 +1,7 @@
 'use client';
 
-import AcademicDepartmentField from '@/components/Academic/AcademicDepartmentField';
-import SemesterRegistrationField from '@/components/Academic/SemesterRegistrationField';
+import AcademicDepartmentField from '@/components/ui/Fields/Academic/AcademicDepartmentField';
+import SemesterRegistrationField from '@/components/ui/Fields/Academic/SemesterRegistrationField';
 import CustomForm from '@/components/Forms/CustomForm';
 import CustomInputField from '@/components/Forms/CustomInputField';
 import CustomSelect from '@/components/Forms/CustomSelect';

@@ -21,7 +21,6 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addMatcher(authApi.endpoints.userLogin.matchFulfilled, (state, action) => {
-            console.log({ payload: action.payload });
             state.user = action.payload.user;
             state.token = action.payload.accessToken;
             state.permission = action.payload.permission;

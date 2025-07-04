@@ -1,4 +1,4 @@
-import AcademicFacultyField from '@/components/Academic/AcademicFacultyField';
+import AcademicFacultyField from '@/components/ui/Fields/Academic/AcademicFacultyField';
 import CustomForm from '@/components/Forms/CustomForm';
 import CustomInputField from '@/components/Forms/CustomInputField';
 import CustomLoading from '@/components/Loader/CustomLoading';

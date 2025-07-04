@@ -5,6 +5,7 @@ const AUTH_URL = `/auth`;
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        // login
         userLogin: builder.mutation({
             query: (payloadData) => ({
                 url: `${AUTH_URL}/login`,
@@ -13,6 +14,7 @@ export const authApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: [tagTypes.user],
         }),
+        // logout
         userLogout: builder.mutation({
             query: () => ({
                 url: `${AUTH_URL}/logout`,

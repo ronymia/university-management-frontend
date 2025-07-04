@@ -1,6 +1,6 @@
-import FacultyPage from "@/components/ui/Common/FacultyPage";
-import React from "react";
+import FacultyPage from '@/components/ui/Common/Faculty/FacultyPage';
+import React from 'react';
 
 export default function SuperAdminFacultyPage() {
-  return <FacultyPage />;
+    return <FacultyPage />;
 }
