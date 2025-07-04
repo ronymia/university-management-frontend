@@ -2,7 +2,6 @@
 
 import React, { useMemo, useState } from 'react';
 import { IconType } from 'react-icons';
-import { motion } from 'motion/react';
 import useDeviceWith from '@/hooks/useDeviceWith';
 import { getFromLocalStorage } from '@/utils/local-storage';
 import Pagination from './Pagination';
@@ -58,7 +57,6 @@ interface ICustomTableProps {
 }
 
 export default function CustomTable({
-    rowHeight = 'h-16',
     rows = [],
     columns = [],
     isLoading = false,
@@ -120,13 +118,7 @@ export default function CustomTable({
     /* ===================================== RETURN JSX ===================================== */
     return (
         <>
-            <table
-                style={{
-                    borderCollapse: 'separate',
-                    borderSpacing: '0 10px',
-                }}
-                className="w-full"
-            >
+            <table className="w-full table table-auto border-separate border-spacing-y-2.5">
                 {/* <===================================== Table Header ===================================> */}
                 {/* // In your CustomTable component's return statement */}
                 <thead className="h-16 hidden md:table-header-group sticky top-3 bg-base-300 z-10 text-sm">
@@ -173,12 +165,12 @@ export default function CustomTable({
                     </tr>
                 </thead>
                 {/* <===================================== Table Body ===================================> */}
-                <tbody className="block w-full md:table-row-group">
+                <tbody className="md:table-row-group">
                     {!isLoading ? (
                         sortedRows?.map((row, rowIndex) => (
                             <tr
                                 key={rowIndex}
-                                className=" block md:table-row border md:border-0 md:border-b border-primary-content  text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg "
+                                className="min-h-16 block md:table-row border md:border-0 md:border-b border-primary-content text-sm font-semibold mb-4 md:mb-0 p-4 md:p-0 rounded-lg"
                             >
                                 {/* <===================================== Action for Mobile ====================================> */}
                                 {windowInnerWidth < 768 && actions?.length > 0 && (
@@ -214,10 +206,10 @@ export default function CustomTable({
                                                         : '100%',
                                             }}
                                             data-label={col?.['header']}
-                                            className="block md:table-cell  border md:border-none border-gray-200"
+                                            className="block md:table-cell border md:border-none border-gray-200 h-16"
                                         >
                                             <div
-                                                className={`drop-shadow md:border-t md:border-b md:border-primary/20 ${rowHeight} flex items-center justify-start px-4 
+                                                className={`drop-shadow md:border-t md:border-b md:border-primary/20 h-16 flex items-center justify-start px-4 
                             ${
                                 index === 0
                                     ? 'md:border-l md:rounded-tl-xl md:rounded-bl-xl'
@@ -266,24 +258,16 @@ export default function CustomTable({
                             </tr>
                         ))
                     ) : (
-                        <motion.tr
-                            initial={{ opacity: 0.5, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 10 }}
-                            transition={{
-                                duration: 0.5,
-                                repeat: Infinity,
-                                repeatType: 'reverse',
-                            }}
-                            className="border-b"
-                        >
+                        <tr className="border-b w-full">
                             <td
-                                colSpan={windowInnerWidth > 768 ? columns.length + 1 : 1}
-                                className="py-4 px-6"
+                                colSpan={
+                                    windowInnerWidth > 768 ? columns.length + 1 : columns.length + 1
+                                }
+                                className="text-center align-middle h-96 w-full"
                             >
                                 <CustomLoading />
                             </td>
-                        </motion.tr>
+                        </tr>
                     )}
                 </tbody>
                 {/* <===================================== Table Footer ==================================> */}

@@ -1,27 +1,35 @@
+import { tagTypes } from '../tag-types';
 import { baseApi } from './baseApi';
 
-const USER_URL = `/v1/users`;
+const USER_URL = `/users`;
 
 export const userApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        // login
+        // GET ALL USERS
         users: builder.query({
-            query: (payloadData) => ({
-                url: `${USER_URL}/login`,
-                method: 'POST',
-                data: payloadData,
+            query: () => ({
+                url: `${USER_URL}`,
+                method: 'GET',
+            }),
+            providesTags: (result) => (result ? [tagTypes.user] : []),
+        }),
+        // GET SINGLE USER
+        singleUser: builder.query({
+            query: (id) => ({
+                url: `${USER_URL}/${id}`,
+                method: 'GET',
             }),
             // invalidatesTags: [tagTypes.user],
         }),
-        // logout
-        singleUser: builder.query({
-            query: () => ({
-                url: `${USER_URL}/logout`,
-                method: 'POST',
+        // DELETE USER
+        deleteUser: builder.mutation({
+            query: (id) => ({
+                url: `${USER_URL}/${id}`,
+                method: 'DELETE',
             }),
-            // invalidatesTags: [tagTypes.user],
+            invalidatesTags: (result) => (result ? [tagTypes.user] : []),
         }),
     }),
 });
 
-export const { useUsersQuery, useSingleUserQuery } = userApi;
+export const { useUsersQuery, useSingleUserQuery, useDeleteUserMutation } = userApi;

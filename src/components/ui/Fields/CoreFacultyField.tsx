@@ -1,4 +1,4 @@
-import { useFacultiesFromCoreQuery } from '@/redux/api/facultyApi';
+import { useFacultiesQuery } from '@/redux/api/facultyApi';
 import CustomSelect from '@/components/Forms/CustomSelect';
 
 type FacultyProps = {
@@ -8,7 +8,7 @@ type FacultyProps = {
 };
 
 const CoreFacultyField = ({ name, label, academicDepartmentId }: FacultyProps) => {
-    const { data, isLoading } = useFacultiesFromCoreQuery({
+    const { data, isLoading } = useFacultiesQuery({
         limit: 100,
         page: 1,
         academicDepartmentId: academicDepartmentId ?? undefined,

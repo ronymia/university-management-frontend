@@ -1,6 +1,6 @@
 'use client';
 
-import UserView from '@/components/ui/Common/User/UserView';
+import UserProfile from '@/components/ui/Common/User/UserProfile';
 import React, { use } from 'react';
 
 type IViewStudentPageProps = {
@@ -11,5 +11,5 @@ type IViewStudentPageProps = {
 
 export default function ViewAdminStudent({ params }: IViewStudentPageProps) {
     const { id } = use(params);
-    return <UserView userId={id} />;
+    return <UserProfile userId={id} />;
 }

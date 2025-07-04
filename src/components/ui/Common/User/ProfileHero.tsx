@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function UserViewHero() {
+export default function ProfileHero() {
     return <div>UserViewHero</div>;
 }
