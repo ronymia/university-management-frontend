@@ -1,10 +1,10 @@
 'use client';
-import CustomInputField from '../Forms/CustomInputField';
-import AcademicDepartmentField from '../Academic/AcademicDepartmentField';
-import AcademicFacultyField from '../Academic/AcademicFacultyField';
-import AcademicSemesterField from '../Academic/AcademicSemesterField';
-import CustomRadioButton from '../Forms/CustomRadioButton';
-import CustomFileUpload from '../Forms/CustomFileUpload';
+import CustomFileUpload from '@/components/Forms/CustomFileUpload';
+import CustomInputField from '@/components/Forms/CustomInputField';
+import AcademicDepartmentField from '@/components/ui/Fields/Academic/AcademicDepartmentField';
+import AcademicFacultyField from '@/components/ui/Fields/Academic/AcademicFacultyField';
+import AcademicSemesterField from '@/components/ui/Fields/Academic/AcademicSemesterField';
+import GenderField from '@/components/ui/Fields/GenderField';
 import { useState } from 'react';
 
 const StudentInfo = ({
@@ -80,24 +80,9 @@ const StudentInfo = ({
                 />
 
                 {/* gender */}
-                <CustomRadioButton
-                    id="student.gender"
-                    name="student.gender"
-                    label="Gender"
-                    required
-                    options={[
-                        {
-                            name: 'student.gender',
-                            title: 'Male',
-                            value: 'male',
-                        },
-                        {
-                            name: 'student.gender',
-                            title: 'Female',
-                            value: 'female',
-                        },
-                    ]}
-                />
+                <GenderField name="student.gender" label="Gender" required />
+
+                {/* profileImage */}
                 {!studentId ? (
                     <CustomFileUpload id="file" name="file" required label="Image" />
                 ) : null}

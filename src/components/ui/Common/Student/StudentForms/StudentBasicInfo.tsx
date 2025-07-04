@@ -1,7 +1,7 @@
-import CustomTextareaField from '../Forms/CustomTextareaField';
-import CustomInputField from '../Forms/CustomInputField';
-import CustomDatePicker from '../Forms/CustomDatePicker';
-import BloodGroupField from '../ui/Fields/BloodGroupField';
+import CustomDatePicker from '@/components/Forms/CustomDatePicker';
+import CustomInputField from '@/components/Forms/CustomInputField';
+import CustomTextareaField from '@/components/Forms/CustomTextareaField';
+import BloodGroupField from '@/components/ui/Fields/BloodGroupField';
 
 const StudentBasicInfo = () => {
     return (

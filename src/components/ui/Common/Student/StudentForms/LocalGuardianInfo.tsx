@@ -1,5 +1,5 @@
-import CustomInputField from '../Forms/CustomInputField';
-import CustomTextareaField from '../Forms/CustomTextareaField';
+import CustomInputField from '@/components/Forms/CustomInputField';
+import CustomTextareaField from '@/components/Forms/CustomTextareaField';
 
 const LocalGuardianInfo = () => {
     return (

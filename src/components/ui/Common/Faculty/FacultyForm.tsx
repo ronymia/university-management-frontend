@@ -17,9 +17,9 @@ import { facultySchema } from '@/schemas/faculty';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import BloodGroupField from '../Fields/BloodGroupField';
-import GenderField from '../Fields/GenderField';
-import FacultyDesignationField from '../Fields/FacultyDesignationField';
+import GenderField from '../../Fields/GenderField';
+import BloodGroupField from '../../Fields/BloodGroupField';
+import FacultyDesignationField from '../../Fields/FacultyDesignationField';
 
 export default function FacultyForm({ id = '' }: { id: string }) {
     const router = useRouter();
