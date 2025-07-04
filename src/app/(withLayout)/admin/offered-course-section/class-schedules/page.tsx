@@ -7,7 +7,7 @@ import { useOfferedCourseSchedulesQuery } from '@/redux/api/offeredCourseSchedul
 export default function CourseClassSchedulePage() {
     const { data, isLoading } = useOfferedCourseSchedulesQuery({});
 
-    console.log({ courseClassSchedules: data?.offeredCourseSchedules });
+    // console.log({ courseClassSchedules: data?.offeredCourseSchedules });
     const courseClassSchedules = data?.offeredCourseSchedules || [];
 
     if (isLoading) {

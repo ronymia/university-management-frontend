@@ -22,7 +22,6 @@ export default function CustomProfileAvatar({
 }) {
     const { user }: { user: any } = useAppSelector((state) => state.auth);
     const userDetails = getUserInfo() as any;
-    console.log({ user });
     const initials = name
         .split(' ')
         .map((n) => n[0])

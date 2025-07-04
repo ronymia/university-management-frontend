@@ -49,7 +49,7 @@ export default function OfferedCourseSectionPage() {
     };
 
     const handleEdit = (updateData: IOfferedCourseSection) => {
-        console.log({ updateData });
+        // console.log({ updateData });
         router.push(`/admin/offered-course-section/edit/${updateData.id}`);
     };
 

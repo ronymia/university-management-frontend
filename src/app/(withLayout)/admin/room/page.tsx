@@ -41,7 +41,7 @@ export default function RoomPage() {
     };
 
     const handleEdit = (updateData: IRoom) => {
-        console.log({ updateData });
+        // console.log({ updateData });
         setPopupOptions((prev) => ({
             ...prev,
             open: true,

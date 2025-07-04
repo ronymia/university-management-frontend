@@ -1,11 +1,5 @@
 'use client';
 
-import CustomLoading from '@/components/Loader/CustomLoading';
-import StepperForm from '@/components/StepperForm/StepperForm';
-import GuardianInfo from '@/components/StudentForms/GuardianInfo';
-import LocalGuardianInfo from '@/components/StudentForms/LocalGuardianInfo';
-import StudentBasicInfo from '@/components/StudentForms/StudentBasicInfo';
-import StudentInfo from '@/components/StudentForms/StudentInfo';
 import {
     useAddStudentWithFormDataMutation,
     useStudentQuery,
@@ -13,6 +7,12 @@ import {
 } from '@/redux/api/studentApi';
 import { studentMasterSchema, studentStepSchemas } from '@/schemas/student';
 import { useRouter } from 'next/navigation';
+import StudentInfo from './StudentForms/StudentInfo';
+import StudentBasicInfo from './StudentForms/StudentBasicInfo';
+import GuardianInfo from './StudentForms/GuardianInfo';
+import LocalGuardianInfo from './StudentForms/LocalGuardianInfo';
+import CustomLoading from '@/components/Loader/CustomLoading';
+import StepperForm from '@/components/StepperForm/StepperForm';
 
 export default function StudentForm({ id = '' }: { id?: string }) {
     const router = useRouter();
@@ -108,7 +108,6 @@ export default function StudentForm({ id = '' }: { id?: string }) {
         },
     };
 
-    console.log({ defaultValues });
     if (isLoading || isFetching) return <CustomLoading />;
     return (
         <>
