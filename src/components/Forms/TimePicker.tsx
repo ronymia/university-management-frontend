@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from 'react';
 import { FaSync } from 'react-icons/fa';
 import { MdOutlineAccessTime } from 'react-icons/md';
 import { motion } from 'motion/react';
@@ -23,7 +23,6 @@ function convertTo12HourTime(time24: string): ITime {
 
 function TimePicker({
     isLoading,
-    label = 'Pick Time',
     name,
     id,
     value,
@@ -31,20 +30,27 @@ function TimePicker({
     min,
     max,
     position = 'bottom',
+    errorMessage,
+    placeholder,
+    isTimePickerOpen,
+    setIsTimePickerOpen,
 }: {
     isLoading: boolean;
-    label: string;
-    name: string;
-    id: string;
-    value: string;
+    label?: string;
+    name?: string;
+    id?: string;
+    value?: string;
     min?: string;
     max?: string;
-
+    placeholder?: string;
     position: 'top' | 'bottom';
     onChange: (value: string) => void;
+    isTimePickerOpen: boolean;
+    setIsTimePickerOpen: Dispatch<SetStateAction<boolean>>;
+    errorMessage: string;
 }) {
-    const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
     const [displayValue, setDisplayValue] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const [time, setTime] = useState<ITime>({
         hour: 12,
@@ -52,17 +58,25 @@ function TimePicker({
         second: 0,
         meridiem: 'AM',
     });
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (value) {
-            try {
-                setTime(convertTo12HourTime(value));
-            } catch {
-                setError(`Invalid time format provided: ${value}`);
-            }
+        if (!value) return;
+
+        const newTime = convertTo12HourTime(value);
+        const currentTime = convertTo12HourTime(
+            convertTo24HourFormat(`${time.hour}:${time.minute} ${time.meridiem}`),
+        );
+
+        // Only update if the incoming value is different from current state
+        if (
+            newTime.hour !== currentTime.hour ||
+            newTime.minute !== currentTime.minute ||
+            newTime.meridiem !== currentTime.meridiem
+        ) {
+            setTime(newTime);
         }
-    }, [value]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // GET LIMIT
     const getLimit = (key: keyof ITime) => (key === 'hour' ? 12 : 59);
@@ -77,7 +91,7 @@ function TimePicker({
 
             const shouldToggleMeridiem = key === 'hour' && prev.hour === 11 && updatedValue === 12;
 
-            const newTime = {
+            return {
                 ...prev,
                 [key]: updatedValue,
                 meridiem: shouldToggleMeridiem
@@ -86,13 +100,6 @@ function TimePicker({
                         : 'AM'
                     : prev.meridiem,
             };
-
-            // call onChange with the new value
-            onChange?.(
-                convertTo24HourFormat(`${newTime.hour}:${newTime.minute}:00 ${newTime.meridiem}`),
-            );
-
-            return newTime;
         });
     };
 
@@ -105,7 +112,7 @@ function TimePicker({
             // Handle meridiem toggle when hour rolls back from 12 ➜ 11
             const shouldToggleMeridiem = key === 'hour' && prev.hour === 12 && updatedValue === 11;
 
-            const newTime = {
+            return {
                 ...prev,
                 [key]: updatedValue,
                 meridiem: shouldToggleMeridiem
@@ -114,13 +121,6 @@ function TimePicker({
                         : 'AM'
                     : prev.meridiem,
             };
-
-            // call onChange with the new value
-            onChange?.(
-                convertTo24HourFormat(`${newTime.hour}:${newTime.minute}:00 ${newTime.meridiem}`),
-            );
-
-            return newTime;
         });
     };
 
@@ -133,20 +133,40 @@ function TimePicker({
     };
 
     const renderBottomMessage = () => {
-        if (!min || !max) return null;
-        const from = convertTo12HourTime(min);
-        const to = convertTo12HourTime(max);
-        return (
-            <div className="text-xs font-medium mt-2">
-                Allowed from {from.hour}:{String(from.minute).padStart(2, '0')} {from.meridiem} to{' '}
-                {to.hour}:{String(to.minute).padStart(2, '0')} {to.meridiem}
-            </div>
-        );
+        // if (!min || !max) return null;
+        const from = min && (convertTo12HourTime(min) as ITime);
+        const to = max && convertTo12HourTime(max);
+
+        // BETWEEN MIN AND MAX
+        if (from && to) {
+            return (
+                <div className="text-xs font-medium mt-2">
+                    Allowed from {from?.hour}:{String(from?.minute).padStart(2, '0')}{' '}
+                    {from?.meridiem} to {to?.hour}:{String(to?.minute).padStart(2, '0')}{' '}
+                    {to?.meridiem}
+                </div>
+            );
+        } else if (from) {
+            return (
+                <div className="text-xs font-medium mt-2">
+                    Allowed from {from?.hour}:{String(from?.minute).padStart(2, '0')}{' '}
+                    {from?.meridiem}
+                </div>
+            );
+        } else if (to) {
+            return (
+                <div className="text-xs font-medium mt-2">
+                    Allowed till {to?.hour}:{String(to?.minute).padStart(2, '0')} {to?.meridiem}
+                </div>
+            );
+        }
+
+        return <div className="text-xs font-medium mt-2">Out of allowed range</div>;
     };
 
     // UPDATE VALUE
     useEffect(() => {
-        const formatted = convertTo24HourFormat(`${time.hour}:${time.minute}:00 ${time.meridiem}`);
+        const formatted = convertTo24HourFormat(`${time.hour}:${time.minute} ${time.meridiem}`);
 
         if ((min && formatted < min) || (max && formatted > max)) {
             setError(
@@ -155,25 +175,45 @@ function TimePicker({
                 )}`,
             );
             setDisplayValue('');
-            onChange('');
+            onChange?.('');
         } else {
             const display = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')} ${time.meridiem}`;
             setError(null);
             setDisplayValue(display);
-            onChange(formatted);
+            onChange?.(formatted);
         }
-    }, [time.hour, time.minute, time.meridiem, min, max, onChange]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [time.hour, time.minute, time.meridiem, min, max]);
+
+    useEffect(() => {
+        const formatted = convertTo24HourFormat(`${time.hour}:${time.minute} ${time.meridiem}`);
+
+        if ((min && formatted < min) || (max && formatted > max)) {
+            setError(
+                `Time must be between ${convertTo12HourFormat(min as string)} and ${convertTo12HourFormat(
+                    max as string,
+                )}`,
+            );
+            setDisplayValue('');
+            onChange?.('');
+        } else {
+            const display = `${String(time.hour).padStart(2, '0')}:${String(time.minute).padStart(2, '0')} ${time.meridiem}`;
+            setError(null);
+            setDisplayValue(display);
+            onChange?.(formatted); // Safe here
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [time.hour, time.minute, time.meridiem, min, max]);
 
     //  RENDER
     return (
-        <div className={`w-full flex flex-col justify-start gap-y-1.5 relative`}>
-            {/* LABEL */}
-            {label ? <label htmlFor={name}>{label}</label> : null}
-
+        <Fragment>
             {/* INPUT */}
             <button
+                type="button"
+                // ref={timeRef as RefObject<HTMLButtonElement>}
                 // onClick={() => setShowPicker(true)}
-                className="flex items-center gap-2 text-black shadow-sm relative"
+                className="flex items-center gap-2 relative h-11"
             >
                 <MdOutlineAccessTime size={24} className={`absolute left-2 text-gray-400`} />
                 <input
@@ -183,8 +223,8 @@ function TimePicker({
                     readOnly
                     onClick={() => setIsTimePickerOpen((prev) => !prev)}
                     value={displayValue}
-                    placeholder="Start time"
-                    className="w-full h-12 px-10 rounded-md border border-[#d9d9d9] placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    placeholder={placeholder}
+                    className="w-full h-full px-10 rounded-md border border-[#d9d9d9] placeholder:text-gray-400 focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
                 />
 
                 {/* Right-side Icon */}
@@ -213,7 +253,9 @@ function TimePicker({
                 </div>
             </button>
             {/* error */}
-            {error ? <small className={`text-error font-medium`}>{error}</small> : null}
+            {error ? (
+                <small className={`text-error font-medium`}>{error || errorMessage}</small>
+            ) : null}
 
             {/* TIME PICKER */}
             {isTimePickerOpen && (
@@ -232,6 +274,7 @@ function TimePicker({
                         {/* HOURS */}
                         <div className="flex flex-col justify-center gap-1.5">
                             <button
+                                type="button"
                                 // data-auto={`hour-plus-${dataAuto}`}
                                 onClick={() => increase('hour')}
                                 className={`w-16 px-3 py-2 border bg-slate-100 text-slate-700 rounded-md flex justify-center items-center hover:bg-primary hover:text-base-300 duration-200 cursor-pointer`}
@@ -245,6 +288,7 @@ function TimePicker({
                                 className={`w-16 px-3 py-1 border border-[#d9d9d9] text-center rounded-md bg-transparent outline-none`}
                             />
                             <button
+                                type="button"
                                 // data-auto={`minute-plus-${dataAuto}`}
                                 onClick={() => decrease('hour')}
                                 className={`w-16 px-3 py-2 bg-slate-100 text-slate-700 border rounded-md flex justify-center items-center hover:bg-primary hover:text-base-300 duration-200 cursor-pointer`}
@@ -259,6 +303,7 @@ function TimePicker({
                             {/* {[FiPlus]} */}
 
                             <button
+                                type="button"
                                 // data-auto={`hour-plus-${dataAuto}`}
                                 onClick={() => increase('minute')}
                                 className={`w-16 px-3 py-2 border bg-slate-100 text-slate-700 rounded-md flex justify-center items-center hover:bg-primary hover:text-base-300 duration-200 cursor-pointer`}
@@ -272,6 +317,7 @@ function TimePicker({
                                 className={`w-16 px-3 py-1 border border-[#d9d9d9] text-center rounded-md bg-transparent outline-none cursor-pointer`}
                             />
                             <button
+                                type="button"
                                 // data-auto={`minute-plus-${dataAuto}`}
                                 onClick={() => decrease('minute')}
                                 className={`w-16 px-3 py-2 bg-slate-100 text-slate-700 border rounded-md flex justify-center items-center hover:bg-primary hover:text-base-300 duration-200 cursor-pointer`}
@@ -306,7 +352,7 @@ function TimePicker({
                     {renderBottomMessage() || null}
                 </div>
             )}
-        </div>
+        </Fragment>
     );
 }
 

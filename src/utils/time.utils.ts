@@ -40,5 +40,5 @@ export function convertTo24HourFormat(time: string) {
     const formattedHours = convertedHours.toString().padStart(2, '0');
     const formattedMinutes = (minutes || '00').padStart(2, '0');
 
-    return `${formattedHours}:${formattedMinutes}:00`;
+    return `${formattedHours}:${formattedMinutes}`;
 }

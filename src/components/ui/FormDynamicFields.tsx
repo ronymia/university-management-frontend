@@ -3,12 +3,12 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { daysOptions } from '@/constants/global';
 import CustomSelect from '../Forms/CustomSelect';
-import CustomInputField from '../Forms/CustomInputField';
 import BuildingField from './Fields/BuildingField';
 import RoomField from './Fields/RoomField';
 import CustomButton from '../Button/CustomButton';
 import CoreFacultyField from './Fields/CoreFacultyField';
 import { useState } from 'react';
+import CustomTimePicker from '../Forms/CustomTimePicker';
 
 const FormDynamicFields = ({ academicDepartmentId }: { academicDepartmentId?: string }) => {
     const { control } = useFormContext();
@@ -43,23 +43,19 @@ const FormDynamicFields = ({ academicDepartmentId }: { academicDepartmentId?: st
                                     required
                                 />
 
-                                <CustomInputField
-                                    id={`classSchedules.${index}.startTime`}
+                                {/* startTime */}
+                                <CustomTimePicker
                                     name={`classSchedules.${index}.startTime`}
-                                    type="text"
-                                    label="Start time"
-                                    placeholder="Start time"
-                                    required
+                                    label={`Start Time`}
+                                    maxTimeName={`classSchedules.${index}.endTime`}
                                 />
                                 {/* endTime */}
-                                <CustomInputField
-                                    id={`classSchedules.${index}.endTime`}
+                                <CustomTimePicker
                                     name={`classSchedules.${index}.endTime`}
-                                    type="text"
-                                    label="End time"
-                                    placeholder="End time"
-                                    required
+                                    minTimeName={`classSchedules.${index}.startTime`}
+                                    label={`End Time`}
                                 />
+
                                 {/* building */}
                                 <BuildingField
                                     name={`building`}
@@ -73,6 +69,8 @@ const FormDynamicFields = ({ academicDepartmentId }: { academicDepartmentId?: st
                                     name={`classSchedules.${index}.roomId`}
                                     label={'Room'}
                                     buildingId={buildingId}
+                                    required
+                                    disabled
                                 />
                                 {/* facultyId */}
                                 <CoreFacultyField

@@ -237,11 +237,37 @@ export default function DatePicker({
         // This gives how many empty boxes to insert at the beginning
         const emptyDivs = (startOfMonth.day() - startOfWeekDay + 7) % 7;
 
+        //
+        const previousMonth = moment(startOfMonth).subtract(1, 'month');
+
+        const daysInPrevMonth = previousMonth.daysInMonth();
+
+        const prevMonthDates = Array.from({ length: emptyDivs }, (_, i) => {
+            return moment(previousMonth).date(daysInPrevMonth - emptyDivs + i + 1);
+        });
+
+        const daysInMonthBoxes = currentMonth.daysInMonth();
+        const emptyStartBoxes = (startOfMonth.day() - startOfWeekDay + 7) % 7;
+        const totalCells = 42;
+        const totalDisplayed = emptyStartBoxes + daysInMonthBoxes;
+        const emptyEndBoxes = totalCells - totalDisplayed;
+
+        const nextMonth = currentMonth.clone().add(1, 'month');
+
+        const nextMonthDates = Array.from({ length: emptyEndBoxes }, (_, i) => {
+            return moment(nextMonth).date(i + 1);
+        });
+
         return (
             <>
                 {/* Render empty divs for alignment */}
-                {Array.from({ length: emptyDivs }).map((_, index) => (
-                    <div key={`empty-${index}`} className="w-10 h-10 bg-transparent"></div>
+                {prevMonthDates.map((date, index) => (
+                    <div
+                        key={`prev-${index}`}
+                        className="w-10 h-10 text-gray-400 flex items-center justify-center cursor-not-allowed"
+                    >
+                        {date.date()}
+                    </div>
                 ))}
 
                 {/* Render days of the month */}
@@ -288,28 +314,35 @@ export default function DatePicker({
                     // }
                     else {
                         buttonClass +=
-                            ' bg-gray-500 bg-opacity-40 border-gray-500 border-opacity-40 hover:border-primary hover:bg-primary-content ';
-                    }
-                    if (isDisabled && (isDisabledBefore || isDisabledAfter)) {
-                        buttonClass += ' disabled-before-after';
+                            ' bg-primary/10 border-gray-500 hover:border-primary hover:bg-primary hover:text-base-300 font-medium drop-shadow disabled:cursor-not-allowed';
                     }
 
                     return (
                         <button
                             type="button"
                             data-auto={`days`}
-                            title={`${isOffDay ? 'College Off Day' : ''}`}
                             key={day.format('x')}
                             onClick={() => handleDateClick(day)}
                             className={` ${buttonClass} ${
                                 small ? 'h-7 w-7' : 'md:h-10 md:w-10 h-7 w-7'
-                            }`}
+                            } `}
                             disabled={isDisabled || !!isDisabledBefore || !!isDisabledAfter}
                         >
                             {day.format('D')}
                         </button>
                     );
                 })}
+
+                {/*  */}
+                {/* Next month dates */}
+                {nextMonthDates.map((date, index) => (
+                    <div
+                        key={`next-${index}`}
+                        className="w-10 h-10 text-gray-400 flex items-center justify-center cursor-not-allowed"
+                    >
+                        {date.date()}
+                    </div>
+                ))}
             </>
         );
     };
@@ -367,12 +400,10 @@ export default function DatePicker({
                 <label
                     htmlFor={id}
                     data-auto={`${dataAuto}-date_picker_label`}
-                    className="label-text text-md font-bold"
+                    className="text-sm font-medium"
                 >
                     {label}{' '}
-                    {!disabled && required && (
-                        <span className="text-error font-bold text-md">*</span>
-                    )}
+                    {!disabled && required && <span className="text-error font-bold">*</span>}
                 </label>
             )}
 
@@ -456,37 +487,44 @@ export default function DatePicker({
             {calendarVisible && (
                 <div
                     data-auto={`date_picker`}
-                    className={`w-[350px] absolute bg-base-300 shadow-xl border p-5 rounded-md z-[1000]
+                    className={`w-[350px] absolute bg-base-300 shadow-xl border p-5 rounded-md z-50
                     ${right ? 'right-0' : 'left-0'}
                     ${top ? 'top-auto bottom-full mb-2' : 'top-full mt-2'}
                     ${small ? 'md:w-[250px] px-3 py-3' : 'md:w-[350px] px-3 md:px-5 md:py-5'}
+                    ${calendarVisible ? 'border-primary/20' : ''}
   `}
                 >
                     {/* DATE SELECT */}
                     {renderComponent === 'day' && (
-                        <section data-auto={`date_component`}>
+                        <section data-auto={`date_component`} className={`relative`}>
                             {/* MONTH AND YEAR NAME */}
                             <header className="flex justify-between">
-                                {/* PREVIOUS BUTTON */}
-                                <button
-                                    type="button"
-                                    data-auto={`prev_month`}
-                                    onClick={goToPreviousMonth}
-                                >
-                                    {' '}
-                                    <FaAngleLeft size={24} />{' '}
-                                </button>
                                 {/* SHOW MONTH AND YEAR */}
                                 {renderMonthAndYear()}
-                                {/* NEXT BUTTON */}
-                                <button
-                                    type="button"
-                                    data-auto={`next_month`}
-                                    onClick={goToNextMonth}
-                                >
-                                    {' '}
-                                    <FaAngleRight size={24} />
-                                </button>
+
+                                {/* PREVIOUS BUTTON */}
+                                <div className="flex flex-row gap-2 absolute right-0 top-0">
+                                    <button
+                                        type="button"
+                                        title="Previous Month"
+                                        data-auto={`prev_month`}
+                                        onClick={goToPreviousMonth}
+                                    >
+                                        {' '}
+                                        <FaAngleLeft size={24} />{' '}
+                                    </button>
+
+                                    {/* NEXT BUTTON */}
+                                    <button
+                                        type="button"
+                                        title="Next Month"
+                                        data-auto={`next_month`}
+                                        onClick={goToNextMonth}
+                                    >
+                                        {' '}
+                                        <FaAngleRight size={24} />
+                                    </button>
+                                </div>
                             </header>
 
                             {/* RENDER WEEKS AND DAYS */}
