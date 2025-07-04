@@ -8,7 +8,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 interface ICustomInputFieldProps {
     dataTestId?: string;
     name: string;
-    type?: 'text' | 'email' | 'password';
+    type?: 'text' | 'email' | 'password' | 'number';
     size?: string;
     id?: string;
     placeholder: string;

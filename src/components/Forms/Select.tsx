@@ -59,6 +59,7 @@ export default function Select({
             // console.log("first", value);
             setSelectedOptions(Array.isArray(value) ? value : [value]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     // console.log({ selectedOptions });
 
