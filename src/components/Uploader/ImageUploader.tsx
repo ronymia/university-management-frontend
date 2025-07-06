@@ -4,17 +4,18 @@ import { useState } from 'react';
 interface IImageUploadProps {
     type?: 'circular' | 'square';
     imageUrl: string;
-    handleGetImage: (payload: File) => void;
+    uploadHandler: (payload: File) => void;
     isLoading: boolean;
-    size?: string;
-    name?: string;
+    size?: number;
+    fallBackText?: string;
 }
 
 export default function ImageUploader({
     type = 'circular',
     isLoading = false,
-    handleGetImage,
-    size = '32',
+    uploadHandler,
+    size = 128,
+    // fallBackText = 'Upload Image',
 }: IImageUploadProps) {
     const [image, setImage] = useState<string | null>(null);
 
@@ -27,7 +28,7 @@ export default function ImageUploader({
             setImage(URL.createObjectURL(file));
 
             // 2. Pass it up
-            handleGetImage(file);
+            uploadHandler(file);
         }
     };
 
@@ -36,7 +37,7 @@ export default function ImageUploader({
   ******************************************/
 
     return (
-        <div className={`flex gap-4 w-${size} h-${size}`}>
+        <div className={`rounded-full`}>
             {/* Square Upload Box */}
             {type === 'square' && (
                 <label
@@ -63,13 +64,14 @@ export default function ImageUploader({
             {/* Circular Upload Box */}
             {type === 'circular' && (
                 <label
-                    className={`flex flex-col items-center justify-center w-${size} h-${size} cursor-pointer border-1 ${
+                    htmlFor="file"
+                    className={`w-[128px] h-[128px] rounded-full flex flex-col items-center justify-center cursor-pointer border-1 ${
                         image ? 'border-solid' : 'border-dotted'
-                    } border-primary rounded-full hover:border-primary transition-colors bg-gray-500`}
+                    } border-primary rounded-full hover:border-primary transition-colors bg-base-300`}
                 >
                     {isLoading ? (
                         'Loading'
-                    ) : (
+                    ) : image ? (
                         <Image
                             src={image ?? ''}
                             alt="Uploaded"
@@ -77,8 +79,14 @@ export default function ImageUploader({
                             height={128}
                             width={128}
                         />
+                    ) : (
+                        <>
+                            <span className="text-primary text-2xl">+</span>
+                            <span className="text-primary">Upload</span>
+                        </>
                     )}
                     <input
+                        id="file"
                         type="file"
                         accept="image/png, image/jpeg, image/jpg"
                         className="hidden"

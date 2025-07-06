@@ -8,7 +8,7 @@ import CustomTable, { IAction, IColumn } from '@/components/Table/CustomTable';
 import { useDebounced } from '@/hooks/useDebounced';
 import { useDeleteFacultyMutation, useFacultiesQuery } from '@/redux/api/facultyApi';
 import { getUserInfo } from '@/services/auth.service';
-import { IFaculty } from '@/types';
+import { ICoreFaculty } from '@/types';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -40,9 +40,10 @@ export default function FacultyPage() {
 
     const faculties = data?.faculties;
     const meta = data?.meta;
-    // console.log(faculties);
-    const deleteHandler = async (id: IFaculty) => {
-        await deleteFaculty(id);
+
+    // DELETE
+    const deleteHandler = async (id: ICoreFaculty) => {
+        await deleteFaculty(id.facultyId);
     };
 
     // ALL ACTION BUTTONS
@@ -50,7 +51,7 @@ export default function FacultyPage() {
         {
             name: 'edit',
             type: 'link',
-            href: (row) => `manage-faculty/edit/${row?.id}`,
+            href: (row: ICoreFaculty) => `manage-faculty/edit/${row?.facultyId}`,
             handler: () => {},
             permissions: [],
             disableOn: [],
@@ -69,7 +70,7 @@ export default function FacultyPage() {
         // NAME
         {
             header: 'Id',
-            accessorKey: 'id',
+            accessorKey: 'facultyId',
             show: true,
             minWidth: 10,
         },
@@ -163,7 +164,7 @@ export default function FacultyPage() {
                 rows={
                     faculties?.map((row) => ({
                         ...row,
-                        fullName: `${row?.name?.firstName} ${row?.name?.middleName} ${row?.name?.lastName}`,
+                        fullName: `${row?.firstName} ${row?.middleName} ${row?.lastName}`,
                         customAcademicDepartment: row?.academicDepartment?.title,
                         customAcademicFaculty: row?.academicFaculty?.title,
                         customCreatedAt: row?.createdAt

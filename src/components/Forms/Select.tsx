@@ -55,12 +55,11 @@ export default function Select({
 
     // SET DEFAULT value
     useEffect(() => {
-        if (value && !isLoading) {
+        if (!isLoading && value) {
             // console.log("first", value);
             setSelectedOptions(Array.isArray(value) ? value : [value]);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [value, isLoading]);
     // console.log({ selectedOptions });
 
     // HANDLE OPTION SELECTION

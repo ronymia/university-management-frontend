@@ -1,4 +1,4 @@
-import { ICoreStudent, IFaculty, IFacultyCourse, IMeta } from '@/types';
+import { ICoreFaculty, ICoreStudent, IFaculty, IFacultyCourse, IMeta } from '@/types';
 import { baseApi } from './baseApi';
 import { tagTypes } from '../tag-types';
 
@@ -15,7 +15,7 @@ export const facultyApi = baseApi.injectEndpoints({
                     params: arg,
                 };
             },
-            transformResponse: (response: IFaculty[], meta: IMeta) => {
+            transformResponse: (response: ICoreFaculty[], meta: IMeta) => {
                 return {
                     faculties: response,
                     meta,

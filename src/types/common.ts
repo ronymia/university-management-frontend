@@ -307,7 +307,7 @@ export interface ICoreFaculty {
     deletedAt?: null;
     academicDepartmentId: string;
     academicFacultyId: string;
-    academicFaculty: IAcademicCoreFaculty;
+    academicFaculty: IAcademicFaculty;
     academicDepartment: IAcademicCoreDepartment;
 }
 

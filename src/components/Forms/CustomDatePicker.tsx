@@ -39,7 +39,7 @@ export default function CustomDatePicker({
                 )}
             />
             {/* ERROR MESSAGE */}
-            {/* <small className={`text-error font-medium`}>{errorMessage}</small> */}
+            <small className={`text-error font-medium`}>{errorMessage}</small>
         </div>
     );
 }

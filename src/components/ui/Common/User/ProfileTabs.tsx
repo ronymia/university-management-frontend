@@ -9,34 +9,49 @@ import { TbCalendarUser } from 'react-icons/tb';
 import { GrSchedulePlay } from 'react-icons/gr';
 import { HiOutlineAcademicCap } from 'react-icons/hi2';
 import { useRouter, useSearchParams } from 'next/navigation';
+import useUserProfile from '@/hooks/useUserProfile';
+import { userTab } from '@/types/user.view';
+import { PROFILE_TABS } from '@/enums/user.view';
+import { profileTabs } from '@/constants/userView';
 
-export default function ProfileTabs({ setActiveTab }: any) {
-    const searchParams = useSearchParams();
+export default function ProfileTabs() {
+    // PROFILE CONTEXT
+    const { setActiveTab } = useUserProfile();
     const router = useRouter();
-    const currentTab = searchParams.get('tabs') || 'profile';
+    // SEARCH PARAMS
+    const searchParams = useSearchParams();
 
+    // GET CURRENT TAB
+    const currentTabParams = searchParams.get('tabs');
+
+    // CHECK CURRENT TAB PATH
+    const currentTab = profileTabs.includes(currentTabParams as userTab)
+        ? currentTabParams
+        : PROFILE_TABS.PROFILE;
+
+    // TABS
     const tabs = [
         {
             label: 'Profile',
-            value: 'profile',
+            value: PROFILE_TABS.PROFILE,
             show: true,
             Icon: CgProfile,
         },
         {
             label: 'Class Schedule',
-            value: 'class-schedule',
+            value: PROFILE_TABS.CLASS_SCHEDULE,
             show: true,
             Icon: GrSchedulePlay,
         },
         {
             label: 'Guardian Information',
-            value: 'guardian-information',
+            value: PROFILE_TABS.GUARDIAN_INFORMATION,
             show: true,
             Icon: HiOutlineDocumentText,
         },
         {
             label: 'Academic Report',
-            value: 'academic-report',
+            value: PROFILE_TABS.ACADEMIC_REPORT,
             show: true,
             Icon: HiOutlineAcademicCap,
         },
@@ -48,13 +63,13 @@ export default function ProfileTabs({ setActiveTab }: any) {
         },
         {
             label: 'Academic Result',
-            value: 'academic-result',
+            value: PROFILE_TABS.ACADEMIC_RESULT,
             show: true,
             Icon: HiOutlineAcademicCap,
         },
         {
-            label: 'Payments Details',
-            value: 'payment-details',
+            label: 'Payment Details',
+            value: PROFILE_TABS.PAYMENT_DETAILS,
             show: true,
             Icon: TbCalendarUser,
         },
@@ -149,14 +164,13 @@ export default function ProfileTabs({ setActiveTab }: any) {
                         className={`${
                             currentTab === singleTab?.value
                                 ? 'bg-gradient-to-tl to-primary shadow-md from-primary/70 text-base-300'
-                                : ''
+                                : 'hover:bg-primary/10'
                         } font-semibold rounded-xl border border-[#eee] text-sm px-3 cursor-pointer text-center h-12 gap-2 flex items-center justify-center shrink-0`}
                         onClick={() => {
                             const params = new URLSearchParams(searchParams.toString());
-                            console.log({ params });
                             params.set('tabs', singleTab?.value);
                             router.push(`?${params.toString()}`);
-                            setActiveTab(singleTab?.value);
+                            setActiveTab(singleTab.value as userTab);
                         }}
                     >
                         <singleTab.Icon className="text-xl drop-shadow" />{' '}
