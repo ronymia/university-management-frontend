@@ -49,6 +49,14 @@ export default function FacultyPage() {
     // ALL ACTION BUTTONS
     const [actions] = useState<IAction[]>([
         {
+            name: 'view',
+            type: 'link',
+            href: (row: ICoreFaculty) => `manage-faculty/view/${row?.facultyId}`,
+            handler: () => {},
+            permissions: [],
+            disableOn: [],
+        },
+        {
             name: 'edit',
             type: 'link',
             href: (row: ICoreFaculty) => `manage-faculty/edit/${row?.facultyId}`,

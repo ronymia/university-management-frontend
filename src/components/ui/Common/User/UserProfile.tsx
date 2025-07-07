@@ -1,3 +1,5 @@
+'use client';
+
 import CustomLoading from '@/components/Loader/CustomLoading';
 import { useSingleUserQuery } from '@/redux/api/userApi';
 import ProfileHero from './ProfileHero';
@@ -13,6 +15,7 @@ import CourseManagement from './Tabs/CourseManagement/CourseManagement';
 import AcademicReport from './Tabs/AcademicReport/AcademicReport';
 import AcademicResult from './Tabs/AcademicResult/AcademicResult';
 import PaymentDetails from './Tabs/PaymentDetails/PaymentDetails';
+import { USER_ROLE } from '@/enums/global';
 
 interface IUserViewProps {
     userId: string;
@@ -22,6 +25,7 @@ interface IProfileContext {
     userInfo: IStudent;
     activeTab: userTab;
     setActiveTab: Dispatch<SetStateAction<userTab>>;
+    userRole: USER_ROLE.SUPER_ADMIN | USER_ROLE.ADMIN | USER_ROLE.FACULTY | USER_ROLE.STUDENT;
 }
 
 export const UserProfileContext = createContext<IProfileContext | null>(null);
@@ -29,13 +33,14 @@ export const UserProfileContext = createContext<IProfileContext | null>(null);
 export default function UserProfile({ userId }: IUserViewProps) {
     const [activeTab, setActiveTab] = useState<userTab>(PROFILE_TABS.PROFILE);
     const { data, isLoading } = useSingleUserQuery(userId);
-    const userInfo = data?.student;
+    const userInfo = data?.student || data?.faculty || data?.admin;
 
     // CONTEXT VALUES
     const profileContextValues = {
         userInfo,
         activeTab,
         setActiveTab,
+        userRole: data?.role,
     };
 
     // LOADING STATE

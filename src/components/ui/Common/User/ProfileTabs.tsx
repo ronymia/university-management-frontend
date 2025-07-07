@@ -13,10 +13,14 @@ import useUserProfile from '@/hooks/useUserProfile';
 import { userTab } from '@/types/user.view';
 import { PROFILE_TABS } from '@/enums/user.view';
 import { profileTabs } from '@/constants/userView';
+import { getUserInfo } from '@/services/auth.service';
+import { USER_ROLE } from '@/enums/global';
 
 export default function ProfileTabs() {
+    const { role } = getUserInfo() as any;
     // PROFILE CONTEXT
-    const { setActiveTab } = useUserProfile();
+    const { setActiveTab, userRole } = useUserProfile();
+    // console.log({ userRole });
     const router = useRouter();
     // SEARCH PARAMS
     const searchParams = useSearchParams();
@@ -46,31 +50,31 @@ export default function ProfileTabs() {
         {
             label: 'Guardian Information',
             value: PROFILE_TABS.GUARDIAN_INFORMATION,
-            show: true,
+            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
             Icon: HiOutlineDocumentText,
         },
         {
             label: 'Course Management',
-            value: 'course-management',
-            show: true,
+            value: PROFILE_TABS.COURSE_MANAGEMENT,
+            show: role === USER_ROLE.FACULTY || role === USER_ROLE.ADMIN,
             Icon: AiOutlineProject,
         },
         {
             label: 'Academic Report',
             value: PROFILE_TABS.ACADEMIC_REPORT,
-            show: true,
+            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
             Icon: HiOutlineAcademicCap,
         },
         {
             label: 'Academic Result',
             value: PROFILE_TABS.ACADEMIC_RESULT,
-            show: true,
+            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
             Icon: HiOutlineAcademicCap,
         },
         {
             label: 'Payment Details',
             value: PROFILE_TABS.PAYMENT_DETAILS,
-            show: true,
+            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
             Icon: TbCalendarUser,
         },
     ];
@@ -157,7 +161,7 @@ export default function ProfileTabs() {
             </button>
 
             {tabs
-                ?.filter((t) => t?.show)
+                ?.filter((tab) => tab?.show)
                 ?.map((singleTab) => (
                     <button
                         key={singleTab.value}

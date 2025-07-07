@@ -2,9 +2,9 @@ import Image from 'next/image';
 import { CustomDropdown } from '../Dropdown/CustomDropdown';
 import { getUserInfo } from '@/services/auth.service';
 import { useAppSelector } from '@/redux/hooks';
-import { USER_ROLE } from '@/constants/role';
 import { getFullName } from '@/utils/getFullName';
 import { motion } from 'motion/react';
+import { USER_ROLE } from '@/enums/global';
 
 export default function CustomProfileAvatar({
     name = 'User',

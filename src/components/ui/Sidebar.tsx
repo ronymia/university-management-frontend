@@ -5,13 +5,13 @@ import React, { JSX, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaRegUser, FaTableCells } from 'react-icons/fa6';
 import { AiOutlineAppstore } from 'react-icons/ai';
-import { USER_ROLE } from '@/constants/role';
 import SidebarGenerator from '../SidebarGenerator';
 import UserAvatar from '../Avatar/CustomUserAvatar';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { collapseSidebar, expandSidebar, toggleSidebar } from '@/redux/slice/globalState';
 import useDeviceWith from '@/hooks/useDeviceWith';
 import { MdOutlineMenuOpen } from 'react-icons/md';
+import { USER_ROLE } from '@/enums/global';
 
 export interface IMenuItems {
     icon: React.ElementType;
