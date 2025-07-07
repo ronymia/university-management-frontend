@@ -47,6 +47,7 @@ export default function Profile() {
             <section
                 className={`rounded-md p-3 border border-[#eee] shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5`}
             >
+                {/*  */}
                 <div
                     className={`col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-row justify-between items-center`}
                 >
@@ -64,13 +65,14 @@ export default function Profile() {
                                 title: 'Update Basic Information',
                             }));
                         }}
-                        className={`flex gap-2 items-center justify-center text-base-300 bg-primary  border-2 border-primary rounded-md font-semibold text-sm w-fit h-fit px-3 py-1.5 cursor-pointer bg-gradient-to-tl to-primary shadow-md from-primary/70 `}
+                        className={`flex gap-2 items-center justify-center text-base-300 bg-primary  border-2 border-primary rounded-md font-semibold text-sm w-fit h-fit px-3 py-1.5 cursor-pointer bg-gradient-to-tl to-primary shadow-md from-primary/70 text-xs md:text-base`}
                     >
-                        <FiEdit size={20} />
+                        <FiEdit className={`text-sm md:text-xl`} />
                         {/* {label} */}
                         Update
                     </button>
                 </div>
+
                 {/* NAME */}
                 <ViewField
                     label={'Name'}

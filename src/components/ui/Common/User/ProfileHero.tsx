@@ -28,9 +28,9 @@ export default function ProfileHero() {
         //     });
     };
     return (
-        <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap gap-4 w-full max-w-full">
+        <div className="flex flex-col md:flex-row w-full">
             {/* Left Profile Card */}
-            <div className="flex flex-col md:flex-row  items-center bg-sky-100 p-4 rounded-xl w-full md:w-full lg:w-1/3 gap-5">
+            <div className="flex flex-col md:flex-row items-center bg-sky-100 p-4 rounded-xl gap-5 max-w-lg">
                 {/* IMAGE */}
                 <ImageUploader
                     fallBackText={`${userInfo?.firstName} ${userInfo?.firstName}`}

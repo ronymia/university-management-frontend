@@ -15,7 +15,8 @@ type IForm_NAME =
     | 'semester_registration'
     | 'offered_course'
     | 'department'
-    | 'student_basic_info';
+    | 'student_basic_info'
+    | 'guardian_info';
 
 export interface IPopupOptions {
     open: boolean;

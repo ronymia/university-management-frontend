@@ -7,6 +7,12 @@ import Profile from './Tabs/Profile/Profile';
 import { userTab } from '@/types/user.view';
 import { IStudent } from '@/types';
 import { PROFILE_TABS } from '@/enums/user.view';
+import ClassSchedule from './Tabs/ClassSchedule/ClassSchedule';
+import GuardianInformation from './Tabs/GuardianInformation/GuardianInformation';
+import CourseManagement from './Tabs/CourseManagement/CourseManagement';
+import AcademicReport from './Tabs/AcademicReport/AcademicReport';
+import AcademicResult from './Tabs/AcademicResult/AcademicResult';
+import PaymentDetails from './Tabs/PaymentDetails/PaymentDetails';
 
 interface IUserViewProps {
     userId: string;
@@ -54,8 +60,13 @@ export default function UserProfile({ userId }: IUserViewProps) {
                 </section>
 
                 {/* TAB CONTENT */}
-
                 {activeTab === PROFILE_TABS.PROFILE && <Profile />}
+                {activeTab === PROFILE_TABS.CLASS_SCHEDULE && <ClassSchedule />}
+                {activeTab === PROFILE_TABS.GUARDIAN_INFORMATION && <GuardianInformation />}
+                {activeTab === PROFILE_TABS.COURSE_MANAGEMENT && <CourseManagement />}
+                {activeTab === PROFILE_TABS.ACADEMIC_REPORT && <AcademicReport />}
+                {activeTab === PROFILE_TABS.ACADEMIC_RESULT && <AcademicResult />}
+                {activeTab === PROFILE_TABS.PAYMENT_DETAILS && <PaymentDetails />}
             </div>
         </UserProfileContext.Provider>
     );

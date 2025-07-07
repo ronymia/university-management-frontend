@@ -50,16 +50,16 @@ export default function ProfileTabs() {
             Icon: HiOutlineDocumentText,
         },
         {
-            label: 'Academic Report',
-            value: PROFILE_TABS.ACADEMIC_REPORT,
-            show: true,
-            Icon: HiOutlineAcademicCap,
-        },
-        {
             label: 'Course Management',
             value: 'course-management',
             show: true,
             Icon: AiOutlineProject,
+        },
+        {
+            label: 'Academic Report',
+            value: PROFILE_TABS.ACADEMIC_REPORT,
+            show: true,
+            Icon: HiOutlineAcademicCap,
         },
         {
             label: 'Academic Result',
