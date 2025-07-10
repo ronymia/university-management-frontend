@@ -11,7 +11,7 @@ interface ICustomInputFieldProps {
     type?: 'text' | 'email' | 'password' | 'number';
     size?: string;
     id?: string;
-    placeholder: string;
+    placeholder?: string;
     required: boolean;
     label?: string;
     disabled?: boolean;
@@ -136,10 +136,10 @@ export default function CustomInputField({
                             <input
                                 {...field}
                                 disabled={disabled}
-                                id={id}
+                                id={id ? id : name}
                                 type={isVisible ? 'text' : 'password'}
                                 value={field.value ?? ''}
-                                placeholder={`${placeholder ?? ''}`}
+                                placeholder={`${placeholder ? placeholder : label}`}
                                 aria-invalid={!!errorMessage}
                                 aria-required={required}
                                 autoComplete="new-password"
@@ -153,11 +153,11 @@ export default function CustomInputField({
                         <input
                             {...field}
                             disabled={disabled}
-                            id={id}
+                            id={id ? id : name}
                             value={field.value ?? ''}
                             type={type}
                             name={name}
-                            placeholder={`${placeholder ?? ''}`}
+                            placeholder={`${placeholder ? placeholder : label}`}
                             aria-invalid={!!errorMessage}
                             aria-required={required}
                             className={`h-11 bg-base-300 w-full p-2 focus:ring-2 focus:ring-primary rounded-md disabled:px-1 disabled:py-0 disabled:border-2 disabled:border-solid disabled:text-gray-700 ${

@@ -5,13 +5,17 @@ export default function FormActionButton({
     isLoading,
     disabled,
     cancelHandler,
+    className,
 }: {
     isLoading: boolean;
     disabled?: boolean;
+    className?: string;
     cancelHandler?: () => void;
 }) {
     return (
-        <div className="flex flex-col md:flex-row justify-end gap-3 mt-auto w-full">
+        <div
+            className={`flex flex-col md:flex-row justify-end gap-3 mt-auto w-full ${className ?? ''}`}
+        >
             {cancelHandler ? (
                 <button
                     type="button"

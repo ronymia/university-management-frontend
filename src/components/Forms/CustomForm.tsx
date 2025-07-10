@@ -1,85 +1,88 @@
-"use client";
+'use client';
 
-import { IGenericErrorResponse } from "@/types";
-import { ReactElement, ReactNode } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import FormActionButton from "./FormActionButton";
+import { IGenericErrorResponse } from '@/types';
+import { ReactElement, ReactNode } from 'react';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import FormActionButton from './FormActionButton';
 
 type FormConfig = {
-  defaultValues?: Record<string, any>;
-  resolver?: any;
+    defaultValues?: Record<string, any>;
+    resolver?: any;
 };
 
 type FormProps = {
-  children?: ReactElement | ReactNode;
-  submitHandler: SubmitHandler<any>;
-  className?: string;
-  cancelHandler?: () => void;
-  dataAuto?: string;
-  isPending?: boolean;
-  showFormActionButton?: boolean;
+    children?: ReactElement | ReactNode;
+    submitHandler: SubmitHandler<any>;
+    className?: string;
+    cancelHandler?: () => void;
+    dataAuto?: string;
+    isPending?: boolean;
+    showFormActionButton?: boolean;
+    actionButtonClassName?: string;
 } & FormConfig;
 
 export default function CustomForm({
-  children,
-  submitHandler,
-  defaultValues,
-  resolver,
-  className,
-  cancelHandler,
-  showFormActionButton = true,
+    children,
+    submitHandler,
+    defaultValues,
+    resolver,
+    className,
+    cancelHandler,
+    showFormActionButton = true,
+    actionButtonClassName,
 }: FormProps) {
-  const formConfig: FormConfig = {};
+    const formConfig: FormConfig = {};
 
-  if (defaultValues) formConfig["defaultValues"] = defaultValues;
-  if (resolver) formConfig["resolver"] = resolver;
-  const methods = useForm<FormConfig>(formConfig);
+    if (defaultValues) formConfig['defaultValues'] = defaultValues;
+    if (resolver) formConfig['resolver'] = resolver;
+    const methods = useForm<FormConfig>(formConfig);
 
-  const {
-    handleSubmit,
-    setError,
-    formState: { isLoading, isSubmitting, isValidating },
-  } = methods;
+    const {
+        handleSubmit,
+        setError,
+        formState: { isLoading, isSubmitting, isValidating },
+    } = methods;
 
-  const onSubmit = async (data: any) => {
-    try {
-      await Promise.resolve(submitHandler(data));
-    } catch (err) {
-      const error = err as IGenericErrorResponse;
+    const onSubmit = async (data: any) => {
+        try {
+            await Promise.resolve(submitHandler(data));
+        } catch (err) {
+            const error = err as IGenericErrorResponse;
 
-      // console.log("form error", { error });
+            // console.log("form error", { error });
 
-      if (error.statusCode === 422) {
-        error.errorMessages?.forEach((err) => {
-          if (Array.isArray(err.path)) {
-            setError(err.path as any, { type: "manual", message: err.message });
-          } else {
-            const fields = (err?.path as string)?.replace(/`/g, "").split(",");
+            if (error.statusCode === 422) {
+                error.errorMessages?.forEach((err) => {
+                    if (Array.isArray(err.path)) {
+                        setError(err.path as any, { type: 'manual', message: err.message });
+                    } else {
+                        const fields = (err?.path as string)?.replace(/`/g, '').split(',');
 
-            fields?.forEach((field) => {
-              setError(field as any, { type: "manual", message: err.message });
-            });
-          }
-        });
-      }
-    }
-  };
+                        fields?.forEach((field) => {
+                            setError(field as any, { type: 'manual', message: err.message });
+                        });
+                    }
+                });
+            }
+        }
+    };
 
-  // useEffect(() => {
-  //   if (defaultValues) reset(defaultValues);
-  // }, [defaultValues, reset]);
+    // useEffect(() => {
+    //   if (defaultValues) reset(defaultValues);
+    // }, [defaultValues, reset]);
 
-  return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className={className}>
-        {children}
-        {showFormActionButton ? (
-          <FormActionButton
-            isLoading={isLoading || isValidating || isSubmitting}
-            cancelHandler={cancelHandler}
-          />
-        ) : null}
-      </form>
-    </FormProvider>
-  );
+    return (
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className={className}>
+                {children}
+                {showFormActionButton ? (
+                    <FormActionButton
+                        isLoading={isLoading || isValidating || isSubmitting}
+                        cancelHandler={cancelHandler}
+                        className={actionButtonClassName}
+                    />
+                ) : null}
+            </form>
+        </FormProvider>
+    );
 }

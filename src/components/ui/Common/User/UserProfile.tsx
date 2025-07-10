@@ -4,10 +4,8 @@ import CustomLoading from '@/components/Loader/CustomLoading';
 import { useSingleUserQuery } from '@/redux/api/userApi';
 import ProfileHero from './ProfileHero';
 import ProfileTabs from './ProfileTabs';
-import { createContext, Dispatch, SetStateAction, useState } from 'react';
-import Profile from './Tabs/Profile/Profile';
+import { useState } from 'react';
 import { userTab } from '@/types/user.view';
-import { IStudent } from '@/types';
 import { PROFILE_TABS } from '@/enums/user.view';
 import ClassSchedule from './Tabs/ClassSchedule/ClassSchedule';
 import GuardianInformation from './Tabs/GuardianInformation/GuardianInformation';
@@ -15,32 +13,27 @@ import CourseManagement from './Tabs/CourseManagement/CourseManagement';
 import AcademicReport from './Tabs/AcademicReport/AcademicReport';
 import AcademicResult from './Tabs/AcademicResult/AcademicResult';
 import PaymentDetails from './Tabs/PaymentDetails/PaymentDetails';
+import UserProfileProvider from '@/context/UserProfileContext';
+import AdminProfile from './Tabs/Profile/AdminProfile';
 import { USER_ROLE } from '@/enums/global';
+import ChangePassword from './Tabs/ChangePassword/ChangePassword';
 
 interface IUserViewProps {
     userId: string;
 }
 
-interface IProfileContext {
-    userInfo: IStudent;
-    activeTab: userTab;
-    setActiveTab: Dispatch<SetStateAction<userTab>>;
-    userRole: USER_ROLE.SUPER_ADMIN | USER_ROLE.ADMIN | USER_ROLE.FACULTY | USER_ROLE.STUDENT;
-}
-
-export const UserProfileContext = createContext<IProfileContext | null>(null);
-
 export default function UserProfile({ userId }: IUserViewProps) {
     const [activeTab, setActiveTab] = useState<userTab>(PROFILE_TABS.PROFILE);
     const { data, isLoading } = useSingleUserQuery(userId);
-    const userInfo = data?.student || data?.faculty || data?.admin;
+    const userInfo = data?.student || data?.faculty || data?.admin || {};
 
     // CONTEXT VALUES
     const profileContextValues = {
         userInfo,
+        adminInfo: data?.admin,
         activeTab,
         setActiveTab,
-        userRole: data?.role,
+        profileRole: data?.role,
     };
 
     // LOADING STATE
@@ -48,7 +41,7 @@ export default function UserProfile({ userId }: IUserViewProps) {
         return <CustomLoading />;
     }
     return (
-        <UserProfileContext.Provider value={profileContextValues}>
+        <UserProfileProvider value={profileContextValues}>
             <div className="flex flex-col gap-y-3">
                 {/* TOP */}
                 <div className="">
@@ -65,14 +58,18 @@ export default function UserProfile({ userId }: IUserViewProps) {
                 </section>
 
                 {/* TAB CONTENT */}
-                {activeTab === PROFILE_TABS.PROFILE && <Profile />}
+                {/* {activeTab === PROFILE_TABS.PROFILE && <Profile />} */}
+                {data?.role === USER_ROLE.ADMIN && activeTab === PROFILE_TABS.PROFILE && (
+                    <AdminProfile />
+                )}
                 {activeTab === PROFILE_TABS.CLASS_SCHEDULE && <ClassSchedule />}
                 {activeTab === PROFILE_TABS.GUARDIAN_INFORMATION && <GuardianInformation />}
                 {activeTab === PROFILE_TABS.COURSE_MANAGEMENT && <CourseManagement />}
                 {activeTab === PROFILE_TABS.ACADEMIC_REPORT && <AcademicReport />}
                 {activeTab === PROFILE_TABS.ACADEMIC_RESULT && <AcademicResult />}
                 {activeTab === PROFILE_TABS.PAYMENT_DETAILS && <PaymentDetails />}
+                {activeTab === PROFILE_TABS.CHANGE_PASSWORD && <ChangePassword />}
             </div>
-        </UserProfileContext.Provider>
+        </UserProfileProvider>
     );
 }

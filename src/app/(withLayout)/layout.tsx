@@ -5,7 +5,7 @@ import Contents from '@/components/ui/Contents';
 import Navbar from '@/components/ui/Navbar';
 import Sidebar from '@/components/ui/Sidebar';
 import { isLoggedIn } from '@/services/auth.service';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 export default function DashboardLayout({
@@ -13,11 +13,16 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode | React.ReactElement;
 }) {
+    // ROUTE
     const router = useRouter();
     // const userLoggedIn = isLoggedIn();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
+    const pathName = usePathname();
+
+    //
     useEffect(() => {
+        console.log({ pathName });
         const loggedIn = isLoggedIn();
         console.log({ loggedIn });
         if (!loggedIn) {
@@ -25,7 +30,7 @@ export default function DashboardLayout({
         } else {
             setIsLoading(false);
         }
-    }, [router]);
+    }, [pathName, router]);
 
     if (isLoading) {
         return <CustomLoading height={'h-screen'} />;

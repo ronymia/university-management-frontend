@@ -47,13 +47,17 @@ instance.interceptors.response.use(
             config._retry = true;
             try {
                 const accessTokenResponse = await getNewAccessToken();
-                console.log({ accessTokenResponse });
+                // console.log({ accessTokenResponse });
+                // EXTRACT ACCESS TOKEN
                 const accessToken = accessTokenResponse?.data?.accessToken || '';
+                //  SET INTO HEADERS
                 config.headers.authorization = 'Bearer ' + accessToken;
+                // SET INTO LOCAL STORAGE
                 setToLocalStorage(authKey, accessToken);
                 return instance(config);
             } catch (refreshTokenError) {
-                console.log({ firstError: refreshTokenError });
+                // console.log({ firstError: refreshTokenError });
+                // CLEAR LOCAL STORAGE
                 window.localStorage.clear();
                 Promise.reject(refreshTokenError);
             }

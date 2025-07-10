@@ -19,8 +19,8 @@ import { USER_ROLE } from '@/enums/global';
 export default function ProfileTabs() {
     const { role } = getUserInfo() as any;
     // PROFILE CONTEXT
-    const { setActiveTab, userRole } = useUserProfile();
-    // console.log({ userRole });
+    const { setActiveTab, profileRole } = useUserProfile();
+    // console.log({ profileRole });
     const router = useRouter();
     // SEARCH PARAMS
     const searchParams = useSearchParams();
@@ -41,16 +41,17 @@ export default function ProfileTabs() {
             show: true,
             Icon: CgProfile,
         },
+
         {
             label: 'Class Schedule',
             value: PROFILE_TABS.CLASS_SCHEDULE,
-            show: true,
+            show: false,
             Icon: GrSchedulePlay,
         },
         {
             label: 'Guardian Information',
             value: PROFILE_TABS.GUARDIAN_INFORMATION,
-            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
+            show: role === USER_ROLE.STUDENT || profileRole === USER_ROLE.STUDENT,
             Icon: HiOutlineDocumentText,
         },
         {
@@ -62,20 +63,26 @@ export default function ProfileTabs() {
         {
             label: 'Academic Report',
             value: PROFILE_TABS.ACADEMIC_REPORT,
-            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
+            show: role === USER_ROLE.STUDENT || profileRole === USER_ROLE.STUDENT,
             Icon: HiOutlineAcademicCap,
         },
         {
             label: 'Academic Result',
             value: PROFILE_TABS.ACADEMIC_RESULT,
-            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
+            show: role === USER_ROLE.STUDENT || profileRole === USER_ROLE.STUDENT,
             Icon: HiOutlineAcademicCap,
         },
         {
             label: 'Payment Details',
             value: PROFILE_TABS.PAYMENT_DETAILS,
-            show: role === USER_ROLE.STUDENT || userRole === USER_ROLE.STUDENT,
+            show: role === USER_ROLE.STUDENT || profileRole === USER_ROLE.STUDENT,
             Icon: TbCalendarUser,
+        },
+        {
+            label: 'Change Password',
+            value: PROFILE_TABS.CHANGE_PASSWORD,
+            show: true,
+            Icon: GrSchedulePlay,
         },
     ];
 

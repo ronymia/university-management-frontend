@@ -22,7 +22,10 @@ export default function FacultyPage() {
         sortOrder: '',
         searchTerm: '',
     });
-    const { role } = getUserInfo() as any;
+
+    // GET LOGGED IN USER ROLE
+    const { role } = (getUserInfo() as any) || { role: '' };
+
     // POPUP
     const { popupOptions, setPopupOptions } = usePopup();
     // DELETE API

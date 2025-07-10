@@ -1,4 +1,4 @@
-import { UserProfileContext } from '@/components/ui/Common/User/UserProfile';
+import { UserProfileContext } from '@/context/UserProfileContext';
 import { useContext } from 'react';
 
 export default function useUserProfile() {

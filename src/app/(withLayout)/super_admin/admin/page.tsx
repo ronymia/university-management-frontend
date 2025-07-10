@@ -47,6 +47,14 @@ export default function AdminPage() {
     // ALL ACTION BUTTONS
     const [actions] = useState<IAction[]>([
         {
+            name: 'view',
+            type: 'link',
+            href: (row: IAdmin) => `admin/view/${row?.id}`,
+            handler: () => {},
+            permissions: [],
+            disableOn: [],
+        },
+        {
             name: 'edit',
             type: 'link',
             href: (row: IAdmin) => `admin/edit/${row?.id}`,

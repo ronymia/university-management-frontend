@@ -6,5 +6,6 @@ export enum PROFILE_TABS {
     COURSE_MANAGEMENT = 'course-management',
     ACADEMIC_RESULT = 'academic-result',
     PAYMENT_DETAILS = 'payment-details',
+    MANAGEMENT_DEPARTMENT = 'management-department',
     CHANGE_PASSWORD = 'change-password',
 }
