@@ -9,7 +9,7 @@ import { useDepartmentsQuery } from '@/redux/api/departmentApi';
 
 export default function UpdateAdminProfile({ handleClosePopup }: { handleClosePopup: () => void }) {
     // USER
-    const { userInfo } = useUserProfile();
+    const { adminInfo: userInfo } = useUserProfile();
     const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
     const departments = data?.departments;
 

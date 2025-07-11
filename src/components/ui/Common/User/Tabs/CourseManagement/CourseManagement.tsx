@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { FaUsersViewfinder } from 'react-icons/fa6';
 
 export default function CourseManagement() {
-    const { userInfo } = useUserProfile();
+    const { studentInfo: userInfo } = useUserProfile();
     console.log({ userInfo });
 
     // QUERIES

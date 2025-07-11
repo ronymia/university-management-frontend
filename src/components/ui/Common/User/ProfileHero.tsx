@@ -6,7 +6,30 @@ import { HiOutlineMail } from 'react-icons/hi';
 import { HiOutlineAcademicCap, HiOutlineCalendar, HiOutlinePhone } from 'react-icons/hi2';
 
 export default function ProfileHero() {
-    const { userInfo } = useUserProfile();
+    const { studentInfo, facultyInfo, adminInfo } = useUserProfile();
+
+    const userInfo = {
+        name: studentInfo?.name || facultyInfo?.name || adminInfo?.name,
+        email: studentInfo?.email || facultyInfo?.email || adminInfo?.email,
+        contactNo: studentInfo?.contactNo || facultyInfo?.contactNo || adminInfo?.contactNo,
+        emergencyContactNo:
+            studentInfo?.emergencyContactNo ||
+            facultyInfo?.emergencyContactNo ||
+            adminInfo?.emergencyContactNo,
+        gender: studentInfo?.gender || facultyInfo?.gender || adminInfo?.gender,
+        bloodGroup: studentInfo?.bloodGroup || facultyInfo?.bloodGroup || adminInfo?.bloodGroup,
+        dateOfBirth: studentInfo?.dateOfBirth || facultyInfo?.dateOfBirth || adminInfo?.dateOfBirth,
+        presentAddress:
+            studentInfo?.presentAddress || facultyInfo?.presentAddress || adminInfo?.presentAddress,
+        permanentAddress:
+            studentInfo?.permanentAddress ||
+            facultyInfo?.permanentAddress ||
+            adminInfo?.permanentAddress,
+        profileImage:
+            studentInfo?.profileImage || facultyInfo?.profileImage || adminInfo?.profileImage,
+        createdAt: studentInfo?.createdAt || facultyInfo?.createdAt || adminInfo?.createdAt,
+        updatedAt: studentInfo?.updatedAt || facultyInfo?.updatedAt || adminInfo?.updatedAt,
+    };
 
     const handleUploadLogo = async () => {
         // Check if the file size exceeds 5MB
@@ -33,9 +56,9 @@ export default function ProfileHero() {
             <div className="flex flex-col md:flex-row items-center bg-sky-100 p-4 rounded-xl gap-5 max-w-lg">
                 {/* IMAGE */}
                 <ImageUploader
-                    fallBackText={`${userInfo?.firstName} ${userInfo?.firstName}`}
+                    fallBackText={getFullName(userInfo?.name as any)}
                     type="circular"
-                    imageUrl={userInfo?.profileImage}
+                    imageUrl={userInfo?.profileImage as string}
                     uploadHandler={handleUploadLogo}
                     isLoading={false}
                 />
@@ -45,7 +68,7 @@ export default function ProfileHero() {
                     {/* Name */}
                     <div className="flex items-center gap-2 justify-center md:justify-start">
                         <h2 className="text-xl font-semibold drop-shadow">
-                            {getFullName(userInfo?.name)}
+                            {getFullName(userInfo?.name as any)}
                         </h2>
                     </div>
 

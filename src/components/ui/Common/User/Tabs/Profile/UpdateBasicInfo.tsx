@@ -7,7 +7,7 @@ import useUserProfile from '@/hooks/useUserProfile';
 
 export default function UpdateBasicInfo({ handleClosePopup }: { handleClosePopup: () => void }) {
     // USER
-    const { userInfo } = useUserProfile();
+    const { studentInfo: userInfo } = useUserProfile();
 
     // DEFAULT VALUES
     const defaultValues = {

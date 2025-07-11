@@ -7,7 +7,7 @@ import { FiEdit } from 'react-icons/fi';
 import UpdateGuardianInformation from './UpdateGuardianInformation';
 
 export default function GuardianInformation() {
-    const { userInfo } = useUserProfile();
+    const { studentInfo: userInfo } = useUserProfile();
     const { popupOptions, setPopupOptions } = usePopupOptions();
     return (
         <>

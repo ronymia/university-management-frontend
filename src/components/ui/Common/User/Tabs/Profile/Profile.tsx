@@ -10,7 +10,7 @@ export default function Profile() {
     // DEVICE WIDTH
     const windowInnerWidth = useDeviceWith();
     // USER
-    const { userInfo } = useUserProfile();
+    const { studentInfo } = useUserProfile();
     // POPUP
     const { popupOptions, setPopupOptions } = usePopupOptions();
 
@@ -76,27 +76,27 @@ export default function Profile() {
                 {/* NAME */}
                 <ViewField
                     label={'Name'}
-                    value={`${userInfo?.name?.firstName} ${userInfo?.name?.middleName} ${userInfo?.name?.lastName}`}
+                    value={`${studentInfo?.name?.firstName} ${studentInfo?.name?.middleName} ${studentInfo?.name?.lastName}`}
                 />
                 {/* EMAIL */}
-                <ViewField label={'Email'} value={`${userInfo?.email}`} />
+                <ViewField label={'Email'} value={`${studentInfo?.email}`} />
                 {/* CONTACT NO */}
-                <ViewField label={'Contact No.'} value={`${userInfo?.contactNo}`} />
+                <ViewField label={'Contact No.'} value={`${studentInfo?.contactNo}`} />
                 {/* EMERGENCY CONTACT NO. */}
                 <ViewField
                     label={'Emergency Contact No.'}
-                    value={`${userInfo?.emergencyContactNo}`}
+                    value={`${studentInfo?.emergencyContactNo}`}
                 />
                 {/* BLOOD GROUP */}
-                <ViewField label={'Blood Group'} value={`${userInfo?.bloodGroup}`} />
+                <ViewField label={'Blood Group'} value={`${studentInfo?.bloodGroup}`} />
                 {/* DATE OF BIRTH */}
-                <ViewField label={'Date of Birth'} value={`${userInfo?.dateOfBirth}`} />
+                <ViewField label={'Date of Birth'} value={`${studentInfo?.dateOfBirth}`} />
                 {/* GENDER */}
-                <ViewField label={'Gender'} value={`${userInfo?.gender}`} />
+                <ViewField label={'Gender'} value={`${studentInfo?.gender}`} />
                 {/* PRESENT ADDRESS */}
-                <ViewField label={'Present Address'} value={`${userInfo?.presentAddress}`} />
+                <ViewField label={'Present Address'} value={`${studentInfo?.presentAddress}`} />
                 {/* PERMANENT ADDRESS */}
-                <ViewField label={'Permanent Address'} value={`${userInfo?.permanentAddress}`} />
+                <ViewField label={'Permanent Address'} value={`${studentInfo?.permanentAddress}`} />
             </section>
         </>
     );

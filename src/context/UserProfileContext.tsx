@@ -4,7 +4,6 @@ import { userTab } from '@/types/user.view';
 import React, { createContext, Dispatch, ReactNode, SetStateAction } from 'react';
 
 interface IProfileContext {
-    userInfo?: IStudent;
     adminInfo?: IAdmin;
     facultyInfo?: IFaculty;
     studentInfo?: IStudent;
@@ -24,10 +23,6 @@ export default function UserProfileProvider({
 }) {
     if (!value) {
         throw new Error('UserProfileProvider value cannot be null or undefined');
-    }
-
-    if (!value.userInfo) {
-        throw new Error('UserProfileProvider userInfo cannot be null or undefined');
     }
 
     return <UserProfileContext.Provider value={value}>{children}</UserProfileContext.Provider>;

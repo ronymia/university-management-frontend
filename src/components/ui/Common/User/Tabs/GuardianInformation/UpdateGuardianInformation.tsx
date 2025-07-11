@@ -9,7 +9,7 @@ export default function UpdateGuardianInformation({
 }: {
     handleClosePopup: () => void;
 }) {
-    const { userInfo } = useUserProfile();
+    const { studentInfo: userInfo } = useUserProfile();
 
     const defaultValues = {
         student: {

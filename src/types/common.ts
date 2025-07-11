@@ -45,6 +45,19 @@ export interface IManagementDepartment {
     __v: number;
 }
 
+export interface IUser {
+    _id: string;
+    id: string;
+    role: string;
+    needsChangePassword: boolean;
+    faculty: IFaculty;
+    student: IStudent;
+    admin: IAdmin;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
 export interface IAdmin {
     id: string;
     name: Name;
@@ -58,6 +71,7 @@ export interface IAdmin {
     designation: string;
     presentAddress: string;
     permanentAddress: string;
+    profileImage: string;
     createdAt: string;
     updatedAt: string;
     __v: number;
@@ -77,6 +91,7 @@ export interface IFaculty {
     designation: string;
     presentAddress: string;
     permanentAddress: string;
+    profileImage: string;
     createdAt: string;
     updatedAt: string;
     __v: number;

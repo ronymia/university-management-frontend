@@ -1,3 +1,4 @@
+import { IMeta, IUser } from '@/types';
 import { tagTypes } from '../tag-types';
 import { baseApi } from './baseApi';
 
@@ -11,6 +12,12 @@ export const userApi = baseApi.injectEndpoints({
                 url: `${USER_URL}`,
                 method: 'GET',
             }),
+            transformResponse: (response: IUser[], meta: IMeta) => {
+                return {
+                    users: response,
+                    meta,
+                };
+            },
             providesTags: (result) => (result ? [tagTypes.user] : []),
         }),
         // GET SINGLE USER
@@ -19,6 +26,7 @@ export const userApi = baseApi.injectEndpoints({
                 url: `${USER_URL}/${id}`,
                 method: 'GET',
             }),
+            transformResponse: (response: IUser) => response,
             // invalidatesTags: [tagTypes.user],
         }),
         // DELETE USER

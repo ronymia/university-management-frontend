@@ -25,17 +25,15 @@ interface IUserViewProps {
 export default function UserProfile({ userId }: IUserViewProps) {
     const [activeTab, setActiveTab] = useState<userTab>(PROFILE_TABS.PROFILE);
     const { data, isLoading } = useSingleUserQuery(userId);
-    const userInfo = data?.student || {};
 
     // CONTEXT VALUES
     const profileContextValues = {
-        userInfo,
         adminInfo: data?.admin,
         facultyInfo: data?.faculty,
         studentInfo: data?.student,
         activeTab,
         setActiveTab,
-        profileRole: data?.role,
+        profileRole: data?.role as USER_ROLE,
     };
 
     // LOADING STATE
