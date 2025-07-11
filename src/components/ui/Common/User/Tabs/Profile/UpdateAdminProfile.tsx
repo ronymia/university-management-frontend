@@ -4,17 +4,23 @@ import CustomInputField from '@/components/Forms/CustomInputField';
 import CustomSelect from '@/components/Forms/CustomSelect';
 import CustomTextareaField from '@/components/Forms/CustomTextareaField';
 import BloodGroupField from '@/components/ui/Fields/BloodGroupField';
+import { USER_ROLE } from '@/enums/global';
 import useUserProfile from '@/hooks/useUserProfile';
 import { useDepartmentsQuery } from '@/redux/api/departmentApi';
 import { useUpdateUserMutation } from '@/redux/api/userApi';
+import { getUserInfo } from '@/services/auth.service';
 
 export default function UpdateAdminProfile({ handleClosePopup }: { handleClosePopup: () => void }) {
+    const { role } = (getUserInfo() as any) || { role: '' };
     // ADMIN UPDATE
     const [updateUser] = useUpdateUserMutation();
 
     // USER
     const { adminInfo } = useUserProfile();
-    const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
+    const { data, isLoading } = useDepartmentsQuery(
+        { limit: 100, page: 1 },
+        { skip: role !== USER_ROLE.SUPER_ADMIN },
+    );
     const departments = data?.departments;
 
     const departmentOptions =
@@ -100,24 +106,28 @@ export default function UpdateAdminProfile({ handleClosePopup }: { handleClosePo
                 required
             />
             {/* managementDepartment */}
-            <CustomSelect
-                isLoading={isLoading}
-                name={'managementDepartment'}
-                id={'managementDepartment'}
-                options={departmentOptions || []}
-                label="Department"
-                placeholder={`Select Department`}
-                required
-            />
-            {/* designation */}
-            <CustomInputField
-                id="designation"
-                name="designation"
-                type="text"
-                label="Designation"
-                placeholder="Designation"
-                required
-            />
+            {role === USER_ROLE.SUPER_ADMIN && (
+                <>
+                    <CustomSelect
+                        isLoading={isLoading}
+                        name={'managementDepartment'}
+                        id={'managementDepartment'}
+                        options={departmentOptions || []}
+                        label="Department"
+                        placeholder={`Select Department`}
+                        required
+                    />
+                    {/* designation */}
+                    <CustomInputField
+                        id="designation"
+                        name="designation"
+                        type="text"
+                        label="Designation"
+                        placeholder="Designation"
+                        required
+                    />
+                </>
+            )}
             {/* contactNo */}
             <CustomInputField
                 id="contactNo"

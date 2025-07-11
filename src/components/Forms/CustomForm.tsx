@@ -46,6 +46,7 @@ export default function CustomForm({
     const onSubmit = async (data: any) => {
         try {
             await Promise.resolve(submitHandler(data));
+            methods.reset();
         } catch (err) {
             const error = err as IGenericErrorResponse;
 

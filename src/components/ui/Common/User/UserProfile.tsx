@@ -34,6 +34,7 @@ export default function UserProfile({ userId }: IUserViewProps) {
         activeTab,
         setActiveTab,
         profileRole: data?.role as USER_ROLE,
+        profileId: data?.id || '',
     };
 
     // LOADING STATE

@@ -56,7 +56,9 @@ export default function ProfileTabs() {
         {
             label: 'Course Management',
             value: PROFILE_TABS.COURSE_MANAGEMENT,
-            show: role === USER_ROLE.FACULTY || role === USER_ROLE.ADMIN,
+            show:
+                profileRole !== USER_ROLE.ADMIN &&
+                (role === USER_ROLE.FACULTY || role === USER_ROLE.ADMIN),
             Icon: AiOutlineProject,
         },
         {

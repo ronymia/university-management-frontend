@@ -10,6 +10,7 @@ interface IProfileContext {
     activeTab: userTab;
     setActiveTab: Dispatch<SetStateAction<userTab>>;
     profileRole: USER_ROLE.SUPER_ADMIN | USER_ROLE.ADMIN | USER_ROLE.FACULTY | USER_ROLE.STUDENT;
+    profileId: string;
 }
 
 export const UserProfileContext = createContext<IProfileContext | null>(null);

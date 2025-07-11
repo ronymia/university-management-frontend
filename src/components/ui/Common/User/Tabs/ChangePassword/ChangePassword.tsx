@@ -1,15 +1,24 @@
 import CustomButton from '@/components/Button/CustomButton';
 import CustomForm from '@/components/Forms/CustomForm';
 import CustomInputField from '@/components/Forms/CustomInputField';
+import CustomToaster from '@/components/Notification/CustomToaster';
+import useUserProfile from '@/hooks/useUserProfile';
 import { useChangePasswordMutation } from '@/redux/api/authApi';
 import React from 'react';
 
 export default function ChangePassword() {
+    const { profileId } = useUserProfile();
+    // REDUX
     const [changePasswordFn, result] = useChangePasswordMutation();
-    const handleOnSubmit = async (formValues: any) => {
-        console.log({ formValues });
 
-        await changePasswordFn(formValues).unwrap();
+    // HANDLE SUBMIT
+    const handleOnSubmit = async (formValues: any) => {
+        await changePasswordFn({ ...formValues, id: profileId })
+            .unwrap()
+            .then(() => {
+                // handleClosePopup?.();
+                CustomToaster({ type: 'success', text: 'Password Changed' });
+            });
     };
 
     //
