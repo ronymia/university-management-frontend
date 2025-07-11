@@ -83,7 +83,10 @@ export default function AdminProfile() {
                 {/* DESIGNATION */}
                 <ViewField label={'Designation'} value={`${adminInfo?.designation}`} />
                 {/* managementDepartment */}
-                <ViewField label={'Designation'} value={`${adminInfo?.managementDepartment}`} />
+                <ViewField
+                    label={'Management Department'}
+                    value={`${adminInfo?.managementDepartment?.title}`}
+                />
                 {/* CONTACT NO */}
                 <ViewField label={'Contact No.'} value={`${adminInfo?.contactNo}`} />
                 {/* EMERGENCY CONTACT NO. */}

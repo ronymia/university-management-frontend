@@ -1,12 +1,13 @@
 import ImageUploader from '@/components/Uploader/ImageUploader';
 import useUserProfile from '@/hooks/useUserProfile';
 import { getFullName } from '@/utils/getFullName';
+import { fromSnakeCase } from '@/utils/textFormatter.utils';
 import moment from 'moment';
 import { HiOutlineMail } from 'react-icons/hi';
 import { HiOutlineAcademicCap, HiOutlineCalendar, HiOutlinePhone } from 'react-icons/hi2';
 
 export default function ProfileHero() {
-    const { studentInfo, facultyInfo, adminInfo } = useUserProfile();
+    const { studentInfo, facultyInfo, adminInfo, profileRole } = useUserProfile();
 
     const userInfo = {
         name: studentInfo?.name || facultyInfo?.name || adminInfo?.name,
@@ -66,10 +67,15 @@ export default function ProfileHero() {
                 {/* USER INFO */}
                 <div className="flex flex-col gap-6 text-center md:text-left">
                     {/* Name */}
-                    <div className="flex items-center gap-2 justify-center md:justify-start">
+                    <div className="flex flex-col items-center md:items-start gap-2 justify-center md:justify-start w-full">
                         <h2 className="text-xl font-semibold drop-shadow">
                             {getFullName(userInfo?.name as any)}
                         </h2>
+                        <small
+                            className={`font-semibold bg-green-600 text-base-300 rounded-md px-2 py-1 text-xs`}
+                        >
+                            {fromSnakeCase(profileRole || '')}
+                        </small>
                     </div>
 
                     {/* User Info Grid */}

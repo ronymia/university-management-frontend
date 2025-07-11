@@ -6,10 +6,14 @@ import CustomTextareaField from '@/components/Forms/CustomTextareaField';
 import BloodGroupField from '@/components/ui/Fields/BloodGroupField';
 import useUserProfile from '@/hooks/useUserProfile';
 import { useDepartmentsQuery } from '@/redux/api/departmentApi';
+import { useUpdateUserMutation } from '@/redux/api/userApi';
 
 export default function UpdateAdminProfile({ handleClosePopup }: { handleClosePopup: () => void }) {
+    // ADMIN UPDATE
+    const [updateUser] = useUpdateUserMutation();
+
     // USER
-    const { adminInfo: userInfo } = useUserProfile();
+    const { adminInfo } = useUserProfile();
     const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
     const departments = data?.departments;
 
@@ -25,25 +29,31 @@ export default function UpdateAdminProfile({ handleClosePopup }: { handleClosePo
     // DEFAULT VALUES
     const defaultValues = {
         name: {
-            firstName: userInfo?.name?.firstName,
-            middleName: userInfo?.name?.middleName,
-            lastName: userInfo?.name?.lastName,
+            firstName: adminInfo?.name?.firstName,
+            middleName: adminInfo?.name?.middleName,
+            lastName: adminInfo?.name?.lastName,
         },
-        email: userInfo?.email,
-        designation: userInfo?.designation,
-        managementDepartment: userInfo?.managementDepartment,
-        contactNo: userInfo?.contactNo,
-        emergencyContactNo: userInfo?.emergencyContactNo,
-        gender: userInfo?.gender,
-        bloodGroup: userInfo?.bloodGroup,
-        dateOfBirth: userInfo?.dateOfBirth,
-        presentAddress: userInfo?.presentAddress,
-        permanentAddress: userInfo?.permanentAddress,
+        email: adminInfo?.email,
+        designation: adminInfo?.designation,
+        managementDepartment: adminInfo?.managementDepartment?.id,
+        contactNo: adminInfo?.contactNo,
+        emergencyContactNo: adminInfo?.emergencyContactNo,
+        gender: adminInfo?.gender,
+        bloodGroup: adminInfo?.bloodGroup,
+        dateOfBirth: adminInfo?.dateOfBirth,
+        presentAddress: adminInfo?.presentAddress,
+        permanentAddress: adminInfo?.permanentAddress,
     };
 
     // HANDLE SUBMIT
     const handleOnSubmit = async (formValues: any) => {
-        console.log({ formValues });
+        // console.log({ formValues });
+
+        await updateUser({ ...formValues, id: adminInfo?.id })
+            .unwrap()
+            .then(() => {
+                handleClosePopup?.();
+            });
     };
     return (
         <CustomForm

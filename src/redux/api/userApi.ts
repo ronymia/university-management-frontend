@@ -27,7 +27,18 @@ export const userApi = baseApi.injectEndpoints({
                 method: 'GET',
             }),
             transformResponse: (response: IUser) => response,
-            // invalidatesTags: [tagTypes.user],
+            providesTags: (result) =>
+                result ? [{ type: tagTypes.user }, { type: tagTypes.user, id: result.id }] : [],
+        }),
+        // UPDATE USER
+        updateUser: builder.mutation({
+            query: (payload) => ({
+                url: `${USER_URL}/${payload.id}`,
+                method: 'PATCH',
+                data: payload,
+            }),
+            invalidatesTags: (result) =>
+                result ? [{ type: tagTypes.user }, { type: tagTypes.user, id: result.id }] : [],
         }),
         // DELETE USER
         deleteUser: builder.mutation({
@@ -40,4 +51,5 @@ export const userApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useUsersQuery, useSingleUserQuery, useDeleteUserMutation } = userApi;
+export const { useUsersQuery, useSingleUserQuery, useDeleteUserMutation, useUpdateUserMutation } =
+    userApi;
