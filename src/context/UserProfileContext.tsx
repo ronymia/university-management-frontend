@@ -4,8 +4,10 @@ import { userTab } from '@/types/user.view';
 import React, { createContext, Dispatch, ReactNode, SetStateAction } from 'react';
 
 interface IProfileContext {
-    userInfo?: IStudent | IAdmin | IFaculty;
+    userInfo?: IStudent;
     adminInfo?: IAdmin;
+    facultyInfo?: IFaculty;
+    studentInfo?: IStudent;
     activeTab: userTab;
     setActiveTab: Dispatch<SetStateAction<userTab>>;
     profileRole: USER_ROLE.SUPER_ADMIN | USER_ROLE.ADMIN | USER_ROLE.FACULTY | USER_ROLE.STUDENT;
