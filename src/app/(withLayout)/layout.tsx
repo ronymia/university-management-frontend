@@ -22,9 +22,7 @@ export default function DashboardLayout({
 
     //
     useEffect(() => {
-        console.log({ pathName });
         const loggedIn = isLoggedIn();
-        console.log({ loggedIn });
         if (!loggedIn) {
             router.push('/auth/login');
         } else {
@@ -43,7 +41,10 @@ export default function DashboardLayout({
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col gap-3 overflow-auto">
+            <div
+                className={`flex-1 flex flex-col gap-3 ${pathName.includes('view') || pathName.includes('profile') ? 'overflow-auto' : ''}
+`}
+            >
                 <Navbar />
                 <Contents>{children}</Contents>
             </div>

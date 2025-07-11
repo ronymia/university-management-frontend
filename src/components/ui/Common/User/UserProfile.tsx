@@ -42,7 +42,7 @@ export default function UserProfile({ userId }: IUserViewProps) {
     }
     return (
         <UserProfileProvider value={profileContextValues}>
-            <div className="flex flex-col gap-y-3">
+            <div className="flex flex-col gap-y-3 overflow-x-hidden">
                 {/* TOP */}
                 <div className="">
                     <h1 className={`text-center text-2xl font-semibold drop-shadow-2xl my-3`}>
