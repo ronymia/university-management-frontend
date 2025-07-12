@@ -17,6 +17,7 @@ type IForm_NAME =
     | 'department'
     | 'student_basic_info'
     | 'admin_basic_info'
+    | 'faculty_basic_info'
     | 'guardian_info';
 
 export interface IPopupOptions {

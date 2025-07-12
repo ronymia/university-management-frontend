@@ -2,15 +2,15 @@ import ViewField from '@/components/Forms/ViewField';
 import CustomPopup from '@/components/Popup/CustomPopup';
 import useUserProfile from '@/hooks/useUserProfile';
 import { FiEdit } from 'react-icons/fi';
+import UpdateStudentProfile from './UpdateStudentProfile';
 import useDeviceWith from '@/hooks/useDeviceWith';
 import usePopupOptions from '@/hooks/usePopupOptions';
-import UpdateAdminProfile from './UpdateAdminProfile';
 
-export default function AdminProfile() {
+export default function StudentProfile() {
     // DEVICE WIDTH
     const windowInnerWidth = useDeviceWith();
     // USER
-    const { adminInfo } = useUserProfile();
+    const { studentInfo } = useUserProfile();
     // POPUP
     const { popupOptions, setPopupOptions } = usePopupOptions();
 
@@ -31,8 +31,8 @@ export default function AdminProfile() {
             >
                 {/* FORM CONTENT */}
 
-                {popupOptions.form === 'admin_basic_info' ? (
-                    <UpdateAdminProfile
+                {popupOptions.form === 'student_basic_info' ? (
+                    <UpdateStudentProfile
                         handleClosePopup={() => {
                             setPopupOptions((prev) => ({
                                 ...prev,
@@ -61,11 +61,11 @@ export default function AdminProfile() {
                                 ...prev,
                                 open: true,
                                 actionType: 'update',
-                                form: 'admin_basic_info',
-                                title: 'Update Admin Information',
+                                form: 'student_basic_info',
+                                title: 'Update Student Basic Information',
                             }));
                         }}
-                        className={`flex gap-2 items-center justify-center text-base-300 bg-primary  border-2 border-primary rounded-md font-semibold w-fit h-fit px-3 py-1.5 cursor-pointer bg-gradient-to-tl to-primary shadow-md from-primary/70 text-xs md:text-base`}
+                        className={`flex gap-2 items-center justify-center text-base-300 bg-primary  border-2 border-primary rounded-md font-semibold text-sm w-fit h-fit px-3 py-1.5 cursor-pointer bg-gradient-to-tl to-primary shadow-md from-primary/70 text-xs md:text-base`}
                     >
                         <FiEdit className={`text-sm md:text-xl`} />
                         {/* {label} */}
@@ -76,34 +76,27 @@ export default function AdminProfile() {
                 {/* NAME */}
                 <ViewField
                     label={'Name'}
-                    value={`${adminInfo?.name?.firstName} ${adminInfo?.name?.middleName} ${adminInfo?.name?.lastName}`}
+                    value={`${studentInfo?.name?.firstName} ${studentInfo?.name?.middleName} ${studentInfo?.name?.lastName}`}
                 />
                 {/* EMAIL */}
-                <ViewField label={'Email'} value={`${adminInfo?.email}`} />
-                {/* DESIGNATION */}
-                <ViewField label={'Designation'} value={`${adminInfo?.designation}`} />
-                {/* managementDepartment */}
-                <ViewField
-                    label={'Management Department'}
-                    value={`${adminInfo?.managementDepartment?.title}`}
-                />
+                <ViewField label={'Email'} value={`${studentInfo?.email}`} />
                 {/* CONTACT NO */}
-                <ViewField label={'Contact No.'} value={`${adminInfo?.contactNo}`} />
+                <ViewField label={'Contact No.'} value={`${studentInfo?.contactNo}`} />
                 {/* EMERGENCY CONTACT NO. */}
                 <ViewField
                     label={'Emergency Contact No.'}
-                    value={`${adminInfo?.emergencyContactNo}`}
+                    value={`${studentInfo?.emergencyContactNo}`}
                 />
                 {/* BLOOD GROUP */}
-                <ViewField label={'Blood Group'} value={`${adminInfo?.bloodGroup}`} />
+                <ViewField label={'Blood Group'} value={`${studentInfo?.bloodGroup}`} />
                 {/* DATE OF BIRTH */}
-                <ViewField label={'Date of Birth'} value={`${adminInfo?.dateOfBirth}`} />
+                <ViewField label={'Date of Birth'} value={`${studentInfo?.dateOfBirth}`} />
                 {/* GENDER */}
-                <ViewField label={'Gender'} value={`${adminInfo?.gender}`} />
+                <ViewField label={'Gender'} value={`${studentInfo?.gender}`} />
                 {/* PRESENT ADDRESS */}
-                <ViewField label={'Present Address'} value={`${adminInfo?.presentAddress}`} />
+                <ViewField label={'Present Address'} value={`${studentInfo?.presentAddress}`} />
                 {/* PERMANENT ADDRESS */}
-                <ViewField label={'Permanent Address'} value={`${adminInfo?.permanentAddress}`} />
+                <ViewField label={'Permanent Address'} value={`${studentInfo?.permanentAddress}`} />
             </section>
         </>
     );

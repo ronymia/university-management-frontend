@@ -17,6 +17,8 @@ import UserProfileProvider from '@/context/UserProfileContext';
 import AdminProfile from './Tabs/Profile/AdminProfile';
 import { USER_ROLE } from '@/enums/global';
 import ChangePassword from './Tabs/ChangePassword/ChangePassword';
+import StudentProfile from './Tabs/Profile/StudentProfile';
+import FacultyProfile from './Tabs/Profile/FacultyProfile';
 
 interface IUserViewProps {
     userId: string;
@@ -59,7 +61,12 @@ export default function UserProfile({ userId }: IUserViewProps) {
                 </section>
 
                 {/* TAB CONTENT */}
-                {/* {activeTab === PROFILE_TABS.PROFILE && <Profile />} */}
+                {data?.role === USER_ROLE.STUDENT && activeTab === PROFILE_TABS.PROFILE && (
+                    <StudentProfile />
+                )}
+                {data?.role === USER_ROLE.FACULTY && activeTab === PROFILE_TABS.PROFILE && (
+                    <FacultyProfile />
+                )}
                 {data?.role === USER_ROLE.ADMIN && activeTab === PROFILE_TABS.PROFILE && (
                     <AdminProfile />
                 )}

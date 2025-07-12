@@ -5,25 +5,29 @@ import CustomTextareaField from '@/components/Forms/CustomTextareaField';
 import BloodGroupField from '@/components/ui/Fields/BloodGroupField';
 import useUserProfile from '@/hooks/useUserProfile';
 
-export default function UpdateBasicInfo({ handleClosePopup }: { handleClosePopup: () => void }) {
+export default function UpdateFacultyProfile({
+    handleClosePopup,
+}: {
+    handleClosePopup: () => void;
+}) {
     // USER
-    const { studentInfo: userInfo } = useUserProfile();
+    const { facultyInfo } = useUserProfile();
 
     // DEFAULT VALUES
     const defaultValues = {
         name: {
-            firstName: userInfo?.name?.firstName,
-            middleName: userInfo?.name?.middleName,
-            lastName: userInfo?.name?.lastName,
+            firstName: facultyInfo?.name?.firstName,
+            middleName: facultyInfo?.name?.middleName,
+            lastName: facultyInfo?.name?.lastName,
         },
-        email: userInfo?.email,
-        contactNo: userInfo?.contactNo,
-        emergencyContactNo: userInfo?.emergencyContactNo,
-        gender: userInfo?.gender,
-        bloodGroup: userInfo?.bloodGroup,
-        dateOfBirth: userInfo?.dateOfBirth,
-        presentAddress: userInfo?.presentAddress,
-        permanentAddress: userInfo?.permanentAddress,
+        email: facultyInfo?.email,
+        contactNo: facultyInfo?.contactNo,
+        emergencyContactNo: facultyInfo?.emergencyContactNo,
+        gender: facultyInfo?.gender,
+        bloodGroup: facultyInfo?.bloodGroup,
+        dateOfBirth: facultyInfo?.dateOfBirth,
+        presentAddress: facultyInfo?.presentAddress,
+        permanentAddress: facultyInfo?.permanentAddress,
     };
 
     // HANDLE SUBMIT
