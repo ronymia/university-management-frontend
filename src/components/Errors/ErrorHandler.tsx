@@ -17,6 +17,15 @@ export default function ErrorHandler({ errors }: IErrorHandlerProps) {
     if (errors.statusCode && errors.statusCode === 403) {
         return CustomToaster({ type: 'error', text: errors.message });
     }
+    if (errors.statusCode && errors.statusCode === 404) {
+        return CustomToaster({ type: 'error', text: errors.message });
+    }
+    if (errors.statusCode && errors.statusCode === 406) {
+        return CustomToaster({ type: 'error', text: errors.message });
+    }
+    if (errors.statusCode && errors.statusCode === 409) {
+        return CustomToaster({ type: 'error', text: errors.message });
+    }
     if (errors.statusCode && errors.statusCode === 422) {
         return CustomToaster({
             type: 'error',

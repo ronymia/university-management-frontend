@@ -33,6 +33,9 @@ export default function AcademicDepartmentField({
             value: acDepartment?.id,
         };
     });
+
+    // console.log({ acDepartmentOptions });
+
     return (
         <CustomSelect
             isLoading={isLoading || isFetching}

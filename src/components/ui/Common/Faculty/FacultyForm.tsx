@@ -23,7 +23,10 @@ import FacultyDesignationField from '../../Fields/FacultyDesignationField';
 
 export default function FacultyForm({ id = '' }: { id: string }) {
     const router = useRouter();
+    // STATE
     const [academicFacultyId, setAcademicFacultyId] = useState<string>('');
+
+    // FACULTY BY ID
     const { data, isLoading } = useFacultyByIdQuery(id, {
         skip: !id,
     });
@@ -53,6 +56,7 @@ export default function FacultyForm({ id = '' }: { id: string }) {
         },
     };
 
+    // SET FACULTY ID
     useEffect(() => {
         if (data?.academicFaculty?.syncId) {
             setAcademicFacultyId(data?.academicFaculty?.syncId);
@@ -60,7 +64,7 @@ export default function FacultyForm({ id = '' }: { id: string }) {
     }, [data?.academicFaculty?.syncId]);
 
     const onSubmit = async (values: any) => {
-        console.log({ values });
+        // console.log({ values });
         const obj = { ...values };
         const file = obj['file'];
         delete obj['file'];

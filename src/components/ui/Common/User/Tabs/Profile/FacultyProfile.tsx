@@ -73,6 +73,8 @@ export default function FacultyProfile() {
                     </button>
                 </div>
 
+                {/* Faculty ID */}
+                <ViewField label={'Faculty ID'} value={`${facultyInfo?.id}`} />
                 {/* NAME */}
                 <ViewField
                     label={'Name'}
@@ -80,22 +82,24 @@ export default function FacultyProfile() {
                 />
                 {/* EMAIL */}
                 <ViewField label={'Email'} value={`${facultyInfo?.email}`} />
-                {/* CONTACT NO */}
-                <ViewField label={'Contact No.'} value={`${facultyInfo?.contactNo}`} />
-                {/* EMERGENCY CONTACT NO. */}
+                {/* DESIGNATION */}
+                <ViewField label={'Designation'} value={`${facultyInfo?.designation}`} />
+                {/* ACADEMIC DEPARTMENT */}
                 <ViewField
-                    label={'Emergency Contact No.'}
-                    value={`${facultyInfo?.emergencyContactNo}`}
+                    label={'Academic Department'}
+                    value={`${facultyInfo?.academicDepartment?.title}`}
                 />
                 {/* ACADEMIC FACULTY */}
                 <ViewField
                     label={'Academic Faculty'}
                     value={`${facultyInfo?.academicFaculty?.title}`}
                 />
-                {/* ACADEMIC DEPARTMENT */}
+                {/* CONTACT NO */}
+                <ViewField label={'Contact No.'} value={`${facultyInfo?.contactNo}`} />
+                {/* EMERGENCY CONTACT NO. */}
                 <ViewField
-                    label={'Academic Department'}
-                    value={`${facultyInfo?.academicDepartment?.title}`}
+                    label={'Emergency Contact No.'}
+                    value={`${facultyInfo?.emergencyContactNo}`}
                 />
                 {/* BLOOD GROUP */}
                 <ViewField label={'Blood Group'} value={`${facultyInfo?.bloodGroup}`} />

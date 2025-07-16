@@ -73,6 +73,8 @@ export default function AdminProfile() {
                     </button>
                 </div>
 
+                {/* Admin ID */}
+                <ViewField label={'Admin ID'} value={`${adminInfo?.id}`} />
                 {/* NAME */}
                 <ViewField
                     label={'Name'}
