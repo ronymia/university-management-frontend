@@ -14,6 +14,7 @@ import { profileTabs } from '@/constants/userView';
 import { getUserInfo } from '@/services/auth.service';
 import { USER_ROLE } from '@/enums/global';
 import HorizontalScroll from '@/components/HorizontalScroll';
+import { useEffect } from 'react';
 
 export default function ProfileTabs() {
     const { role } = (getUserInfo() as any) || {};
@@ -31,6 +32,10 @@ export default function ProfileTabs() {
     const currentTab = profileTabs.includes(currentTabParams as userTab)
         ? currentTabParams
         : PROFILE_TABS.PROFILE;
+
+    useEffect(() => {
+        setActiveTab(currentTab as userTab);
+    }, []);
 
     // TABS
     const tabs = [

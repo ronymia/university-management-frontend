@@ -48,6 +48,7 @@ export default function CustomForm({
             await Promise.resolve(submitHandler(data));
             methods.reset();
         } catch (err) {
+            methods.reset(undefined, { keepValues: true });
             const error = err as IGenericErrorResponse;
 
             // console.log("form error", { error });

@@ -14,11 +14,9 @@ import AcademicReport from './Tabs/AcademicReport/AcademicReport';
 import AcademicResult from './Tabs/AcademicResult/AcademicResult';
 import PaymentDetails from './Tabs/PaymentDetails/PaymentDetails';
 import UserProfileProvider from '@/context/UserProfileContext';
-import AdminProfile from './Tabs/Profile/AdminProfile';
 import { USER_ROLE } from '@/enums/global';
 import ChangePassword from './Tabs/ChangePassword/ChangePassword';
-import StudentProfile from './Tabs/Profile/StudentProfile';
-import FacultyProfile from './Tabs/Profile/FacultyProfile';
+import Profile from './Tabs/Profile/Profile';
 
 interface IUserViewProps {
     userId: string;
@@ -61,15 +59,7 @@ export default function UserProfile({ userId }: IUserViewProps) {
                 </section>
 
                 {/* TAB CONTENT */}
-                {data?.role === USER_ROLE.STUDENT && activeTab === PROFILE_TABS.PROFILE && (
-                    <StudentProfile />
-                )}
-                {data?.role === USER_ROLE.FACULTY && activeTab === PROFILE_TABS.PROFILE && (
-                    <FacultyProfile />
-                )}
-                {data?.role === USER_ROLE.ADMIN && activeTab === PROFILE_TABS.PROFILE && (
-                    <AdminProfile />
-                )}
+                {activeTab === PROFILE_TABS.PROFILE && <Profile />}
                 {activeTab === PROFILE_TABS.CLASS_SCHEDULE && <ClassSchedule />}
                 {activeTab === PROFILE_TABS.GUARDIAN_INFORMATION && <GuardianInformation />}
                 {activeTab === PROFILE_TABS.COURSE_MANAGEMENT && <CourseManagement />}

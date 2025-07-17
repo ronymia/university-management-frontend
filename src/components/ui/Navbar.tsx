@@ -88,7 +88,7 @@ export default function Navbar() {
                                         .then(() => {
                                             window.localStorage.clear();
                                             router.push('/auth/login');
-                                            console.log('Logging out');
+                                            // console.log('Logging out');
                                         });
                                 },
                             },

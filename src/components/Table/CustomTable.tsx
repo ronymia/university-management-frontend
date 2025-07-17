@@ -137,13 +137,14 @@ export default function CustomTable({
                                 >
                                     <div
                                         className={`bg-primary/10 drop-shadow border-t border-b border-primary/20 h-16 flex items-center justify-start px-4 
-                            ${index === 0 ? 'border-l rounded-tl-xl rounded-bl-xl' : 'border-l-0'}
-                            ${
-                                actions.length === 0 && index === columns.length - 1
-                                    ? 'border-r rounded-tr-xl rounded-br-xl'
-                                    : 'border-r-0'
-                            }
-                           `}
+                                                    ${index === 0 ? 'border-l rounded-l-xl' : 'border-l-0'}
+                                                    ${
+                                                        actions.length === 0 &&
+                                                        index === columns.length - 1 - 1
+                                                            ? 'border-r rounded-r-xl'
+                                                            : 'border-r-0'
+                                                    }
+                                                `}
                                     >
                                         {col?.header}
                                     </div>
@@ -210,14 +211,10 @@ export default function CustomTable({
                                         >
                                             <div
                                                 className={`drop-shadow md:border-t md:border-b md:border-primary/20 h-16 flex items-center justify-start px-4 
-                            ${
-                                index === 0
-                                    ? 'md:border-l md:rounded-tl-xl md:rounded-bl-xl'
-                                    : 'md:border-l-0'
-                            }
+                            ${index === 0 ? 'md:border-l md:rounded-l-xl' : 'md:border-l-0'}
                              ${
-                                 actions.length === 0 && index === columns.length - 1
-                                     ? 'border-r rounded-tr-xl rounded-br-xl'
+                                 actions.length === 0 && index === columns.length - 1 - 1
+                                     ? 'border-r rounded-r-xl'
                                      : 'border-r-0'
                              }
                            `}
