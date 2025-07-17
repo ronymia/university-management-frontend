@@ -1,4 +1,5 @@
 import ImageUploader from '@/components/Uploader/ImageUploader';
+import { getImageFullLink } from '@/helpers/config/envConfig';
 import useUserProfile from '@/hooks/useUserProfile';
 import { getFullName } from '@/utils/getFullName';
 import { fromSnakeCase } from '@/utils/textFormatter.utils';
@@ -59,7 +60,7 @@ export default function ProfileHero() {
                 <ImageUploader
                     fallBackText={getFullName(userInfo?.name as any)}
                     type="circular"
-                    imageUrl={userInfo?.profileImage as string}
+                    imageUrl={getImageFullLink(userInfo?.profileImage)}
                     uploadHandler={handleUploadLogo}
                     isLoading={false}
                 />

@@ -56,17 +56,20 @@ export default function AdminForm({ id = '' }: { id?: string }) {
 
     const onSubmit = async (values: any) => {
         const obj = { ...values };
-        const file = obj['file'];
+        const file = obj.admin['profileImage'];
         delete obj['file'];
+
         const data = JSON.stringify(obj);
+
+        // CREATE MULTIPART DATA
         const formData = new FormData();
         formData.append('file', file as Blob);
         formData.append('data', data);
 
-        // console.log({ formData });
+        console.log({ obj });
         if (!!id) {
             const body = values.admin;
-            delete body['profileImage'];
+            // delete body['profileImage'];
             const res = await updateAdmin({ id, body }).unwrap();
             if (res?.id) {
                 router.back();
@@ -91,7 +94,15 @@ export default function AdminForm({ id = '' }: { id?: string }) {
             <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
                 <p className={`font-bold mb-2.5 drop-shadow-sm`}>Admin Information</p>
                 <div className={`grid grid-cols-1 md:grid-cols-3 gap-3`}>
-                    {!id && <CustomFileUpload id="file" name="file" required label="Image" />}
+                    {/* PROFILE PICTURE */}
+                    {!id && (
+                        <CustomFileUpload
+                            id="admin.profileImage"
+                            name="admin.profileImage"
+                            required
+                            label="Image"
+                        />
+                    )}
 
                     {/* firstName */}
                     <CustomInputField

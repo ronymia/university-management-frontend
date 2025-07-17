@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IImageUploadProps {
     type?: 'circular' | 'square';
@@ -15,6 +15,7 @@ export default function ImageUploader({
     isLoading = false,
     uploadHandler,
     size = 128,
+    imageUrl,
     // fallBackText = 'Upload Image',
 }: IImageUploadProps) {
     const [image, setImage] = useState<string | null>(null);
@@ -22,7 +23,7 @@ export default function ImageUploader({
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
-            console.log({ file });
+            // console.log({ file });
 
             // 1. Update local preview
             setImage(URL.createObjectURL(file));
@@ -31,6 +32,12 @@ export default function ImageUploader({
             uploadHandler(file);
         }
     };
+
+    useEffect(() => {
+        if (imageUrl) {
+            setImage(imageUrl);
+        }
+    }, [imageUrl]);
 
     /* ******************************
 
