@@ -50,35 +50,49 @@ export default function FacultyCourses() {
 
     // TABLE COLUMNS DEFINE
     const columns: IColumn[] = [
-        // NAME
+        // customCourse
         {
             header: 'Course name',
             accessorKey: 'customCourse',
             show: true,
-            minWidth: 20,
+            minWidth: 25,
         },
-        // NAME
+        // courseCode
         {
             header: 'Code',
             accessorKey: 'courseCode',
             show: true,
-            minWidth: 20,
+            minWidth: 10,
         },
-        // NAME
+        // courseCredits
         {
             header: 'Credits',
             accessorKey: 'courseCredits',
             show: true,
-            minWidth: 20,
+            minWidth: 10,
         },
-        // NAME
+        // customSection
         {
             header: 'Sections',
             accessorKey: 'customSection',
             show: true,
-            minWidth: 20,
+            minWidth: 15,
         },
-        // NAME
+        // customViewStudents
+        // {
+        //     header: 'View Students',
+        //     accessorKey: 'customViewStudents',
+        //     show: true,
+        //     minWidth: 15,
+        // },
+        // customClassSchedule
+        // {
+        //     header: 'View Class Schedule',
+        //     accessorKey: 'customClassSchedule',
+        //     show: true,
+        //     minWidth: 20,
+        // },
+        // createdAt
         {
             header: 'Created At',
             accessorKey: 'createdAt',
@@ -87,15 +101,15 @@ export default function FacultyCourses() {
         },
     ];
 
-    const handleAssignCourseIntoFaculty = () => {
-        setPopupOptions((prev) => ({
-            ...prev,
-            open: true,
-            actionType: 'create',
-            form: 'assign_course_into_faculty',
-            title: 'Assign Course into Faculty',
-        }));
-    };
+    // const handleAssignCourseIntoFaculty = () => {
+    //     setPopupOptions((prev) => ({
+    //         ...prev,
+    //         open: true,
+    //         actionType: 'create',
+    //         form: 'assign_course_into_faculty',
+    //         title: 'Assign Course into Faculty',
+    //     }));
+    // };
     return (
         <section className={`rounded-md p-3 border border-[#eee] shadow-sm`}>
             <>
@@ -123,8 +137,8 @@ export default function FacultyCourses() {
                 {/* ACTION BAR */}
                 <ActionBar
                     title={`My Courses`}
-                    addButtonLabel={`Assign Course`}
-                    createHandler={handleAssignCourseIntoFaculty}
+                    // addButtonLabel={`Assign Course`}
+                    // createHandler={handleAssignCourseIntoFaculty}
                 />
 
                 {/* TABLE */}
@@ -157,6 +171,25 @@ export default function FacultyCourses() {
                             customCourse: `${row?.course?.title}`,
                             courseCode: `${row?.course?.code}`,
                             courseCredits: `${row?.course?.credits}`,
+                            // customViewStudents: (
+                            //     <>
+                            //         <Link
+                            //             href={`/faculty/courses/student?courseId=${row?.course?.id}&offeredCourseSectionId=${row?.sections?.[0]?.classSchedules?.[0]?.offeredCourseSectionId}`}
+                            //             className={`bg-[#e2e2e2] py-1 px-2 rounded text-[#333] hover:bg-[#333] hover:text-[#e2e2e2]`}
+                            //         >
+                            //             View Students
+                            //         </Link>
+                            //     </>
+                            // ),
+                            // customClassSchedule: (
+                            //     <Link
+                            //         href={`/faculty/courses/class-schedule?courseId=${row?.id}`}
+                            //         target="_blank"
+                            //         className={`bg-[#e2e2e2] py-1 px-2 rounded text-[#333] hover:bg-[#333] hover:text-[#e2e2e2]`}
+                            //     >
+                            //         View Class Schedule
+                            //     </Link>
+                            // ),
                             customSection: (
                                 <>
                                     {row?.sections
