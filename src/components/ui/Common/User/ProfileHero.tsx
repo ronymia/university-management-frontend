@@ -28,7 +28,7 @@ export default function ProfileHero() {
             facultyInfo?.permanentAddress ||
             adminInfo?.permanentAddress,
         profileImage:
-            studentInfo?.profileImage || facultyInfo?.profileImage || adminInfo?.profileImage,
+            studentInfo?.profileImage || facultyInfo?.profileImage || adminInfo?.profileImage || '',
         createdAt: studentInfo?.createdAt || facultyInfo?.createdAt || adminInfo?.createdAt,
         updatedAt: studentInfo?.updatedAt || facultyInfo?.updatedAt || adminInfo?.updatedAt,
     };
