@@ -12,9 +12,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CustomLoading from '@/components/Loader/CustomLoading';
 import CustomDatePicker from '@/components/Forms/CustomDatePicker';
 import CustomSelect from '@/components/Forms/CustomSelect';
-import CustomFileUpload from '@/components/Forms/CustomFileUpload';
 import GenderField from '@/components/ui/Fields/GenderField';
 import { useRouter } from 'next/navigation';
+import CustomImageUpload from '@/components/Forms/CustomImageUpload';
+import BloodGroupField from '@/components/ui/Fields/BloodGroupField';
 
 export default function AdminForm({ id = '' }: { id?: string }) {
     const router = useRouter();
@@ -96,11 +97,11 @@ export default function AdminForm({ id = '' }: { id?: string }) {
                 <div className={`grid grid-cols-1 md:grid-cols-3 gap-3`}>
                     {/* PROFILE PICTURE */}
                     {!id && (
-                        <CustomFileUpload
+                        <CustomImageUpload
                             id="admin.profileImage"
                             name="admin.profileImage"
-                            required
-                            label="Image"
+                            label="Profile Picture"
+                            wrapperClassName="row-span-1 md:row-span-2"
                         />
                     )}
 
@@ -205,14 +206,7 @@ export default function AdminForm({ id = '' }: { id?: string }) {
                         required
                     />
                     {/* bloodGroup */}
-                    <CustomInputField
-                        id="admin.bloodGroup"
-                        name="admin.bloodGroup"
-                        type="text"
-                        label="Blood group"
-                        placeholder="Blood group"
-                        required
-                    />
+                    <BloodGroupField name="admin.bloodGroup" label="Blood group" required={false} />
                     {/* designation */}
                     <CustomInputField
                         id="admin.designation"

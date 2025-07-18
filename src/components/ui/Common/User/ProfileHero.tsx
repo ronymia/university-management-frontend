@@ -1,6 +1,7 @@
+import CustomToaster from '@/components/Notification/CustomToaster';
 import ImageUploader from '@/components/Uploader/ImageUploader';
-import { getImageFullLink } from '@/helpers/config/envConfig';
 import useUserProfile from '@/hooks/useUserProfile';
+import { useUploadProfilePictureMutation } from '@/redux/api/userApi';
 import { getFullName } from '@/utils/getFullName';
 import { fromSnakeCase } from '@/utils/textFormatter.utils';
 import moment from 'moment';
@@ -33,24 +34,40 @@ export default function ProfileHero() {
         updatedAt: studentInfo?.updatedAt || facultyInfo?.updatedAt || adminInfo?.updatedAt,
     };
 
-    const handleUploadLogo = async () => {
+    const [uploadProfilePicture, uploadResult] = useUploadProfilePictureMutation();
+
+    const handleUploadLogo = async (payloadImage: any) => {
         // Check if the file size exceeds 5MB
-        // if (payloadImage.size > 5 * 1024 * 1024) {
-        //     Message({
-        //         type: 'error',
-        //         text: 'File size must not exceed 5MB.',
-        //     });
-        //     return;
-        // }
-        // await uploadImage(payloadImage)
-        //     .unwrap()
-        //     .then((res) => {
-        //         Message({
-        //             type: 'success',
-        //             text: 'Image uploaded successfully',
-        //         });
-        //         userInfo.image = res?.full_location;
-        //     });
+        if (payloadImage.size > 5 * 1024 * 1024) {
+            CustomToaster({
+                type: 'error',
+                text: 'File size must not exceed 5MB.',
+            });
+            return;
+        }
+
+        const userId = adminInfo?.id || studentInfo?.id || facultyInfo?.id;
+        if (!userId) {
+            CustomToaster({
+                type: 'error',
+                text: 'User ID not found.',
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', payloadImage);
+        formData.append('data', JSON.stringify({ id: userId }));
+        await uploadProfilePicture(formData)
+            .unwrap()
+            .then((res) => {
+                console.log({ res });
+                CustomToaster({
+                    type: 'success',
+                    text: 'Image uploaded successfully',
+                });
+                // userInfo.image = res?.full_location;
+            });
     };
     return (
         <div className="flex flex-col md:flex-row w-full">
@@ -60,9 +77,9 @@ export default function ProfileHero() {
                 <ImageUploader
                     fallBackText={getFullName(userInfo?.name as any)}
                     type="circular"
-                    imageUrl={getImageFullLink(userInfo?.profileImage)}
+                    imageUrl={userInfo?.profileImage}
                     uploadHandler={handleUploadLogo}
-                    isLoading={false}
+                    isLoading={uploadResult.isLoading}
                 />
 
                 {/* USER INFO */}

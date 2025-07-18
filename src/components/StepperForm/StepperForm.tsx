@@ -114,6 +114,7 @@ export default function StepperForm({
                 router.push(navigateLink);
             }
         } catch (err) {
+            reset(undefined, { keepValues: true });
             const error = err as IGenericErrorResponse;
 
             // console.log("form error", { error });
@@ -188,6 +189,7 @@ export default function StepperForm({
                                         await currentStepSchema.parseAsync(currentFormValues);
                                         next(); // If validation passes, move to next step
                                     } catch (error) {
+                                        reset(undefined, { keepValues: true });
                                         // CHECKING ZOD ERROR
                                         if (error instanceof z.ZodError) {
                                             // Trigger validation

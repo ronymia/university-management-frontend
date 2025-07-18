@@ -1,5 +1,5 @@
 'use client';
-import CustomFileUpload from '@/components/Forms/CustomFileUpload';
+import CustomImageUpload from '@/components/Forms/CustomImageUpload';
 import CustomInputField from '@/components/Forms/CustomInputField';
 import AcademicDepartmentField from '@/components/ui/Fields/Academic/AcademicDepartmentField';
 import AcademicFacultyField from '@/components/ui/Fields/Academic/AcademicFacultyField';
@@ -20,6 +20,16 @@ const StudentInfo = ({
     return (
         <div className={`border border-[#d9d9d9] rounded p-3.5 mb-2.5`}>
             <div className={`grid grid-cols-1 md:grid-cols-3 gap-3`}>
+                {/* PROFILE PICTURE */}
+                {!studentId && (
+                    <CustomImageUpload
+                        id="student.profileImage"
+                        name="student.profileImage"
+                        label="Profile Picture"
+                        wrapperClassName="row-span-1 md:row-span-2"
+                    />
+                )}
+
                 {/* firstName */}
                 <CustomInputField
                     id="student.name.firstName"
@@ -75,17 +85,13 @@ const StudentInfo = ({
                 {/* academicDepartment */}
                 <AcademicDepartmentField
                     academicFacultyId={academicFacultyId}
+                    isFilterOfferedCourse={false}
                     name="student.academicDepartment"
                     label="Academic Department"
                 />
 
                 {/* gender */}
                 <GenderField name="student.gender" label="Gender" required />
-
-                {/* profileImage */}
-                {!studentId ? (
-                    <CustomFileUpload id="file" name="file" required label="Image" />
-                ) : null}
             </div>
         </div>
     );

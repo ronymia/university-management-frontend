@@ -42,8 +42,7 @@ export default function StudentForm({ id = '' }: { id?: string }) {
 
     const handleStudentSubmit = async (values: any) => {
         const obj = { ...values };
-        const file = obj['file'];
-        delete obj['file'];
+        const file = obj.student['profileImage'];
         const data = JSON.stringify(obj);
         const formData = new FormData();
         formData.append('file', file as Blob);
@@ -51,7 +50,6 @@ export default function StudentForm({ id = '' }: { id?: string }) {
 
         if (!!id) {
             const body = values.student;
-            // delete body["profileImage"];
             const res = await updateStudent({ id, body }).unwrap();
             if (res?.id) {
                 router.back();

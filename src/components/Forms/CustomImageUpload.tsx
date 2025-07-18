@@ -7,7 +7,7 @@ import Image from 'next/image';
 interface ICustomFileUpload {
     id: string;
     name: string;
-    required: boolean;
+    required?: boolean;
     label: string;
     dataTestId?: string;
     wrapperClassName?: string;
@@ -15,13 +15,11 @@ interface ICustomFileUpload {
     disabled?: boolean;
 }
 
-export default function CustomFileUpload({
+export default function CustomImageUpload({
     id,
     name,
-    label,
-    dataTestId,
+    label = 'upload',
     wrapperClassName,
-    labelClass,
 }: ICustomFileUpload) {
     const {
         control,
@@ -49,13 +47,6 @@ export default function CustomFileUpload({
         <div
             className={`${wrapperClassName || ''} w-full flex flex-col gap-y-1.5 items-center justify-center`}
         >
-            {/* LABEL */}
-            {label && (
-                <label data-auto={`label-${dataTestId}`} htmlFor={id}>
-                    <span className={`text-base font-semibold ${labelClass}`}>{label}</span>
-                </label>
-            )}
-
             <Controller
                 control={control}
                 name={name}
@@ -77,7 +68,7 @@ export default function CustomFileUpload({
                         ) : (
                             <>
                                 <span className="text-primary text-2xl">+</span>
-                                <span className="text-primary">Upload</span>
+                                <span className="text-primary">{label}</span>
                             </>
                         )}
                         <input

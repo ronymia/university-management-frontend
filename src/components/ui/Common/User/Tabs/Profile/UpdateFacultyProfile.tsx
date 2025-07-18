@@ -112,25 +112,24 @@ export default function UpdateFacultyProfile({
                 placeholder="Email address"
                 required
             />
-            {role === USER_ROLE.ADMIN ||
-                (role === USER_ROLE.SUPER_ADMIN && (
-                    <>
-                        {/* academicDepartment */}
-                        <AcademicFacultyField
-                            name={'academicFaculty'}
-                            label="Academic Faculty"
-                            onChange={(e) => setAcademicFacultyId(e)}
-                        />
-                        {/* academicDepartment */}
-                        <AcademicDepartmentField
-                            name={'academicDepartment'}
-                            label="Academic Department"
-                            academicFacultyId={academicFacultyId || ''}
-                        />
-                        {/* designation */}
-                        <FacultyDesignationField name="designation" label="Designation" required />
-                    </>
-                ))}
+            {(role === USER_ROLE.ADMIN || role === USER_ROLE.SUPER_ADMIN) && (
+                <>
+                    {/* academicDepartment */}
+                    <AcademicFacultyField
+                        name={'academicFaculty'}
+                        label="Academic Faculty"
+                        onChange={(e) => setAcademicFacultyId(e)}
+                    />
+                    {/* academicDepartment */}
+                    <AcademicDepartmentField
+                        name={'academicDepartment'}
+                        label="Academic Department"
+                        academicFacultyId={academicFacultyId || ''}
+                    />
+                    {/* designation */}
+                    <FacultyDesignationField name="designation" label="Designation" required />
+                </>
+            )}
             {/* contactNo */}
             <CustomInputField
                 id="contactNo"

@@ -3,7 +3,6 @@
 import AcademicDepartmentField from '@/components/ui/Fields/Academic/AcademicDepartmentField';
 import AcademicFacultyField from '@/components/ui/Fields/Academic/AcademicFacultyField';
 import CustomDatePicker from '@/components/Forms/CustomDatePicker';
-import CustomFileUpload from '@/components/Forms/CustomFileUpload';
 import CustomForm from '@/components/Forms/CustomForm';
 import CustomInputField from '@/components/Forms/CustomInputField';
 import CustomTextareaField from '@/components/Forms/CustomTextareaField';
@@ -20,6 +19,7 @@ import { useEffect, useState } from 'react';
 import GenderField from '../../Fields/GenderField';
 import BloodGroupField from '../../Fields/BloodGroupField';
 import FacultyDesignationField from '../../Fields/FacultyDesignationField';
+import CustomImageUpload from '@/components/Forms/CustomImageUpload';
 
 export default function FacultyForm({ id = '' }: { id: string }) {
     const router = useRouter();
@@ -64,10 +64,9 @@ export default function FacultyForm({ id = '' }: { id: string }) {
     }, [data?.academicFaculty?.syncId]);
 
     const onSubmit = async (values: any) => {
-        // console.log({ values });
+        console.log({ values });
         const obj = { ...values };
-        const file = obj['file'];
-        delete obj['file'];
+        const file = obj.faculty['profileImage'];
         const data = JSON.stringify(obj);
         const formData = new FormData();
         formData.append('file', file as Blob);
@@ -76,17 +75,16 @@ export default function FacultyForm({ id = '' }: { id: string }) {
         //
         if (!!id) {
             const body = values.faculty;
-            delete body['profileImage'];
-            const res = await updateFaculty({ id, body });
-            if (!!res) {
+            const res = await updateFaculty({ id, body }).unwrap();
+            if (res?.id) {
                 router.back();
-                console.log('res', { res });
+                // console.log('res', { res });
             }
         } else {
-            const res = await addFacultyWithFormData(formData);
-            if (!!res) {
+            const res = await addFacultyWithFormData(formData).unwrap();
+            if (res?.id) {
                 router.back();
-                console.log('res', { res });
+                // console.log('res', { res });
             }
         }
     };
@@ -107,7 +105,15 @@ export default function FacultyForm({ id = '' }: { id: string }) {
                 <p className={`font-bold mb-2.5 drop-shadow-sm md:col-span-3`}>
                     Faculty Information
                 </p>
-                {!id && <CustomFileUpload id="file" name="file" required label="Image" />}
+                {/* PROFILE PICTURE */}
+                {!id && (
+                    <CustomImageUpload
+                        id="faculty.profileImage"
+                        name="faculty.profileImage"
+                        label="Profile Picture"
+                        wrapperClassName="row-span-1 md:row-span-2"
+                    />
+                )}
 
                 {/* firstName */}
                 <CustomInputField

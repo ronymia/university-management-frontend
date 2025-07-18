@@ -48,8 +48,24 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: (result) => (result ? [tagTypes.user] : []),
         }),
+        // UPDATE USER
+        uploadProfilePicture: builder.mutation({
+            query: (payload) => ({
+                url: `${USER_URL}/update-profile-image`,
+                method: 'PATCH',
+                data: payload,
+                contentType: 'multipart/form-data',
+            }),
+            invalidatesTags: (result) =>
+                result ? [{ type: tagTypes.user }, { type: tagTypes.user, id: result.id }] : [],
+        }),
     }),
 });
 
-export const { useUsersQuery, useSingleUserQuery, useDeleteUserMutation, useUpdateUserMutation } =
-    userApi;
+export const {
+    useUsersQuery,
+    useSingleUserQuery,
+    useDeleteUserMutation,
+    useUpdateUserMutation,
+    useUploadProfilePictureMutation,
+} = userApi;

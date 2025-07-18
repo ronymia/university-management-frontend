@@ -4,7 +4,11 @@ const nextConfig: NextConfig = {
     /* config options here */
     // reactStrictMode: true,
     images: {
-        domains: ['localhost', 'university-management-api-gateway-drab.vercel.app'],
+        domains: [
+            'localhost',
+            'university-management-api-gateway-drab.vercel.app',
+            'bygduxjrnektoomnqrzd.supabase.co',
+        ],
     },
 };
 
