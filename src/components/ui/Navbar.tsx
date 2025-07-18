@@ -54,6 +54,7 @@ export default function Navbar() {
                             },
                             {
                                 Icon: logoutResult.isLoading ? FaSync : MdOutlineLogout,
+                                className: logoutResult.isLoading ? 'animate-spin' : '',
                                 label: 'Logout',
                                 onClick: async () => {
                                     await logout(undefined)

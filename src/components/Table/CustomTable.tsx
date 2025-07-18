@@ -113,6 +113,8 @@ export default function CustomTable({
         onSort: handleSort,
     }));
 
+    console.log({ columns: columns.length });
+
     // Then pass sortedRows and columnsWithSort to your CustomTable
 
     /* ===================================== RETURN JSX ===================================== */
@@ -214,7 +216,7 @@ export default function CustomTable({
                             ${index === 0 ? 'md:border-l md:rounded-l-xl' : 'md:border-l-0'}
                              ${
                                  actions.length === 0 && index === columns.length - 1 - 1
-                                     ? 'border-r rounded-r-xl'
+                                     ? 'md:border-r rounded-r-xl'
                                      : 'border-r-0'
                              }
                            `}

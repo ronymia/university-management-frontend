@@ -17,6 +17,7 @@ export default function CustomProfileAvatar({
     avatarUrl?: string;
     dropdownItems?: {
         Icon: React.ElementType;
+        className?: string;
         label: string;
         onClick: () => void;
     }[];
@@ -76,7 +77,7 @@ export default function CustomProfileAvatar({
                     <li
                         key={idx}
                         onClick={item.onClick}
-                        className={`cursor-pointer px-3 py-2 m-2  hover:bg-primary rounded-md hover:text-base-300 drop-shadow-lg flex gap-3 items-start justify-start last:m-0 last:bg-error last:rounded-none last:text-base-300
+                        className={`cursor-pointer px-3 py-2 m-2  hover:bg-primary rounded-md hover:text-base-300 drop-shadow-lg flex gap-3 items-start justify-start last:m-0 last:bg-error last:rounded-none last:text-base-300 ${item?.className ? item?.className : ''}
           `}
                         role="option"
                         aria-selected="false"
