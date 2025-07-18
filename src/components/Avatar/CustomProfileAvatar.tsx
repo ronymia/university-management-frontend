@@ -5,6 +5,8 @@ import { useAppSelector } from '@/redux/hooks';
 import { getFullName } from '@/utils/getFullName';
 import { motion } from 'motion/react';
 import { USER_ROLE } from '@/enums/global';
+import { superAdminInfo } from '@/constants/superAdmin';
+import { fromSnakeCase } from '@/utils/textFormatter.utils';
 
 export default function CustomProfileAvatar({
     name = 'User',
@@ -36,11 +38,11 @@ export default function CustomProfileAvatar({
             <div className="flex flex-col text-right">
                 <strong className="text-sm">
                     {userDetails?.role === USER_ROLE.SUPER_ADMIN
-                        ? 'MD Rony Mia'
+                        ? getFullName(superAdminInfo.name)
                         : getFullName(user?.name)}
                 </strong>
                 <small className="text-xs font-semibold text-gray-500 uppercase">
-                    {userDetails?.role || ''}
+                    {fromSnakeCase(userDetails?.role || '')}
                 </small>
             </div>
             <button

@@ -1,5 +1,7 @@
 import CustomToaster from '@/components/Notification/CustomToaster';
 import ImageUploader from '@/components/Uploader/ImageUploader';
+import { superAdminInfo } from '@/constants/superAdmin';
+import { USER_ROLE } from '@/enums/global';
 import useUserProfile from '@/hooks/useUserProfile';
 import { useUploadProfilePictureMutation } from '@/redux/api/userApi';
 import { getFullName } from '@/utils/getFullName';
@@ -12,29 +14,69 @@ export default function ProfileHero() {
     const { studentInfo, facultyInfo, adminInfo, profileRole } = useUserProfile();
 
     const userInfo = {
-        name: studentInfo?.name || facultyInfo?.name || adminInfo?.name,
-        email: studentInfo?.email || facultyInfo?.email || adminInfo?.email,
-        contactNo: studentInfo?.contactNo || facultyInfo?.contactNo || adminInfo?.contactNo,
+        name:
+            studentInfo?.name ||
+            facultyInfo?.name ||
+            adminInfo?.name ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.name) ||
+            '',
+        email:
+            studentInfo?.email ||
+            facultyInfo?.email ||
+            adminInfo?.email ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.email) ||
+            '',
+        contactNo:
+            studentInfo?.contactNo ||
+            facultyInfo?.contactNo ||
+            adminInfo?.contactNo ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.contactNo) ||
+            '',
         emergencyContactNo:
             studentInfo?.emergencyContactNo ||
             facultyInfo?.emergencyContactNo ||
-            adminInfo?.emergencyContactNo,
-        gender: studentInfo?.gender || facultyInfo?.gender || adminInfo?.gender,
-        bloodGroup: studentInfo?.bloodGroup || facultyInfo?.bloodGroup || adminInfo?.bloodGroup,
-        dateOfBirth: studentInfo?.dateOfBirth || facultyInfo?.dateOfBirth || adminInfo?.dateOfBirth,
+            adminInfo?.emergencyContactNo ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.emergencyContactNo) ||
+            '',
+        gender:
+            studentInfo?.gender ||
+            facultyInfo?.gender ||
+            adminInfo?.gender ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.gender) ||
+            '',
+        bloodGroup:
+            studentInfo?.bloodGroup ||
+            facultyInfo?.bloodGroup ||
+            adminInfo?.bloodGroup ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.bloodGroup) ||
+            '',
+        dateOfBirth:
+            studentInfo?.dateOfBirth ||
+            facultyInfo?.dateOfBirth ||
+            adminInfo?.dateOfBirth ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.dateOfBirth) ||
+            '',
         presentAddress:
-            studentInfo?.presentAddress || facultyInfo?.presentAddress || adminInfo?.presentAddress,
+            studentInfo?.presentAddress ||
+            facultyInfo?.presentAddress ||
+            adminInfo?.presentAddress ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.presentAddress) ||
+            '',
         permanentAddress:
             studentInfo?.permanentAddress ||
             facultyInfo?.permanentAddress ||
-            adminInfo?.permanentAddress,
+            adminInfo?.permanentAddress ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.permanentAddress) ||
+            '',
         profileImage:
-            studentInfo?.profileImage || facultyInfo?.profileImage || adminInfo?.profileImage || '',
+            studentInfo?.profileImage ||
+            facultyInfo?.profileImage ||
+            adminInfo?.profileImage ||
+            (profileRole === USER_ROLE.SUPER_ADMIN && superAdminInfo.profileImage) ||
+            '',
         createdAt: studentInfo?.createdAt || facultyInfo?.createdAt || adminInfo?.createdAt,
         updatedAt: studentInfo?.updatedAt || facultyInfo?.updatedAt || adminInfo?.updatedAt,
     };
-
-    // const superAdminImage = `https://bygduxjrnektoomnqrzd.supabase.co/storage/v1/object/public/university-management/profile/475297743_1802905417139782_804306711311321380_n.jpg`;
 
     const [uploadProfilePicture, uploadResult] = useUploadProfilePictureMutation();
 
@@ -89,7 +131,7 @@ export default function ProfileHero() {
                     {/* Name */}
                     <div className="flex flex-col items-center md:items-start gap-2 justify-center md:justify-start w-full">
                         <h2 className="text-xl font-semibold drop-shadow">
-                            {getFullName(userInfo?.name as any)}
+                            {getFullName(userInfo?.name as any) || 'N/A'}
                         </h2>
                         <small
                             className={`font-semibold bg-green-600 text-base-300 rounded-md px-2 py-1 text-xs`}
