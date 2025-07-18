@@ -36,7 +36,7 @@ export default function CustomProfileAvatar({
             <div className="flex flex-col text-right">
                 <strong className="text-sm">
                     {userDetails?.role === USER_ROLE.SUPER_ADMIN
-                        ? 'MD ROny Mia'
+                        ? 'MD Rony Mia'
                         : getFullName(user?.name)}
                 </strong>
                 <small className="text-xs font-semibold text-gray-500 uppercase">

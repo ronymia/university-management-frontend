@@ -49,13 +49,13 @@ export default function Sidebar() {
                     show: true,
                     subItems: [],
                 },
-                {
-                    icon: FaRegUser,
-                    label: 'Change Password',
-                    path: `/auth/change-password`,
-                    show: true,
-                    subItems: [],
-                },
+                // {
+                //     icon: FaRegUser,
+                //     label: 'Change Password',
+                //     path: `/auth/change-password`,
+                //     show: true,
+                //     subItems: [],
+                // },
             ],
         },
     ];

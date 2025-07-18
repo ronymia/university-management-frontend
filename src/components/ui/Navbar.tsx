@@ -6,7 +6,6 @@ import { useAppDispatch } from '@/redux/hooks';
 import { toggleSidebar } from '@/redux/slice/globalState';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GrUserSettings } from 'react-icons/gr';
 import { TbUserEdit } from 'react-icons/tb';
 import { useUserLogoutMutation } from '@/redux/api/authApi';
 import { FaSync } from 'react-icons/fa';
@@ -15,27 +14,6 @@ export default function Navbar() {
     const router = useRouter();
     const appDispatch = useAppDispatch();
     const [logout, logoutResult] = useUserLogoutMutation();
-
-    // const lastScrollTopRef = useRef(0);
-
-    // useEffect(() => {
-    //   const handleScroll = () => {
-    //     const scrollTop =
-    //       window.pageYOffset || document.documentElement.scrollTop;
-
-    //     if (scrollTop < lastScrollTopRef.current) {
-    //       appDispatch(toggleStickyNavbar(true));
-    //     } else {
-    //       appDispatch(toggleStickyNavbar(false));
-    //     }
-
-    //     lastScrollTopRef.current = scrollTop <= 0 ? 0 : scrollTop;
-    //     appDispatch(setLastScrollTopNavbar(lastScrollTopRef.current));
-    //   };
-
-    //   window.addEventListener("scroll", handleScroll);
-    //   return () => window.removeEventListener("scroll", handleScroll);
-    // }, []);
 
     return (
         <AnimatePresence mode="wait">
@@ -72,12 +50,7 @@ export default function Navbar() {
                             {
                                 Icon: TbUserEdit,
                                 label: 'Profile',
-                                onClick: () => console.log('Settings clicked'),
-                            },
-                            {
-                                label: 'Settings',
-                                Icon: GrUserSettings,
-                                onClick: () => console.log('Settings clicked'),
+                                onClick: () => router.push('/profile'),
                             },
                             {
                                 Icon: logoutResult.isLoading ? FaSync : MdOutlineLogout,

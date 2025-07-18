@@ -87,7 +87,10 @@ export default function ProfileTabs() {
         {
             label: 'Change Password',
             value: PROFILE_TABS.CHANGE_PASSWORD,
-            show: true,
+            show:
+                profileRole === USER_ROLE.STUDENT ||
+                profileRole === USER_ROLE.FACULTY ||
+                profileRole === USER_ROLE.ADMIN,
             Icon: GrSchedulePlay,
         },
     ];

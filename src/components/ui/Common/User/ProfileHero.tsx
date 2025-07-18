@@ -34,6 +34,8 @@ export default function ProfileHero() {
         updatedAt: studentInfo?.updatedAt || facultyInfo?.updatedAt || adminInfo?.updatedAt,
     };
 
+    // const superAdminImage = `https://bygduxjrnektoomnqrzd.supabase.co/storage/v1/object/public/university-management/profile/475297743_1802905417139782_804306711311321380_n.jpg`;
+
     const [uploadProfilePicture, uploadResult] = useUploadProfilePictureMutation();
 
     const handleUploadLogo = async (payloadImage: any) => {
