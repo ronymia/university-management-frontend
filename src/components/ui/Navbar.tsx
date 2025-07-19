@@ -24,7 +24,7 @@ export default function Navbar() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -100, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className={`h-18 z-40 relative px-3 flex items-center justify-end md:justify-between rounded-2xl bg-base-300 shadow`}
+                    className={`h-18 z-40 sticky top-3 px-3 flex items-center justify-end md:justify-between rounded-2xl bg-base-300 shadow`}
                 >
                     <button
                         type="button"
@@ -54,7 +54,6 @@ export default function Navbar() {
                             },
                             {
                                 Icon: logoutResult.isLoading ? FaSync : MdOutlineLogout,
-                                className: logoutResult.isLoading ? 'animate-spin' : '',
                                 label: 'Logout',
                                 onClick: async () => {
                                     await logout(undefined)

@@ -34,7 +34,10 @@ export default function UserPage() {
     if (!!debouncedSearchTerm) {
         setQueries((prev) => ({ ...prev, searchTerm: debouncedSearchTerm }));
     }
-    const { data, isLoading } = useUsersQuery({});
+    const { data, isLoading } = useUsersQuery({
+        page: queries.page,
+        limit: queries.limit,
+    });
     console.log({ data });
 
     const students = data?.users;

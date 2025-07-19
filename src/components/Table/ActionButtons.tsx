@@ -16,14 +16,16 @@ export default function ActionButtons({ actions, row, dataAuto }: IActionButtons
     return (
         <>
             {actions
+                .filter((action: any) => action?.permissions?.length === 0)
                 .filter(
                     (action: any) =>
                         !action?.disableOn?.some(
-                            (disable: any) => row?.[disable?.accessorKey] === disable?.value,
+                            (disable: { accessorKey: string; value: any }) =>
+                                row?.[disable?.accessorKey] === disable?.value,
                         ),
                 )
+
                 .map((action: any) => {
-                    const isPermitted = true;
                     const Icon: any =
                         action?.name === 'edit'
                             ? FiEdit
@@ -36,7 +38,6 @@ export default function ActionButtons({ actions, row, dataAuto }: IActionButtons
                     const iconClass = `text-3xl p-1 bg-gray-50 rounded border border-primary/20 drop-shadow cursor-pointer ${
                         action?.name === 'delete' ? 'text-red-500' : 'text-primary'
                     }`;
-                    if (!isPermitted) return null;
 
                     if (action?.type === 'link' && action?.href) {
                         // Render a Link
