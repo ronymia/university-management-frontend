@@ -2,7 +2,7 @@ import CustomForm from '@/components/Forms/CustomForm';
 import CustomInputField from '@/components/Forms/CustomInputField';
 import CustomTextareaField from '@/components/Forms/CustomTextareaField';
 import useUserProfile from '@/hooks/useUserProfile';
-import React from 'react';
+import { useUpdateStudentMutation } from '@/redux/api/studentApi';
 
 export default function UpdateGuardianInformation({
     handleClosePopup,
@@ -10,6 +10,8 @@ export default function UpdateGuardianInformation({
     handleClosePopup: () => void;
 }) {
     const { studentInfo: userInfo } = useUserProfile();
+    // ADMIN UPDATE
+    const [updateStudent] = useUpdateStudentMutation();
 
     const defaultValues = {
         student: {
@@ -33,6 +35,11 @@ export default function UpdateGuardianInformation({
 
     const handleOnSubmit = async (formValues: any) => {
         console.log({ formValues });
+        await updateStudent({ id: userInfo?.id, body: formValues.student })
+            .unwrap()
+            .then(() => {
+                handleClosePopup?.();
+            });
     };
 
     return (

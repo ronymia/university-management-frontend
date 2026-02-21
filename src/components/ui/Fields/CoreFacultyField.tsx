@@ -14,7 +14,7 @@ const CoreFacultyField = ({ name, label, academicDepartmentId }: FacultyProps) =
         academicDepartmentId: academicDepartmentId ?? undefined,
     });
     const faculties = data?.faculties;
-    const facultiesOptions = faculties?.map((faculty: any) => {
+    const facultiesOptions = faculties?.map((faculty) => {
         // console.log(faculty);
         //ts-ignore
         return {

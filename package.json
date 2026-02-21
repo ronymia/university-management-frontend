@@ -1,11 +1,11 @@
 {
-    "name": "univarsity-management-frontend",
+    "name": "university-management-frontend",
     "version": "0.1.0",
     "private": true,
     "scripts": {
         "dev": "rm -rf .next && next dev --turbopack",
         "build": "next build",
-        "start": "next start",
+        "start": "next start -p 3003",
         "lint": "next lint",
         "type-check": "tsc --noEmit",
         "prepare": "husky",

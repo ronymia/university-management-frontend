@@ -46,7 +46,7 @@ export default function FacultyPage() {
 
     // DELETE
     const deleteHandler = async (id: ICoreFaculty) => {
-        await deleteFaculty(id.facultyId);
+        await deleteFaculty(id.id);
     };
 
     // ALL ACTION BUTTONS

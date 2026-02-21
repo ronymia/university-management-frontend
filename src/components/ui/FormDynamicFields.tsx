@@ -58,7 +58,7 @@ const FormDynamicFields = ({ academicDepartmentId }: { academicDepartmentId?: st
 
                                 {/* building */}
                                 <BuildingField
-                                    name={`building`}
+                                    name={`classSchedules.${index}.buildingId`}
                                     label={`Building`}
                                     onChange={(e) => {
                                         setBuildingId(e);
@@ -68,7 +68,7 @@ const FormDynamicFields = ({ academicDepartmentId }: { academicDepartmentId?: st
                                 <RoomField
                                     name={`classSchedules.${index}.roomId`}
                                     label={'Room'}
-                                    buildingId={buildingId}
+                                    buildingId={buildingId ? buildingId : undefined}
                                     required
                                     disabled
                                 />

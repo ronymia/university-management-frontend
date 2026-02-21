@@ -87,10 +87,13 @@ export default function OfferedCourseSectionForm({ id }: IDProps) {
                 dayOfWeek: classSchedule.dayOfWeek,
                 startTime: classSchedule.startTime,
                 endTime: classSchedule.endTime,
-                roomId: classSchedule.roomId,
+                buildingId: classSchedule.room?.buildingId,
+                roomId: classSchedule.room?.id,
                 facultyId: classSchedule.facultyId,
             })) || [],
     };
+
+    console.log({ defaultValues, data });
 
     if (isLoading) {
         return <CustomLoading />;

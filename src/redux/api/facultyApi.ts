@@ -3,6 +3,7 @@ import { baseApi } from './baseApi';
 import { tagTypes } from '../tag-types';
 
 const BASE_FACULTY_API_URL = '/faculties';
+const BASE_AUTH_FACULTY_API_URL = '/auth-faculties';
 
 export const facultyApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
@@ -26,7 +27,7 @@ export const facultyApi = baseApi.injectEndpoints({
         // get single faculty user endpoint
         facultyById: build.query({
             query: (id: string | string[] | undefined) => ({
-                url: `${BASE_FACULTY_API_URL}/${id}`,
+                url: `${BASE_AUTH_FACULTY_API_URL}/${id}`,
                 method: 'GET',
             }),
             transformResponse: (response: IFaculty) => {
@@ -55,7 +56,7 @@ export const facultyApi = baseApi.injectEndpoints({
         // update faculty user endpoint
         updateFaculty: build.mutation({
             query: (data) => ({
-                url: `${BASE_FACULTY_API_URL}/${data.id}`,
+                url: `${BASE_AUTH_FACULTY_API_URL}/${data.id}`,
                 method: 'PATCH',
                 data: data.body,
             }),
@@ -64,7 +65,7 @@ export const facultyApi = baseApi.injectEndpoints({
         // delete faculty user endpoint
         deleteFaculty: build.mutation({
             query: (id) => ({
-                url: `${BASE_FACULTY_API_URL}/${id}`,
+                url: `${BASE_AUTH_FACULTY_API_URL}/${id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: (result) => (result ? [tagTypes.faculty] : []),

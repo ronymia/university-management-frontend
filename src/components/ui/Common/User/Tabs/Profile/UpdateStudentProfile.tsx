@@ -4,6 +4,7 @@ import CustomInputField from '@/components/Forms/CustomInputField';
 import CustomTextareaField from '@/components/Forms/CustomTextareaField';
 import BloodGroupField from '@/components/ui/Fields/BloodGroupField';
 import useUserProfile from '@/hooks/useUserProfile';
+import { useUpdateUserMutation } from '@/redux/api/userApi';
 
 export default function UpdateStudentProfile({
     handleClosePopup,
@@ -12,6 +13,8 @@ export default function UpdateStudentProfile({
 }) {
     // USER
     const { studentInfo } = useUserProfile();
+    // ADMIN UPDATE
+    const [updateUser] = useUpdateUserMutation();
 
     // DEFAULT VALUES
     const defaultValues = {
@@ -32,7 +35,12 @@ export default function UpdateStudentProfile({
 
     // HANDLE SUBMIT
     const handleOnSubmit = async (formValues: any) => {
-        console.log({ formValues });
+        // console.log({ formValues });
+        await updateUser({ ...formValues, id: studentInfo?.id })
+            .unwrap()
+            .then(() => {
+                handleClosePopup?.();
+            });
     };
     return (
         <CustomForm
