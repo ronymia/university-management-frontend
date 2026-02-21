@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     images: {
         domains: [
             'localhost',
-            'university-management-api-gateway-drab.vercel.app',
+            'university-management-api-gateway-production.up.railway.app',
             'bygduxjrnektoomnqrzd.supabase.co',
         ],
     },
